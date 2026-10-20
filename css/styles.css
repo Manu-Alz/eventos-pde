@@ -1,0 +1,51 @@
+/* styles.css · base compartida (home + publicar)
+   Pensada para celular primero: áreas táctiles de 44px, márgenes seguros del iPhone (notch y barra inferior). */
+
+/* 1. Tokens y reset */
+:root{color-scheme:dark;--bg:#000;--surface:#0E0E11;--ink:#F4F4F5;--muted:#9C9CA6;--line:#26262C;--sea:#4CC3DB;--sun:#7C4DFF;--on-sun:#fff;
+  --gutter:20px;     /* margen lateral de la página */
+  --tap:44px}        /* alto mínimo de un botón táctil */
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;padding-top:env(safe-area-inset-top,0px);background:var(--bg);color:var(--ink);font:400 16px/1.55 'DM Sans',system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+h1,h2,h3{font-family:'Bricolage Grotesque','DM Sans',system-ui,sans-serif;line-height:1.05;margin:0}
+a{color:inherit}
+button{touch-action:manipulation}
+[hidden]{display:none!important}
+:focus-visible{outline:3px solid var(--sea);outline-offset:2px}
+
+/* 2. Layout y cabecera */
+.wrap{max-width:1080px;margin:0 auto;padding:0 max(var(--gutter),env(safe-area-inset-right)) 0 max(var(--gutter),env(safe-area-inset-left))}
+header.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0}
+.logo{font:800 22px 'Bricolage Grotesque',sans-serif;text-decoration:none;letter-spacing:-.01em;white-space:nowrap}
+.logo span{color:var(--sun)}
+.hact{display:flex;gap:8px;align-items:center}
+.hact .btn{padding:10px 18px;font-size:14px}
+
+/* 3. Botones, chips e íconos */
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:var(--tap);border:0;border-radius:999px;background:var(--sun);color:var(--on-sun);font:700 15px 'DM Sans',sans-serif;padding:11px 20px;cursor:pointer;text-decoration:none;text-align:center}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.chip{flex:none;display:inline-flex;align-items:center;justify-content:center;min-height:var(--tap);font:500 15px 'DM Sans',sans-serif;padding:8px 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip:disabled{opacity:.35;cursor:default}
+.btn:active,.chip:active{opacity:.8}
+.ico{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* 4. Pie de página (lo arma site.js) */
+footer{padding:28px 0 max(36px,calc(env(safe-area-inset-bottom) + 20px));color:var(--muted);font-size:14px}
+/* Pie de página: contacto a la derecha y datos a la izquierda; en celular, datos arriba y botones a lo ancho debajo */
+.foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px 24px;margin-top:40px}
+.foot-info{display:flex;flex-wrap:wrap;gap:2px 14px;margin:0;line-height:1.5}
+.foot-links{display:flex;flex-wrap:wrap;gap:10px}
+.foot a{display:inline-flex;align-items:center;gap:6px;min-height:var(--tap);padding:8px 18px;border:1.5px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font-weight:500;text-decoration:none;transition:border-color .2s}
+.foot a:hover{border-color:var(--ink)}
+@media (max-width:600px){
+  .foot{flex-direction:column;align-items:stretch;gap:16px}
+  .foot-info{flex-direction:column;gap:2px}
+  .foot-links{flex-direction:column}
+  .foot a{justify-content:center}
+}
+
+/* 5. Animación compartida */
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}

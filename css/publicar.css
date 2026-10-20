@@ -1,0 +1,57 @@
+/* publicar.css · página de publicación: planes, formulario y pago
+   Estructura: section.pub > .back, h2, .lead, .step, .plans > .plan, #paso2 > form, #ok */
+
+/* 1. Sección */
+section.pub{margin:16px 0 0;padding:40px 0 56px;background:var(--surface);border-top:1px solid var(--line)}
+section.pub h2{font-size:clamp(32px,6vw,52px);letter-spacing:-.02em;max-width:16ch;text-wrap:balance}
+section.pub .lead{max-width:52ch;color:var(--muted);margin:14px 0 30px}
+.lead a{color:var(--ink);font-weight:700;overflow-wrap:anywhere}
+.step{font-size:24px;margin-bottom:18px}
+.back{display:inline-flex;align-items:center;min-height:var(--tap);margin-bottom:6px;color:var(--muted);text-decoration:none;font-size:15px}
+.back:hover{color:var(--ink)}
+
+/* 2. Planes */
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin:0 0 40px;padding-top:14px;align-items:center}
+.plan{position:relative;display:flex;flex-direction:column;text-align:center;background:var(--bg);border:1.5px solid var(--line);border-radius:18px;padding:26px 22px;transition:border-color .2s,box-shadow .2s,background .2s}
+.plan.hl{border-color:var(--sun)}
+.plan.on{border-color:var(--sun);background:rgba(124,77,255,.14);box-shadow:0 0 0 3px rgba(124,77,255,.35)}
+.badge{position:absolute;top:0;right:0;display:flex;align-items:center;gap:4px;background:var(--sun);color:var(--on-sun);font-weight:700;font-size:13px;padding:3px 10px;border-radius:0 16px 0 12px}
+.badge .ico{fill:currentColor;width:14px;height:14px}
+.plan h3{font-size:18px;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:700}
+.price{font:800 48px/1 'Bricolage Grotesque',sans-serif;margin:16px 0 4px;letter-spacing:-.02em}
+.price small{font:500 14px 'DM Sans',sans-serif;color:var(--muted);letter-spacing:0}
+.billed{font-size:13px;color:var(--muted);margin:0 0 16px}
+.plan-blurb{margin:14px 0 0}
+.plan ul{list-style:none;margin:0 0 20px;padding:0;display:grid;gap:8px;text-align:left;font-size:15px;flex:1}
+.plan li{display:flex;gap:8px;align-items:flex-start}
+.plan li .ico{color:var(--sun);margin-top:4px}
+.plan .btn{width:100%;background:transparent;color:var(--ink);border:1.5px solid var(--line);transition:background .2s,border-color .2s}
+.plan.hl .btn,.plan.on .btn{background:var(--sun);border-color:var(--sun);color:var(--on-sun)}
+@media (hover:hover){.plan .btn:hover{background:var(--sun);border-color:var(--sun);color:var(--on-sun)}}
+@media (min-width:768px){.plan.hl{transform:translateY(-14px)}}
+
+/* 3. Paso 2: formulario */
+#paso2{animation:rise .35s ease-out}
+.chosen{margin:-6px 0 18px;color:var(--muted)}
+.chosen b{color:var(--ink)}
+.linkbtn{background:none;border:0;color:var(--sea);font:inherit;text-decoration:underline;cursor:pointer;padding:10px 0 10px 6px}
+form{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;max-width:760px}
+label{display:flex;flex-direction:column;gap:5px;font-size:14px;font-weight:500;min-width:0}
+form input,form select,form textarea{display:block;width:100%;min-width:0;min-height:48px;font:inherit;padding:11px 14px;border-radius:12px;border:1.5px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);color:inherit}
+form textarea{min-height:96px}
+form select option{color:#0F2A3D}
+form .full{grid-column:1/-1}
+.hint{font-weight:400;color:var(--muted)}
+
+/* 4. Pago */
+#ok{display:none;max-width:760px;border:1.5px solid var(--sun);border-radius:14px;padding:18px;margin-top:20px}
+#ok p{margin:0 0 12px}
+#ok .note{font-size:14px;color:var(--muted)}
+.refcode{display:inline-block;font:700 22px ui-monospace,Menlo,Consolas,monospace;letter-spacing:.08em;background:var(--bg);border:1.5px dashed var(--sun);border-radius:10px;padding:6px 14px;margin:0 0 16px}
+.paytabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+.pay{margin:10px 0 18px}
+.dl{display:grid;grid-template-columns:auto 1fr;gap:8px 18px;margin:0 0 10px}
+.dl dt{color:var(--muted)}
+.dl dd{margin:0;font-weight:700;overflow-wrap:anywhere}
+.sendrow{display:flex;flex-wrap:wrap;gap:10px}
+@media (max-width:480px){.sendrow .btn{flex:1 1 100%}}
