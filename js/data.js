@@ -151,5 +151,65 @@ const EV = [
     place: "Maldonado y Punta del Este",
     desc: "29.ª edición, con funciones libres y gratuitas en salas de la zona.",
     endDate: "2027-02-26"
+  },
+
+  /* Cargados el 20/10 desde la lista de fiestas del equipo (Dance & Night Club): solo se confirmaron fecha y
+     Instagram. Lugar y hora se completan con cada organizador. El primero es un show del miércoles. */
+  {
+    title: "Lo vi en Filosofía",
+    cat: "Música en vivo", date: "2026-10-21", time: "21:00",
+    place: "Box Garden, Punta del Este",
+    desc: "Show en vivo de la banda de rock Lo vi en Filosofía.",
+    featured: true
+  },
+  {
+    title: "Volvé Mi Negra",
+    cat: "Fiestas", date: "2026-11-07", time: "A confirmar",
+    place: "Punta del Este (a confirmar)",
+    desc: "Noche de fiesta en Punta del Este. Lugar y hora a confirmar.",
+    contact: "https://instagram.com/volveminegra"
+  },
+  {
+    title: "El Rancho Pub",
+    cat: "Fiestas", date: "2026-11-14", time: "A confirmar",
+    place: "Punta del Este (a confirmar)",
+    desc: "Noche en El Rancho Pub. Lugar y hora a confirmar.",
+    contact: "https://instagram.com/elranchopub"
+  },
+  {
+    title: "Pawsa",
+    cat: "Fiestas", date: "2026-11-20", time: "A confirmar",
+    place: "Punta del Este (a confirmar)",
+    desc: "Noche con Pawsa en Punta del Este. Lugar y hora a confirmar.",
+    contact: "https://instagram.com/pawsaofficial"
+  },
+  {
+    title: "Volvé Mi Negra",
+    cat: "Fiestas", date: "2026-12-24", time: "A confirmar",
+    place: "Punta del Este (a confirmar)",
+    desc: "Noche de fiesta en Punta del Este. Lugar y hora a confirmar.",
+    contact: "https://instagram.com/volveminegra"
+  },
+  {
+    title: "Sensation Punta del Este",
+    cat: "Fiestas", date: "2026-12-31", time: "A confirmar",
+    place: "Punta del Este (a confirmar)",
+    desc: "Fiesta de Año Nuevo para recibir el 2027. Lugar y hora a confirmar.",
+    contact: "https://instagram.com/sensation_pde",
+    featured: true
+  },
+  {
+    title: "Volvé Mi Negra",
+    cat: "Fiestas", date: "2027-01-02", time: "A confirmar",
+    place: "Punta del Este (a confirmar)",
+    desc: "Noche de fiesta en Punta del Este. Lugar y hora a confirmar.",
+    contact: "https://instagram.com/volveminegra"
+  },
+  {
+    title: "Argy",
+    cat: "Fiestas", date: "2027-01-15", time: "A confirmar",
+    place: "Punta del Este (a confirmar)",
+    desc: "Noche con Argy en Punta del Este. Lugar y hora a confirmar.",
+    contact: "https://instagram.com/argy"
   }
 ];
