@@ -68,4 +68,4 @@ La pestaña "Solicitudes" tiene las columnas "Pagó", "Publicado desde" y "Hasta
 ## Notas
 
 - Categorías (7): Fiestas, Música en vivo, Náutica, Autos, Deportes, Festivales y Gastronomía. Para cambiar una, editá `CATS` (`config.js`).
-- Si en tu repo existe una carpeta `eventos-pde/eventos-pde` (copia vieja anidada), borrala: queda publicada en el hosting.
+- Dominio: las direcciones públicas (canonical, og:url, og:image y sitemap) apuntan a https://eventospde.com/. Al activarlo en GitHub Pages, el archivo `CNAME` tiene que quedar en la raíz del repo.
