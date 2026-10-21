@@ -74,8 +74,13 @@
 .maplink:hover{color:var(--c)}
 .contact{display:inline-flex;align-items:center;font-size:14px;font-weight:700;text-decoration:none;color:var(--ink);border:1.5px solid var(--line);border-radius:999px;padding:5px 14px}
 .contact:hover{border-color:var(--c)}
-.ref{display:flex;align-items:center;gap:10px;padding:7px 10px;border:1px solid var(--line);border-radius:12px;background:var(--bg);text-decoration:none;min-width:0}
-.ref:hover{border-color:var(--c)}
+:root{
+  --ref-glass:rgba(255,255,255,.07);        /* fondo translúcido del botón de link (como en la portada) */
+  --ref-glass-line:rgba(255,255,255,.16);   /* borde del botón de link */
+  --ref-glass-hover:rgba(255,255,255,.11);  /* fondo al pasar el mouse */
+}
+.ref{display:flex;align-items:center;gap:10px;padding:7px 10px;border:1px solid var(--ref-glass-line);border-radius:12px;background:var(--ref-glass);text-decoration:none;min-width:0}
+.ref:hover{background:var(--ref-glass-hover);border-color:var(--c)}
 .ref .ri{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 24%,transparent);color:var(--c)}
 .ref .rt{min-width:0;display:flex;flex-direction:column;line-height:1.25}
 .ref b{font-size:14px}
@@ -85,7 +90,7 @@
    El efecto vive solo en el borde, así que no tapa la foto ni el texto (con o sin foto se ve igual).
    Ajustes rápidos: */
 :root{
-  --chrome:linear-gradient(135deg,#f2f5f9 0%,#9aa5b4 22%,#e9edf2 42%,#7b8696 62%,#dfe4ea 82%,#aab4c2 100%);  /* etiqueta, banda y botones */
+  --chrome:linear-gradient(135deg,#f2f5f9 0%,#9aa5b4 22%,#e9edf2 42%,#7b8696 62%,#dfe4ea 82%,#aab4c2 100%);  /* etiqueta "Destacado" */
   --top-frame:3px;            /* grosor del marco */
   --top-glow:.34;             /* resplandor de afuera (0 = ninguno) */
   --top-spin:7s;              /* lo que tarda el destello en dar la vuelta */
