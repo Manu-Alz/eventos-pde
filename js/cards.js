@@ -1,4 +1,4 @@
-/* cards.js · piezas de una publicación y tarjeta cuadrada
+/* cards.js · piezas de una publicación y tarjeta de la grilla
    Las usan la grilla, el Hot topic y el calendario.
    Requiere: config.js, utils.js */
 
@@ -78,28 +78,63 @@ function whereHtml(e) {
 
 const dateHtml = e => `<div class="date"><b>${dayLabel(e)}</b><small>${monthLabel(e)}</small></div>`;
 
-/* ============ 4. Tarjeta cuadrada de la grilla ============
-   Estructura: .band + .body > [.card-head, h3, .ref?, p, .card-foot] */
+/* ============ 4. Identidad de cada evento ============
+   slug: nombre corto para el link compartible (eventospde.com/#solomun-en-open-park-2026-12-29)
+   hash: número fijo por título; sirve para que cada portada generada se vea distinta pero siempre igual */
+const slugOf = e => (e.title + " " + e.date).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const hashOf = s => { let h = 7; for (const ch of s) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return h; };
+
+const DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+
+/* "martes 29 de diciembre" · para eventos de varios días: "23 al 29 de enero" */
+function longDate(e) {
+  const d = n => parseInt(n.slice(8), 10);
+  if (e.endDate && e.endDate !== e.date) {
+    const sameMonth = e.endDate.slice(0, 7) === e.date.slice(0, 7);
+    return sameMonth
+      ? `${d(e.date)} al ${d(e.endDate)} de ${MESES[+e.date.slice(5, 7) - 1]}`
+      : `${d(e.date)} de ${MESES[+e.date.slice(5, 7) - 1]} al ${d(e.endDate)} de ${MESES[+e.endDate.slice(5, 7) - 1]}`;
+  }
+  const wd = DIAS[new Date(e.date + "T12:00:00Z").getUTCDay()];
+  return `${wd} ${d(e.date)} de ${MESES[+e.date.slice(5, 7) - 1]}`;
+}
+
+/* ============ 5. Portada de la tarjeta ============
+   Con foto (campo photo en data.js): la foto. Sin foto: un degradé con el color de la categoría,
+   en una posición distinta para cada evento. El grano y la sombra los pone tarjetas.css. */
+const coverHtml = e => e.photo
+  ? `<div class="cover"><img src="${esc(e.photo)}" alt="" loading="lazy" decoding="async"></div>`
+  : '<div class="cover gen"></div>';
+
+const coverStyle = e => { const h = hashOf(e.title); return `--gx:${18 + h % 64}%;--gy:${12 + (h >> 4) % 50}%`; };
+
+/* ============ 6. Tarjeta de la grilla ============
+   Estructura: .cover + .k-top [.k-date, .k-cat] + .k-bottom [.k-feat?, h3, .k-meta, .k-go]
+   Al tocarla se abre el detalle (detalle.js). Los links y botones viven adentro del detalle. */
 function cardEl(e) {
   const card = document.createElement("article");
-  card.className = "card" + (e.featured ? " top" : "") + (e.photo ? " has-photo" : "");
-  card.style.setProperty("--c", CATS[e.cat]);
-  /* Foto de fondo (campo photo en data.js). Se pasa con ruta completa porque una url() dentro de una
-     variable CSS se resuelve desde la carpeta css/, no desde la página. */
-  if (e.photo) card.style.setProperty("--photo", `url("${new URL(e.photo, document.baseURI).href}")`);
+  card.className = "card" + (e.featured ? " top" : "");
+  card.dataset.id = slugOf(e);
+  card.tabIndex = 0;
+  card.setAttribute("role", "button");
+  card.setAttribute("aria-haspopup", "dialog");
+  card.setAttribute("aria-label", `${e.title}, ${longDate(e)}. Ver detalles`);
+  card.style.cssText = `--c:${CATS[e.cat]};${coverStyle(e)}`;
   card.innerHTML = `
-    <div class="band"></div>
-    <div class="body">
-      <div class="card-head">
-        ${dateHtml(e)}
-        <span class="tag">${esc(e.cat)}${e.featured ? '<span class="feat">Destacado</span>' : ""}</span>
-      </div>
+    ${coverHtml(e)}
+    <div class="k-top">
+      <div class="k-date"><b>${dayLabel(e)}</b><small>${monthLabel(e)}</small></div>
+      <span class="k-cat"><i></i>${esc(e.cat)}</span>
+    </div>
+    <div class="k-bottom">
+      ${e.featured ? `<span class="k-feat">${ico("star")}Featured</span>` : ""}
       <h3>${esc(e.title)}</h3>
-      ${embedHtml(e)}
-      <p>${esc(e.desc)}</p>
-      <div class="card-foot">
-        <div class="foot-row">${whenHtml(e)}${contactHtml(e)}</div>
-        ${whereHtml(e)}
+      <div class="k-row">
+        <ul class="k-meta">
+          <li><span class="k-ic">${ico("clock")}</span><span>${esc(timeLabel(e))}</span></li>
+          <li><span class="k-ic">${ico("pin")}</span><span class="k-place">${esc(e.place)}</span></li>
+        </ul>
+        <span class="k-go" aria-hidden="true">${ico("arrow")}</span>
       </div>
     </div>`;
   return card;

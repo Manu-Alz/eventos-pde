@@ -1,12 +1,17 @@
-/* eventos.css · home: hero, buscador, filtros, grilla de tarjetas cuadradas
+/* eventos.css · home: hero, buscador, filtros y piezas reutilizables
    (el calendario está en calendario.css y la portada en portada.css) */
 
 /* 1. Hero, buscador, filtros y barra de vista */
-.hero{padding:20px 0 28px}
-.hero h1{font-size:clamp(38px,9.4vw,92px);font-weight:800;letter-spacing:-.03em;max-width:12ch;text-wrap:balance}
-.hero p{font-size:clamp(16px,4.4vw,19px);color:var(--muted);max-width:46ch;margin:14px 0 0}
-.search{margin-bottom:18px}
-.search input{display:block;width:100%;min-height:48px;font:inherit;padding:12px 18px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);-webkit-appearance:none;appearance:none}
+.hero{padding:clamp(26px,7vw,76px) 0 clamp(26px,5vw,48px)}
+.hero-pill{display:inline-flex;align-items:center;gap:9px;margin:0 0 clamp(16px,3vw,26px);padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--glass);font-size:13px;font-weight:500;color:rgba(255,255,255,.82)}
+.hero-pill i{width:7px;height:7px;border-radius:50%;background:#46d9a0;box-shadow:0 0 0 4px rgba(70,217,160,.16)}
+.hero h1{font-size:clamp(42px,11.6vw,108px);font-weight:600;line-height:.96;letter-spacing:-.045em;max-width:13ch;text-wrap:balance}
+.hero p:not(.hero-pill){font-size:clamp(16px,4.4vw,19px);line-height:1.55;color:var(--muted);max-width:46ch;margin:clamp(16px,3vw,26px) 0 0}
+.search{position:relative;margin-bottom:16px}
+.search input{display:block;width:100%;min-height:52px;font:inherit;padding:12px 20px 12px 52px;border-radius:999px;border:1px solid var(--line);color:var(--ink);-webkit-appearance:none;appearance:none;
+  background:var(--glass) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239a9aa4' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M20 20l-3.5-3.5'/%3E%3C/svg%3E") no-repeat 19px center/20px;
+  transition:border-color .25s,background-color .25s}
+.search input:focus{outline:0;border-color:rgba(255,255,255,.4);background-color:var(--glass-hover)}
 .search input::placeholder{color:var(--muted)}
 .chips{display:flex;gap:8px;overflow-x:auto;margin:0 calc(-1 * var(--gutter));padding:4px var(--gutter) 14px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
@@ -14,64 +19,24 @@
 .chip-cal .ico{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 /* Escritorio: los filtros pasan a la línea siguiente en vez de cortarse */
 @media (min-width:700px){.chips{flex-wrap:wrap;overflow:visible;margin:0;padding:4px 0 14px}}
-.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:2px 0 16px}
+.toolbar{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:clamp(20px,5vw,44px) 0 18px}
+.toolbar h2{font-size:clamp(34px,8vw,60px);font-weight:600;letter-spacing:-.045em;line-height:1}
 .count{margin:0;color:var(--muted);font-size:14px;white-space:nowrap}
 .empty{padding:40px 0;color:var(--muted)}
 
-/* 2. Grilla y tarjeta cuadrada
-   Estructura: .band + .body > [.card-head, h3, .ref?, p, .card-foot]
-   Ajustes rápidos (cambiá los valores acá y se aplican a todas las tarjetas): */
-:root{
-  --grid-min:290px;      /* ancho mínimo de columna: define cuántas tarjetas entran por fila */
-  --grid-gap:18px;       /* espacio entre tarjetas */
-  --card-radius:18px;    /* redondeo */
-  --card-pad:18px 20px;  /* aire interno: arriba/abajo  izquierda/derecha */
-  --card-gap:10px;       /* separación entre bloques de la tarjeta */
-  --card-title:21px;     /* tamaño del título */
-  --card-text:15px;      /* tamaño de la descripción */
-}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(var(--grid-min),1fr));gap:var(--grid-gap)}
-.card{position:relative;aspect-ratio:1/1;align-self:start;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--card-radius)}
-.card .band{flex:none;height:8px;background:var(--c);border-radius:calc(var(--card-radius) - 1px) calc(var(--card-radius) - 1px) 0 0}
-.card .body{flex:1;min-height:0;display:flex;flex-direction:column;gap:var(--card-gap);padding:var(--card-pad)}
-.card .body>*{flex:none}
-.card-head{display:flex;align-items:center;gap:10px}
-.card-foot{margin-top:auto;display:grid;gap:8px}
-.foot-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.card h3{font-size:var(--card-title);line-height:1.14}
-.card p{margin:0;color:var(--muted);font-size:var(--card-text);line-height:1.45}
-.card h3,.card p{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;-webkit-line-clamp:2;line-clamp:2}
-.card .body:not(:has(.ref)) p{-webkit-line-clamp:3;line-clamp:3}
-
+/* 2. Fecha y etiqueta (las usan la portada y el calendario; la grilla tiene las suyas en tarjetas.css) */
 .date{display:inline-flex;align-items:baseline;gap:6px;padding:6px 12px;border-radius:12px;background:var(--ref-glass);box-shadow:inset 0 0 0 1px var(--ref-glass-line)}   /* vidrio, igual que el botón de link (variables en la sección 3) */
 .date b{font:800 21px/1 'Bricolage Grotesque',sans-serif}
 .date small{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
 .tag{font-size:13px;font-weight:700;color:var(--c);white-space:nowrap}
-.feat{font-size:12px;font-weight:700;background:var(--c);color:#000;border-radius:6px;padding:2px 7px;margin-left:10px}
-
-/* 2b. Foto de fondo (opcional): campo photo del evento en data.js.
-   Es una capa propia (::before) detrás del contenido, con un velo oscuro encima para que el texto se lea siempre.
-   No toca el fondo de la tarjeta, así que funciona igual en las normales y en las destacadas.
-   Ajustes rápidos: */
-:root{
-  --photo-veil-top:0.93;     /* opacidad del velo arriba, lo más oscuro (0 = foto pura, 1 = sin foto) */
-  --photo-veil-bottom:.70;  /* opacidad del velo abajo, más claro para que se vea la foto */
-}
-.card.has-photo{overflow:hidden}
-.card.has-photo::before{content:"";position:absolute;inset:0;pointer-events:none;
-  background:
-    linear-gradient(180deg,color-mix(in srgb,var(--surface) calc(var(--photo-veil-top)*100%),transparent),color-mix(in srgb,var(--surface) calc(var(--photo-veil-bottom)*100%),transparent)),
-    var(--photo) center/cover no-repeat}
-.card.has-photo>*{position:relative}   /* contenido por encima de la foto */
-.card.has-photo .band{border-radius:0}
 
 /* 3. Piezas reutilizables: hora/lugar, contacto, embed de entradas */
 .meta{display:grid;gap:4px}
 .when,.where{display:flex;align-items:center;gap:8px;min-width:0;font-size:14px}
-.when .ico,.where .ico{color:var(--c)}
+.when .ico,.where .ico{color:rgba(255,255,255,.85)}   /* íconos neutros: el color de la categoría vive solo en el punto de la etiqueta */
 .place{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.maplink{color:inherit;text-decoration:underline;text-decoration-color:var(--c);text-underline-offset:3px}
-.maplink:hover{color:var(--c)}
+.maplink{color:inherit;text-decoration:underline;text-decoration-color:rgba(255,255,255,.4);text-underline-offset:3px}
+.maplink:hover{text-decoration-color:currentColor}
 .contact{display:inline-flex;align-items:center;font-size:14px;font-weight:700;text-decoration:none;color:var(--ink);border:1.5px solid rgba(255,255,255,.22);border-radius:999px;padding:5px 14px;background:rgba(255,255,255,.12)}
 .contact:hover{background:rgba(255, 255, 255, 0.021);border-color:var(--c)}
 :root{
@@ -81,30 +46,8 @@
 }
 .ref{display:flex;align-items:center;gap:10px;padding:7px 10px;border:1px solid var(--ref-glass-line);border-radius:12px;background:var(--ref-glass);text-decoration:none;min-width:0}
 .ref:hover{background:var(--ref-glass-hover);border-color:var(--c)}
-.ref .ri{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 24%,transparent);color:var(--c)}
+.ref .ri{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;line-height:0;background:rgba(255,255,255,.1);color:#fff}
+.ref .ri .ico{display:block;width:16px;height:16px}
 .ref .rt{min-width:0;display:flex;flex-direction:column;line-height:1.25}
 .ref b{font-size:14px}
 .ref small{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-/* 4. Destacados: marco de platino con un destello de luz que le da la vuelta
-   El efecto vive solo en el borde, así que no tapa la foto ni el texto (con o sin foto se ve igual).
-   Ajustes rápidos: */
-:root{
-  --chrome:linear-gradient(135deg,#f2f5f9 0%,#9aa5b4 22%,#e9edf2 42%,#7b8696 62%,#dfe4ea 82%,#aab4c2 100%);  /* etiqueta "Destacado" */
-  --top-frame:3px;            /* grosor del marco */
-  --top-glow:.34;             /* resplandor de afuera (0 = ninguno) */
-  --top-spin:7s;              /* lo que tarda el destello en dar la vuelta */
-  --metal-dark:#333b49;       /* tono más oscuro del metal (el punto mínimo de la luz) */
-  --metal-dim:#56606f;        /* tono oscuro del segundo destello */
-  --metal-mid:#9aa5b4;        /* tono medio */
-}
-@property --spin{syntax:"<angle>";inherits:false;initial-value:0deg}   /* permite animar el ángulo */
-@keyframes top-spin{to{--spin:360deg}}
-.card.top{border:var(--top-frame) solid transparent;
-  background:
-    linear-gradient(var(--surface),var(--surface)) padding-box,
-    conic-gradient(from var(--spin),var(--metal-dark) 0deg,var(--metal-mid) 50deg,#ffffff 85deg,var(--metal-mid) 120deg,var(--metal-dark) 175deg,var(--metal-dim) 250deg,#d5dbe4 285deg,var(--metal-dark) 330deg,var(--metal-dark) 360deg) border-box;
-  box-shadow:0 0 26px -6px rgba(205,218,235,var(--top-glow));
-  animation:top-spin var(--top-spin) linear infinite}
-.card.top .band{height:5px;background:none}   /* la franja de arriba queda vacía: el marco giratorio ya cumple esa función */
-.card.top .feat{background:var(--chrome);color:#12141a;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}

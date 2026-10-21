@@ -85,5 +85,9 @@ function render() {
 /* ============ 6. Inicio ============ */
 $("q").addEventListener("input", render);
 
+/* Etiqueta del hero: cuántos eventos hay en agenda */
+const heroLive = $("hero-live");
+if (heroLive) heroLive.textContent = `${LIVE.length} ${LIVE.length === 1 ? "evento" : "eventos"} en agenda`;
+
 renderHot(LIVE);
 render();

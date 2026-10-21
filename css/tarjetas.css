@@ -1,0 +1,84 @@
+/* tarjetas.css · grilla y tarjetas del home
+   Estructura de la tarjeta: .cover (foto o degradé) + .k-top [.k-date, .k-cat] + .k-bottom [.k-feat?, h3, .k-row]
+   Al tocar una tarjeta se abre el detalle (detalle.css / detalle.js).
+   Índice: 1 Ajustes rápidos · 2 Grilla y tarjeta · 3 Portada (foto o generada) · 4 Contenido · 5 Featured */
+
+/* 1. Ajustes rápidos: cambiá los valores acá y se aplican a todas las tarjetas */
+:root{
+  --grid-min:290px;            /* ancho mínimo de columna: define cuántas tarjetas entran por fila */
+  --grid-gap:16px;             /* espacio entre tarjetas */
+  --card-ratio:4/5;            /* proporción (ancho/alto) */
+  --card-radius:28px;          /* redondeo */
+  --card-pad:18px;             /* aire interno */
+  --card-border:rgba(255,255,255,.13);
+  --card-title:clamp(22px,6.2vw,27px);
+  --zoom:1.09;                 /* cuánto crece la imagen al pasar el mouse (1 = nada) */
+
+  --grain-opacity:.55;         /* intensidad del grano sobre las portadas (0 = sin grano) */
+  --scrim:.9;                  /* oscuridad de abajo, donde va el texto (0 a 1) */
+
+  /* Grano: ruido fino generado, se repite como mosaico */
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.6 -.35'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* 2. Grilla y tarjeta */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(var(--grid-min),1fr));gap:var(--grid-gap)}
+.card{position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;
+  aspect-ratio:var(--card-ratio);padding:var(--card-pad);border-radius:var(--card-radius);
+  border:1px solid var(--card-border);background:#0b0b0e;color:var(--ink);cursor:pointer;
+  transition:transform .5s var(--ease),border-color .3s}
+.card:active{transform:scale(.985)}
+.card:focus-visible{outline:2px solid #fff;outline-offset:3px}
+@media (hover:hover){
+  .card:hover{border-color:rgba(255,255,255,.34)}
+  .card:hover .cover img{transform:scale(var(--zoom))}
+  .card:hover .cover.gen{background-size:calc(100% * var(--zoom)) calc(100% * var(--zoom)),calc(100% * var(--zoom)) calc(100% * var(--zoom)),auto}
+  .card:hover .k-go{background:#F4F4F5;color:#08080a;transform:rotate(45deg)}
+}
+
+/* 3. Portada: foto o degradé generado, con sombra abajo y grano arriba de todo */
+.cover{position:absolute;inset:0;z-index:-1;overflow:hidden;background:#0b0b0e}
+.cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.02);transition:transform .9s var(--ease)}
+.cover.gen{background:
+  radial-gradient(80% 70% at var(--gx) var(--gy),color-mix(in srgb,var(--c) 82%,#000) 0%,transparent 72%) center/100% 100% no-repeat,
+  radial-gradient(70% 60% at calc(100% - var(--gx)) calc(100% - var(--gy)),color-mix(in srgb,color-mix(in srgb,var(--c) 45%,var(--sun)) 60%,#000) 0%,transparent 75%) center/100% 100% no-repeat,
+  #0b0b0e;
+  transition:background-size .9s var(--ease)}
+.cover::before{content:"";position:absolute;inset:0;z-index:1;   /* sombra: más oscura abajo para que el texto se lea */
+  background:linear-gradient(to top,rgba(5,5,8,var(--scrim)) 0%,rgba(5,5,8,calc(var(--scrim)*.55)) 42%,rgba(5,5,8,.12) 78%,rgba(5,5,8,.3) 100%)}
+.cover::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;   /* grano */
+  background:var(--grain);background-size:180px;mix-blend-mode:overlay;opacity:var(--grain-opacity)}
+
+/* 4. Contenido */
+.k-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.k-date,.k-cat{backdrop-filter:blur(12px) saturate(1.3);-webkit-backdrop-filter:blur(12px) saturate(1.3);
+  background:rgba(10,10,14,.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+.k-date{display:inline-flex;align-items:baseline;gap:6px;padding:8px 13px;border-radius:16px}
+.k-date b{font:700 24px/1 'Bricolage Grotesque',sans-serif}
+.k-date small{font-size:13px;font-weight:500;color:rgba(255,255,255,.72);text-transform:uppercase;letter-spacing:.07em}
+.k-cat{display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border-radius:999px;font-size:13px;font-weight:700;white-space:nowrap}
+.k-cat i{width:9px;height:9px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c)}   /* el color de la categoría vive solo acá */
+
+.k-bottom{display:grid;gap:12px}
+.card h3{font-size:var(--card-title);font-weight:600;line-height:1.05;letter-spacing:-.025em;text-wrap:balance;
+  display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;-webkit-line-clamp:3;line-clamp:3}
+.k-row{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.k-meta{list-style:none;margin:0;padding:0;display:grid;gap:8px;min-width:0}
+.k-meta li{display:flex;align-items:center;gap:10px;min-width:0;font-size:14px;color:rgba(255,255,255,.88)}
+.k-place{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Íconos: neutros (blanco sobre vidrio). Tamaños pares para que queden exactamente centrados */
+.k-ic{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;line-height:0;color:#fff;
+  background:rgba(255,255,255,.1);box-shadow:inset 0 0 0 1px rgba(255,255,255,.16)}
+.k-ic .ico{display:block;width:16px;height:16px}
+.k-go{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;line-height:0;
+  background:rgba(255,255,255,.12);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  transition:transform .5s var(--ease),background .3s,color .3s}
+.k-go .ico{display:block;width:20px;height:20px}
+
+/* 5. Featured: sin bordes ni brillos. Se reconoce por la etiqueta de platino con estrella,
+   y porque va siempre primero en la lista. */
+:root{--chrome:linear-gradient(135deg,#f2f5f9 0%,#aab4c2 30%,#eef1f5 55%,#8b96a6 80%,#dfe4ea 100%)}
+.k-feat{justify-self:start;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:.02em;color:#12141a;
+  background:var(--chrome);border-radius:999px;padding:5px 11px 5px 9px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.4)}
+.k-feat .ico{width:13px;height:13px;fill:currentColor;stroke:none}
+.card.top{border-color:rgba(255,255,255,.26)}

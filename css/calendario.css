@@ -4,12 +4,12 @@
 :root{
   --cal-gap:4px;          /* espacio entre días */
   --cal-min-h:112px;      /* alto mínimo de un día en pantallas anchas */
-  --cal-radius:12px
+  --cal-radius:18px
 }
 
 /* 1. Cabecera: mes y navegación */
 .calhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
-.calhead h2{font-size:clamp(26px,5vw,38px);text-transform:capitalize}
+.calhead h2{font-size:clamp(30px,6vw,46px);font-weight:600;letter-spacing:-.04em;text-transform:capitalize}
 .calsub{margin:4px 0 0;color:var(--muted);font-size:14px}
 .calnav{display:flex;gap:8px}
 .calnav .chip{width:var(--tap);padding:0;font-size:20px}
@@ -18,11 +18,11 @@
 .cgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:var(--cal-gap)}
 .cw{text-align:center;font-size:13px;color:var(--muted);padding:4px 0}
 .cd{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:6px;min-width:0;min-height:var(--cal-min-h);padding:8px 6px 6px;text-align:left;cursor:pointer;
-  border-radius:var(--cal-radius);border:1px solid var(--line);background:var(--surface);color:var(--ink);font:500 15px 'DM Sans',sans-serif}
+  border-radius:var(--cal-radius);border:1px solid var(--line);background:var(--glass);color:var(--ink);font:500 15px 'DM Sans',sans-serif}
 .cd.off{visibility:hidden}
 .cd:disabled{cursor:default;color:var(--muted)}
 .cd.past{opacity:.55}
-.cd.has{border-color:var(--muted)}
+.cd.has{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.075)}
 .cd.has .cd-num{font-weight:700}
 .cd.today{outline:2px solid var(--sea);outline-offset:-1px;opacity:1}
 .cd[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
@@ -50,7 +50,7 @@
 /* 6. Lista de eventos del día o del mes */
 .calbelow{margin-top:24px;scroll-margin-top:12px}
 .calbelow-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
-.calbelow h3{font-size:22px}
+.calbelow h3{font-size:clamp(24px,5vw,32px);font-weight:600;letter-spacing:-.03em}
 
 /* 7. Celulares: días cuadrados con puntos */
 @media (max-width:700px){

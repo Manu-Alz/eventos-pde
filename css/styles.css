@@ -2,12 +2,24 @@
    Pensada para celular primero: áreas táctiles de 44px, márgenes seguros del iPhone (notch y barra inferior). */
 
 /* 1. Tokens y reset */
-:root{color-scheme:dark;--bg:#000;--surface:#0E0E11;--ink:#F4F4F5;--muted:#9C9CA6;--line:#26262C;--sea:#4CC3DB;--sun:#7C4DFF;--on-sun:#fff;
+:root{color-scheme:dark;
+  --bg:#08080a;                       /* fondo: negro suave, deja ver el grano y los bordes */
+  --surface:#111115;                  /* tarjetas y cajas */
+  --ink:#F4F4F5;--muted:#9a9aa4;
+  --line:rgba(255,255,255,.11);       /* bordes finos translúcidos */
+  --glass:rgba(255,255,255,.05);      /* fondo de vidrio: chips, buscador, botones */
+  --glass-hover:rgba(255,255,255,.09);
+  --sea:#4CC3DB;--sun:#7C4DFF;--on-sun:#fff;
+  --grain-page:.05;                   /* grano sobre toda la página (0 = sin grano) */
+  --ease:cubic-bezier(.2,.8,.2,1);
   --gutter:20px;     /* margen lateral de la página */
   --tap:44px}        /* alto mínimo de un botón táctil */
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{margin:0;padding-top:env(safe-area-inset-top,0px);background:var(--bg);color:var(--ink);font:400 16px/1.55 'DM Sans',system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+/* Grano fino sobre toda la página: unifica el fondo con las portadas de las tarjetas */
+body::before{content:"";position:fixed;inset:0;z-index:90;pointer-events:none;opacity:var(--grain-page);
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.6 -.35'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 h1,h2,h3{font-family:'Bricolage Grotesque','DM Sans',system-ui,sans-serif;line-height:1.05;margin:0}
 a{color:inherit}
 button{touch-action:manipulation}
@@ -16,17 +28,22 @@ button{touch-action:manipulation}
 
 /* 2. Layout y cabecera */
 .wrap{max-width:1080px;margin:0 auto;padding:0 max(var(--gutter),env(safe-area-inset-right)) 0 max(var(--gutter),env(safe-area-inset-left))}
-header.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0}
-.logo{font:800 22px 'Bricolage Grotesque',sans-serif;text-decoration:none;letter-spacing:-.01em;white-space:nowrap}
+header.top{position:sticky;top:0;z-index:30;display:flex;justify-content:space-between;align-items:center;gap:12px;
+  margin:0 calc(-1 * var(--gutter));padding:12px var(--gutter);
+  background:rgba(8,8,10,.82);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4)}
+.logo{font:700 22px 'Bricolage Grotesque',sans-serif;text-decoration:none;letter-spacing:-.01em;white-space:nowrap}
 .logo span{color:var(--sun)}
 .hact{display:flex;gap:8px;align-items:center}
-.hact .btn{padding:10px 18px;font-size:14px}
+.hact .btn{padding:10px 20px;font-size:14px}
+.hact .btn:not(.ghost){background:#F4F4F5;color:#08080a}      /* botón blanco, como las referencias */
+.hact .btn.ghost{background:var(--glass)}
 
 /* 3. Botones, chips e íconos */
 .btn{display:inline-flex;align-items:center;justify-content:center;min-height:var(--tap);border:0;border-radius:999px;background:var(--sun);color:var(--on-sun);font:700 15px 'DM Sans',sans-serif;padding:11px 20px;cursor:pointer;text-decoration:none;text-align:center}
-.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
-.chip{flex:none;display:inline-flex;align-items:center;justify-content:center;min-height:var(--tap);font:500 15px 'DM Sans',sans-serif;padding:8px 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.chip{flex:none;display:inline-flex;align-items:center;justify-content:center;min-height:var(--tap);font:500 15px 'DM Sans',sans-serif;padding:8px 18px;border-radius:999px;border:1px solid var(--line);background:var(--glass);color:var(--ink);cursor:pointer;transition:background .25s,border-color .25s,color .25s}
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+@media (hover:hover){.chip:not([aria-pressed="true"]):not(:disabled):hover{background:var(--glass-hover);border-color:rgba(255,255,255,.25)}}
 .chip:disabled{opacity:.35;cursor:default}
 .btn:active,.chip:active{opacity:.8}
 .ico{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -37,8 +54,8 @@ footer{padding:28px 0 max(36px,calc(env(safe-area-inset-bottom) + 20px));color:v
 .foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px 24px;margin-top:40px}
 .foot-info{display:flex;flex-wrap:wrap;gap:2px 14px;margin:0;line-height:1.5}
 .foot-links{display:flex;flex-wrap:wrap;gap:10px}
-.foot a{display:inline-flex;align-items:center;gap:6px;min-height:var(--tap);padding:8px 18px;border:1.5px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font-weight:500;text-decoration:none;transition:border-color .2s}
-.foot a:hover{border-color:var(--ink)}
+.foot a{display:inline-flex;align-items:center;gap:6px;min-height:var(--tap);padding:8px 18px;border:1px solid var(--line);border-radius:999px;background:var(--glass);color:var(--ink);font-weight:500;text-decoration:none;transition:border-color .2s,background .2s}
+.foot a:hover{border-color:rgba(255,255,255,.35);background:var(--glass-hover)}
 @media (max-width:600px){
   .foot{flex-direction:column;align-items:stretch;gap:16px}
   .foot-info{flex-direction:column;gap:2px}
