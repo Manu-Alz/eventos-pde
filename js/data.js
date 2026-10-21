@@ -228,6 +228,13 @@ const EV = [
     portada: true
   },
   {
+    title: "2Fancy: Halloween Edition",
+    cat: "Fiestas", date: "2026-10-31", time: "A confirmar",
+    place: "OAK, Punta del Este",
+    desc: "Fiesta 2Fancy en su edición de Halloween: sábado 31 de octubre en OAK, Punta del Este. Hora a confirmar con la organización.",
+    photo: "2fancy-oak.webp"
+  },
+  {
     title: "Sensation Punta del Este",
     cat: "Fiestas", date: "2026-12-31", time: "23:59",
     place: "Ruta 104 km 3,5, Punta del Este",
