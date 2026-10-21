@@ -54,8 +54,8 @@
    No toca el fondo de la tarjeta, así que funciona igual en las normales y en las destacadas.
    Ajustes rápidos: */
 :root{
-  --photo-veil-top:.60;     /* opacidad del velo arriba (0 = foto pura, 1 = sin foto) */
-  --photo-veil-bottom:.90;  /* opacidad del velo abajo, donde van la hora y el lugar */
+  --photo-veil-top:.74;     /* opacidad del velo arriba (0 = foto pura, 1 = sin foto) */
+  --photo-veil-bottom:.93;  /* opacidad del velo abajo, donde van la hora y el lugar */
 }
 .card.has-photo{overflow:hidden}
 .card.has-photo::before{content:"";position:absolute;inset:0;pointer-events:none;
@@ -81,12 +81,26 @@
 .ref b{font-size:14px}
 .ref small{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* 4. Destacados: platinado cromado (arriba-izquierda a abajo-derecha) */
-:root{--chrome:linear-gradient(135deg,#f2f5f9 0%,#9aa5b4 22%,#e9edf2 42%,#7b8696 62%,#dfe4ea 82%,#aab4c2 100%)}
-.card.top{border:1.5px solid transparent;
-  background:linear-gradient(135deg,rgba(255,255,255,.15) 0%,rgba(255,255,255,.02) 45%,rgba(190,205,225,.12) 100%) padding-box,linear-gradient(var(--surface),var(--surface)) padding-box,var(--chrome) border-box}
-.card.top .band{height:10px;background:var(--chrome)}
-.card.top::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.07) 45%,transparent 60%)}
+/* 4. Destacados: marco de platino con un destello de luz que le da la vuelta
+   El efecto vive solo en el borde, así que no tapa la foto ni el texto (con o sin foto se ve igual).
+   Ajustes rápidos: */
+:root{
+  --chrome:linear-gradient(135deg,#f2f5f9 0%,#9aa5b4 22%,#e9edf2 42%,#7b8696 62%,#dfe4ea 82%,#aab4c2 100%);  /* etiqueta, banda y botones */
+  --top-frame:3px;            /* grosor del marco */
+  --top-glow:.34;             /* resplandor de afuera (0 = ninguno) */
+  --top-spin:7s;              /* lo que tarda el destello en dar la vuelta */
+  --metal-dark:#5b6676;       /* tono oscuro del metal */
+  --metal-mid:#9aa5b4;        /* tono medio */
+}
+@property --spin{syntax:"<angle>";inherits:false;initial-value:0deg}   /* permite animar el ángulo */
+@keyframes top-spin{to{--spin:360deg}}
+.card.top{border:var(--top-frame) solid transparent;
+  background:
+    linear-gradient(var(--surface),var(--surface)) padding-box,
+    conic-gradient(from var(--spin),var(--metal-dark) 0deg,var(--metal-mid) 50deg,#ffffff 85deg,var(--metal-mid) 120deg,var(--metal-dark) 175deg,#7f8a9a 250deg,#d5dbe4 285deg,var(--metal-dark) 330deg,var(--metal-dark) 360deg) border-box;
+  box-shadow:0 0 26px -6px rgba(205,218,235,var(--top-glow));
+  animation:top-spin var(--top-spin) linear infinite}
+.card.top .band{height:5px;background:none}   /* la franja de arriba queda vacía: el marco giratorio ya cumple esa función */
 .card.top .feat{background:var(--chrome);color:#12141a;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
 .card.top .date{background:linear-gradient(135deg,#1b1d23,#0a0a0c);box-shadow:inset 0 0 0 1px rgba(200,212,228,.28)}
 
