@@ -33,7 +33,7 @@ const EV = [
      se completan con cada organización antes de publicar. Categorías sin eventos: sumá los tuyos. */
   {
     title: "Solomun en Open Park",
-    cat: "Fiestas", date: "2026-12-29", time: "A confirmar",
+    cat: "Fiestas", date: "2026-12-29", time: "23:59",
     place: "Open Park, El Placer (puente de La Barra)",
     desc: "Deep y tech house de Solomun en la carpa de Open Park: una de las fechas fuertes del cierre de 2026.",
     tickets: "https://allmusicparties.com/es/evento/solomun-en-open-park-punta-del-este",
@@ -45,6 +45,7 @@ const EV = [
     cat: "Fiestas", date: "2026-12-31", time: "A confirmar",
     place: "Cipriani, Punta del Este",
     desc: "Black Coffee recibe el 2027 en Cipriani.",
+    photo: "img/eventos/blackcoffee.png",
     featured: true
   },
   {
@@ -59,13 +60,15 @@ const EV = [
     cat: "Fiestas", date: "2026-12-31", time: "A confirmar",
     place: "Polo Medellín, Punta del Este",
     desc: "Año Nuevo con Hot Since 82 en Polo Medellín.",
+    photo: "img/eventos/hotsince.jpeg",
     featured: true
   },
   {
     title: "Music On: Marco Carola & More",
-    cat: "Fiestas", date: "2027-01-02", time: "A confirmar",
+    cat: "Fiestas", date: "2027-01-02", time: "23:00",
     place: "Open Park, El Placer",
     desc: "Marco Carola trae Music On a Open Park para arrancar enero.",
+    photo: "img/eventos/musiconmarcocarola.jpeg",
     featured: true
   },
   {
@@ -91,7 +94,7 @@ const EV = [
   },
   {
     title: "Blavicio en Open Park",
-    cat: "Fiestas", date: "2026-12-28", time: "A confirmar",
+    cat: "Fiestas", date: "2026-12-28", time: "23:59",
     place: "Open Park, El Placer",
     desc: "Primera fecha de Blavicio en Open Park esta temporada."
   },
@@ -115,19 +118,19 @@ const EV = [
   },
   {
     title: "Adriatique en MACA",
-    cat: "Fiestas", date: "2027-01-03", time: "A confirmar",
+    cat: "Fiestas", date: "2027-01-03", time: "16:00",
     place: "MACA, Punta del Este",
     desc: "El dúo suizo de melodic house y techno llega a MACA."
   },
   {
     title: "Miss Monique en Open Park",
-    cat: "Fiestas", date: "2027-01-04", time: "A confirmar",
+    cat: "Fiestas", date: "2027-01-04", time: "23:00",
     place: "Open Park, El Placer",
     desc: "Progressive y melodic techno con Miss Monique."
   },
   {
     title: "Chris Stussy en Open Park",
-    cat: "Fiestas", date: "2027-01-09", time: "A confirmar",
+    cat: "Fiestas", date: "2027-01-09", time: "23:00",
     place: "Open Park, El Placer",
     desc: "House de Chris Stussy en la carpa de Open Park."
   },
@@ -180,9 +183,9 @@ const EV = [
   },
   {
     title: "Pawsa",
-    cat: "Fiestas", date: "2026-11-20", time: "A confirmar",
+    cat: "Fiestas", date: "2026-11-20", time: "22:00",
     place: "Punta del Este (a confirmar)",
-    desc: "Noche con Pawsa en Punta del Este. Lugar y hora a confirmar.",
+    desc: "Noche con Pawsa en Punta del Este. Lugar a confirmar.",
     contact: "https://instagram.com/pawsaofficial"
   },
   {
@@ -194,24 +197,26 @@ const EV = [
   },
   {
     title: "Sensation Punta del Este",
-    cat: "Fiestas", date: "2026-12-31", time: "A confirmar",
-    place: "Punta del Este (a confirmar)",
-    desc: "Fiesta de Año Nuevo para recibir el 2027. Lugar y hora a confirmar.",
+    cat: "Fiestas", date: "2026-12-31", time: "23:59",
+    place: "Ruta 104 km 3,5, Punta del Este",
+    map: "https://www.google.com/maps/search/?api=1&query=-34.870806,-54.819389",
+    desc: "Fiesta de Año Nuevo para recibir el 2027.",
     contact: "https://instagram.com/sensation_pde",
+    photo: "img/eventos/sensacion.jpeg",
     featured: true
   },
   {
     title: "Volvé Mi Negra",
-    cat: "Fiestas", date: "2027-01-02", time: "A confirmar",
+    cat: "Fiestas", date: "2027-01-02", time: "23:59",
     place: "Punta del Este (a confirmar)",
-    desc: "Noche de fiesta en Punta del Este. Lugar y hora a confirmar.",
+    desc: "Noche de fiesta en Punta del Este. Lugar a confirmar.",
     contact: "https://instagram.com/volveminegra"
   },
   {
     title: "Argy",
-    cat: "Fiestas", date: "2027-01-15", time: "A confirmar",
-    place: "Punta del Este (a confirmar)",
-    desc: "Noche con Argy en Punta del Este. Lugar y hora a confirmar.",
+    cat: "Fiestas", date: "2027-01-15", time: "23:00",
+    place: "Open Park, El Placer",
+    desc: "Noche con Argy en Open Park.",
     contact: "https://instagram.com/argy"
   }
 ];
