@@ -185,18 +185,18 @@ function paypalPanel(plan, total, ref) {
   return [a, h("p", "note", `Escribí la referencia ${ref} en la nota del pago y después avisanos por WhatsApp o mail.`)];
 }
 
-/* Mercado Pago: link fijo por plan y días (CONFIG.mercadopago). Solo se ofrece si hay link para esa cantidad de días. */
-const mpUrl = (plan, days) => safeUrl(((CONFIG.mercadopago || {})[plan.name] || {})[days]);
-const mpDays = plan => Object.keys((CONFIG.mercadopago || {})[plan.name] || {}).filter(d => mpUrl(plan, d));
-function mpPanel(plan, days, total, ref) {
-  const url = mpUrl(plan, days);
-  const a = h("a", "btn", `Pagar US$ ${total} con Mercado Pago`);
+/* Mercado Pago: link de monto libre en pesos (CONFIG.mercadopago). Se muestra cuántos pesos escribir. */
+const MP = CONFIG.mercadopago || {};
+const mpOn = Boolean(safeUrl(MP.link)) && MP.uyuRate > 0;
+const pesos = usd => "$U " + Math.round(usd * MP.uyuRate).toLocaleString("es-UY");
+function mpPanel(plan, total, ref) {
+  const a = h("a", "btn", `Pagar ${pesos(total)} con Mercado Pago`);
   a.target = "_blank";
   a.rel = "noopener";
-  a.href = url;
+  a.href = safeUrl(MP.link);
   a.dataset.ev = "pago_mercadopago";
   a.dataset.c = plan.name;
-  return [a, h("p", "note", `Pagá con tarjeta, débito o efectivo. Después mandanos el comprobante con tu referencia ${ref}.`)];
+  return [a, h("p", "note", `Se abre Mercado Pago: escribí ${pesos(total)} (US$ ${total}) y pagá con tarjeta, débito o efectivo. Después mandanos el comprobante con tu referencia ${ref}.`)];
 }
 
 /* ============ 5. Aviso automático ============
@@ -221,7 +221,7 @@ form.addEventListener("submit", ev => {
   const start = data.start || todayIso();
   const ref = newRef();
   notifyRequest(plan, data, ref, total);
-  const methods = [mpUrl(plan, days) && "Mercado Pago", isSet(CONFIG.bank.cuenta) && "Depósito bancario", isSet(CONFIG.paypal) && "PayPal"].filter(Boolean);
+  const methods = [mpOn && "Mercado Pago", isSet(CONFIG.bank.cuenta) && "Depósito bancario", isSet(CONFIG.paypal) && "PayPal"].filter(Boolean);
 
   const tabs  = h("div", "paytabs");
   const panel = h("div", "pay");
@@ -232,7 +232,7 @@ form.addEventListener("submit", ev => {
 
   function showMethod(method) {
     panel.replaceChildren(...(method === "Depósito bancario" ? bankPanel(total, ref) : method === "PayPal" ? paypalPanel(plan, total, ref)
-      : method === "Mercado Pago" ? mpPanel(plan, days, total, ref) : []));
+      : method === "Mercado Pago" ? mpPanel(plan, total, ref) : []));
     tabs.querySelectorAll("button").forEach(t => t.setAttribute("aria-pressed", t.textContent === method));
     const msg = buildMessage(ref, method, plan, data);
     wa.href = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`;
@@ -255,9 +255,6 @@ form.addEventListener("submit", ev => {
       : methods.length === 1 ? [h("p", "", `Pagá por ${methods[0] === "Depósito bancario" ? "depósito bancario" : methods[0]}:`)]
       : [h("p", "note", "Te pasamos los datos de pago por WhatsApp o mail.")]),
     panel,
-    /* Mercado Pago tiene links para algunas duraciones: si eligió otra, se le avisa cuáles */
-    ...(!mpUrl(plan, days) && mpDays(plan).length
-      ? [h("p", "note", `Con ${mpDays(plan).join(", ").replace(/, (\d+)$/, " o $1")} días también podés pagar con Mercado Pago (tarjeta o débito).`)] : []),
     h("p", "", "Cuando pagues, mandanos el comprobante:"),
     h("div", "sendrow")
   );

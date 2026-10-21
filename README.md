@@ -62,7 +62,7 @@ Se cobra por día publicado y cada tramo sale más barato: `tiers: [[hastaElDía
 ## Cobro (manual)
 
 1. La persona elige plan, completa el formulario y recibe una referencia (`PDE-XXXXX`).
-2. Paga con Mercado Pago, depósito bancario o PayPal indicando la referencia. Mercado Pago usa un link de pago fijo por plan y días (`mercadopago` en `config.js`, para 1, 3, 7, 14 y 30 días); un link vacío no se ofrece.
+2. Paga con Mercado Pago, depósito bancario o PayPal indicando la referencia. Mercado Pago usa tu link de monto libre (`mercadopago.link` en `config.js`): la web le dice a la persona cuántos pesos escribir, con la cotización `mercadopago.uyuRate`. Actualizá la cotización cuando cambie el dólar.
 3. Manda el comprobante por WhatsApp o mail (`eventospde.uy@gmail.com`).
 4. Verificás el pago, cargás el evento en `data.js` y subís el cambio.
 

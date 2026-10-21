@@ -10,12 +10,11 @@ const CONFIG = {
   ga:        "G-SC1Y8ZRB66",                // ID de Google Analytics 4. Sin ID no se carga nada.
   formUrl:   "https://script.google.com/macros/s/AKfycbw3bA6B-pJBWWmT8cY2v-Lf1zUcxGLNRvU6uYToSOMTkQf7eRKdO-oVnZnw9YQSQMFA/exec",                            // dirección de la aplicación web de Google (apps-script/Code.gs). Vacío = no se avisa solo
   paypal:    "TU_USUARIO_PAYPAL",           // lo que va después de paypal.me/
-  /* Mercado Pago: un link de pago (creado en tu cuenta, monto fijo) por plan y cantidad de días.
-     Los días son los de los botones rápidos del formulario. Link vacío = esa opción no se ofrece;
-     si alguien elige otra cantidad de días, se le ofrece depósito o pedir el link por WhatsApp. */
+  /* Mercado Pago: link de pago de monto libre (la persona escribe el monto, en pesos).
+     La web le muestra cuántos pesos poner: total en US$ × uyuRate. Sin link o sin cotización no se ofrece. */
   mercadopago: {
-    "Básico":  { 1: "", 3: "", 7: "", 14: "", 30: "" },   // US$ 6 · 15 · 27 · 41 · 73
-    "Portada": { 1: "", 3: "", 7: "", 14: "", 30: "" }    // US$ 30 · 72 · 120 · 176 · 304
+    link:    "https://link.mercadopago.com.uy/eventospde",
+    uyuRate: 42                             // cotización del dólar para Mercado Pago (actualizala cuando cambie)
   },
   bank: {
     titular: "EventosPDE",                  // nombre que se muestra en la tabla de depósito (vacío = no se muestra)
