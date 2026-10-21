@@ -177,7 +177,7 @@ form.addEventListener("submit", ev => {
   done.replaceChildren(
     h("p", "", `${CONFIG.formUrl ? `¡Recibimos “${data.title}”!` : `Armamos tu solicitud de “${data.title}”.`} Falta el pago de US$ ${total} (${data.weeks} ${Number(data.weeks) === 1 ? "semana" : "semanas"}) para publicarlo. Tu referencia es:`),
     h("div", "refcode", ref),
-    ...(plan.name === "Portada" ? [h("p", "note", "El Hot topic es un lugar único: antes de cobrarte confirmamos por WhatsApp o mail que tu fecha esté libre.")] : []),
+    ...(plan.name === "Portada" ? [h("p", "note", "La portada tiene lugares limitados: antes de cobrarte confirmamos por WhatsApp o mail que tu fecha esté libre.")] : []),
     /* Un solo método: se muestra directo, sin botón. Dos o más: botones para elegir. */
     ...(methods.length > 1 ? [h("p", "", "Elegí cómo pagar:"), tabs]
       : methods.length === 1 ? [h("p", "", `Pagá por ${methods[0] === "PayPal" ? "PayPal" : "depósito bancario"}:`)]

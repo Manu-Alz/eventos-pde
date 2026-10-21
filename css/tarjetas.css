@@ -1,7 +1,7 @@
 /* tarjetas.css · grilla y tarjetas del home
-   Estructura de la tarjeta: .cover (foto o degradé) + .k-top [.k-date, .k-cat] + .k-bottom [.k-feat?, h3, .k-row]
+   Estructura de la tarjeta: .cover (foto o degradé) + .k-top [.k-date, .k-cat] + .k-bottom [h3, .k-row]
    Al tocar una tarjeta se abre el detalle (detalle.css / detalle.js).
-   Índice: 1 Ajustes rápidos · 2 Grilla y tarjeta · 3 Portada (foto o generada) · 4 Contenido · 5 Featured */
+   Índice: 1 Ajustes rápidos · 2 Grilla y tarjeta · 3 Portada (foto o generada) · 4 Contenido */
 
 /* 1. Ajustes rápidos: cambiá los valores acá y se aplican a todas las tarjetas */
 :root{
@@ -10,7 +10,6 @@
   --card-ratio:4/5;            /* proporción (ancho/alto) */
   --card-radius:28px;          /* redondeo */
   --card-pad:18px;             /* aire interno */
-  --card-border:rgba(255,255,255,.13);
   --card-title:clamp(22px,6.2vw,27px);
   --zoom:1.09;                 /* cuánto crece la imagen al pasar el mouse (1 = nada) */
 
@@ -25,12 +24,11 @@
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(var(--grid-min),1fr));gap:var(--grid-gap)}
 .card{position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;
   aspect-ratio:var(--card-ratio);padding:var(--card-pad);border-radius:var(--card-radius);
-  border:1px solid var(--card-border);background:#0b0b0e;color:var(--ink);cursor:pointer;
-  transition:transform .5s var(--ease),border-color .3s}
+  background:#0b0b0e;box-shadow:0 22px 44px -26px rgba(0,0,0,.9);color:var(--ink);cursor:pointer;
+  transition:transform .5s var(--ease)}
 .card:active{transform:scale(.985)}
 .card:focus-visible{outline:2px solid #fff;outline-offset:3px}
 @media (hover:hover){
-  .card:hover{border-color:rgba(255,255,255,.34)}
   .card:hover .cover img{transform:scale(var(--zoom))}
   .card:hover .cover.gen{background-size:calc(100% * var(--zoom)) calc(100% * var(--zoom)),calc(100% * var(--zoom)) calc(100% * var(--zoom)),auto}
   .card:hover .k-go{background:#F4F4F5;color:#08080a;transform:rotate(45deg)}
@@ -39,10 +37,10 @@
 /* 3. Portada: foto o degradé generado, con sombra abajo y grano arriba de todo */
 .cover{position:absolute;inset:0;z-index:-1;overflow:hidden;background:#0b0b0e}
 .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.02);transition:transform .9s var(--ease)}
-.cover.gen{background:
-  radial-gradient(80% 70% at var(--gx) var(--gy),color-mix(in srgb,var(--c) 82%,#000) 0%,transparent 72%) center/100% 100% no-repeat,
-  radial-gradient(70% 60% at calc(100% - var(--gx)) calc(100% - var(--gy)),color-mix(in srgb,color-mix(in srgb,var(--c) 45%,var(--sun)) 60%,#000) 0%,transparent 75%) center/100% 100% no-repeat,
-  #0b0b0e;
+.cover.gen{background:     /* el color cubre toda la tarjeta: base teñida + dos manchas grandes (subí/bajá los % para cubrir más o menos) */
+  radial-gradient(120% 95% at var(--gx) var(--gy),color-mix(in srgb,var(--c) 92%,#000) 0%,color-mix(in srgb,var(--c) 38%,#000) 55%,transparent 100%) center/100% 100% no-repeat,
+  radial-gradient(110% 85% at calc(100% - var(--gx)) calc(100% - var(--gy)),color-mix(in srgb,color-mix(in srgb,var(--c) 40%,var(--sun)) 70%,#000) 0%,transparent 90%) center/100% 100% no-repeat,
+  color-mix(in srgb,var(--c) 26%,#0b0b0e);
   transition:background-size .9s var(--ease)}
 .cover::before{content:"";position:absolute;inset:0;z-index:1;   /* sombra: más oscura abajo para que el texto se lea */
   background:linear-gradient(to top,rgba(5,5,8,var(--scrim)) 0%,rgba(5,5,8,calc(var(--scrim)*.55)) 42%,rgba(5,5,8,.12) 78%,rgba(5,5,8,.3) 100%)}
@@ -74,11 +72,3 @@
   background:rgba(255,255,255,.12);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   transition:transform .5s var(--ease),background .3s,color .3s}
 .k-go .ico{display:block;width:20px;height:20px}
-
-/* 5. Featured: sin bordes ni brillos. Se reconoce por la etiqueta de platino con estrella,
-   y porque va siempre primero en la lista. */
-:root{--chrome:linear-gradient(135deg,#f2f5f9 0%,#aab4c2 30%,#eef1f5 55%,#8b96a6 80%,#dfe4ea 100%)}
-.k-feat{justify-self:start;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:.02em;color:#12141a;
-  background:var(--chrome);border-radius:999px;padding:5px 11px 5px 9px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.4)}
-.k-feat .ico{width:13px;height:13px;fill:currentColor;stroke:none}
-.card.top{border-color:rgba(255,255,255,.26)}

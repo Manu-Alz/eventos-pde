@@ -1,0 +1,83 @@
+/* destacados.css · slider de eventos destacados (lo arma js/destacados.js)
+   Estructura: .feat > .feat-track > .slide [.cover, .s-main [.s-top, .s-bottom], .s-poster?] + .feat-nav [.feat-bars, .feat-arrow x2]
+   Índice: 1 Ajustes rápidos · 2 Diapositiva · 3 Contenido · 4 Póster · 5 Barras y flechas · 6 Celular */
+
+/* 1. Ajustes rápidos */
+:root{
+  --feat-radius:32px;          /* redondeo de la diapositiva */
+  --feat-ratio:16/7;           /* proporción en pantalla grande (ancho/alto) */
+  --feat-ratio-m:5/6;          /* proporción en celular */
+  --feat-pad:clamp(20px,4vw,40px);
+  --feat-gap:14px;             /* espacio entre diapositivas mientras se desliza */
+}
+.feat{margin:0 0 clamp(26px,5vw,44px)}
+
+/* 2. Diapositiva: sin bordes, el color y la foto hacen todo el trabajo */
+.feat-track{display:flex;gap:var(--feat-gap);overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.feat-track::-webkit-scrollbar{display:none}
+.slide{position:relative;isolation:isolate;overflow:hidden;flex:0 0 100%;scroll-snap-align:start;scroll-snap-stop:always;
+  display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:clamp(18px,4vw,48px);
+  aspect-ratio:var(--feat-ratio);padding:var(--feat-pad);border-radius:var(--feat-radius);background:#0b0b0e;color:var(--ink);cursor:pointer;
+  transition:transform .5s var(--ease)}
+.slide:active{transform:scale(.99)}
+.slide:focus-visible{outline:2px solid #fff;outline-offset:3px}
+/* La foto de fondo se ve desenfocada (el póster nítido va a la derecha); la sombra va de izquierda a derecha para leer el texto */
+.slide .cover img{filter:blur(34px) saturate(1.15);transform:scale(1.25)}
+.slide .cover::before{background:linear-gradient(90deg,rgba(5,5,8,.92) 0%,rgba(5,5,8,.62) 55%,rgba(5,5,8,.3) 100%)}
+@media (hover:hover){
+  .slide:hover .s-cta{background:#F4F4F5;color:#08080a}
+  .slide:hover .s-cta .ico{transform:rotate(45deg)}
+  .slide:hover .s-poster img{transform:scale(var(--zoom))}
+}
+.slide:not(:has(.s-poster)){grid-template-columns:minmax(0,1fr)}
+
+/* 3. Contenido: arriba etiquetas, abajo título y datos */
+.s-main{display:flex;flex-direction:column;justify-content:space-between;gap:20px;min-width:0}
+.s-top{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.s-when{display:inline-flex;align-items:center;padding:6px 13px;border-radius:999px;font-size:13px;font-weight:700;
+  background:rgba(10,10,14,.4);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.slide .k-cat{background:rgba(10,10,14,.4)}
+.s-bottom{display:grid;gap:14px;justify-items:start}
+.s-date{margin:0;font-size:14px;font-weight:500;color:rgba(255,255,255,.7)}
+.s-date::first-letter{text-transform:uppercase}
+.slide h2{font-size:clamp(32px,6.4vw,68px);font-weight:600;line-height:.98;letter-spacing:-.04em;text-wrap:balance;max-width:16ch}
+.s-desc{margin:0;max-width:48ch;font-size:clamp(14px,3.8vw,16px);color:rgba(255,255,255,.72);
+  display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;-webkit-line-clamp:2;line-clamp:2}
+.slide .k-meta{grid-auto-flow:row}
+.s-cta{display:inline-flex;align-items:center;gap:10px;margin-top:4px;padding:12px 14px 12px 20px;border-radius:999px;font-size:15px;font-weight:700;
+  background:rgba(255,255,255,.14);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:background .3s,color .3s}
+.s-cta .ico{width:20px;height:20px;transition:transform .5s var(--ease)}
+
+/* 4. Póster: la foto del evento, nítida, a la derecha (solo en pantallas anchas) */
+.s-poster{align-self:center;justify-self:end;height:100%;max-height:100%;aspect-ratio:4/5;border-radius:calc(var(--feat-radius) - 12px);overflow:hidden;
+  box-shadow:0 30px 60px -20px rgba(0,0,0,.7)}
+.s-poster img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .9s var(--ease)}
+
+/* 5. Barras de progreso (el timer) y flechas */
+.feat-nav{display:flex;align-items:center;gap:10px;margin-top:10px}
+.feat-bars{flex:1;display:flex;gap:6px}
+.feat-bar{flex:1;height:28px;padding:0;border:0;background:none;position:relative;cursor:pointer}
+.feat-bar::before{content:"";position:absolute;left:0;right:0;top:50%;height:4px;margin-top:-2px;border-radius:4px;background:rgba(255,255,255,.14)}
+.feat-bar i{position:absolute;left:0;right:0;top:50%;height:4px;margin-top:-2px;border-radius:4px;background:#F4F4F5;transform:scaleX(0);transform-origin:left}
+.feat-bar.done i{transform:scaleX(1);opacity:.55}
+.feat-bar.on i{animation:feat-fill var(--feat-interval,6500ms) linear forwards}
+.feat.paused .feat-bar.on i{animation-play-state:paused}
+.feat.still .feat-bar.on i{animation:none;transform:scaleX(1)}   /* sin autoplay: la barra queda llena */
+@keyframes feat-fill{to{transform:scaleX(1)}}
+.feat-arrow{flex:none;width:44px;height:44px;border-radius:50%;border:0;display:grid;place-items:center;line-height:0;color:var(--ink);cursor:pointer;
+  background:var(--glass);transition:background .25s}
+.feat-arrow:hover{background:var(--glass-hover)}
+.feat-arrow .ico{display:block;width:20px;height:20px}
+.feat-arrow[data-dir="-1"] .ico{transform:rotate(-135deg)}   /* la flecha del ícono mira arriba a la derecha: se gira */
+.feat-arrow[data-dir="1"] .ico{transform:rotate(45deg)}
+
+/* 6. Celular: diapositiva alta, el póster pasa a ser el fondo */
+@media (max-width:760px){
+  .slide{grid-template-columns:minmax(0,1fr);aspect-ratio:var(--feat-ratio-m);border-radius:calc(var(--feat-radius) - 4px)}
+  .s-poster{display:none}
+  .slide .cover img{filter:none;transform:scale(1.02)}
+  .slide .cover::before{background:linear-gradient(to top,rgba(5,5,8,.97) 0%,rgba(5,5,8,.9) 50%,rgba(5,5,8,.35) 78%,rgba(5,5,8,.3) 100%)}
+  .s-date{display:none}
+  .feat-arrow{display:none}
+}
+@media (prefers-reduced-motion:reduce){.feat-bar.on i{animation:none;transform:scaleX(1)}}

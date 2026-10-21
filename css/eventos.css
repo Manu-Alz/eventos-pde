@@ -1,6 +1,28 @@
 /* eventos.css · home: hero, buscador, filtros y piezas reutilizables
    (el calendario está en calendario.css y la portada en portada.css) */
 
+/* 0. Fondo de la parte superior: grilla gris fina + resplandor + ondas de grano. Solo cubre el inicio y se desvanece. */
+:root{
+  --tb-height:820px;                       /* alto de la zona con textura */
+  --tb-cell:56px;                          /* tamaño de cada cuadradito de la grilla */
+  --tb-line:rgba(255,255,255,.07);         /* color de las líneas (subí el .07 para que se vean más) */
+  --tb-glow-a:rgba(124,77,255,.30);        /* resplandores de color */
+  --tb-glow-b:rgba(76,195,219,.16);
+  --tb-waves:.2;                           /* intensidad de las ondas de grano (0 = sin ondas) */
+}
+.top-bg{position:absolute;top:0;left:0;right:0;height:var(--tb-height);z-index:0;pointer-events:none;overflow:hidden;
+  -webkit-mask-image:linear-gradient(#000 40%,transparent);mask-image:linear-gradient(#000 40%,transparent)}
+.top-bg::before{content:"";position:absolute;inset:0;       /* grilla */
+  background-image:linear-gradient(var(--tb-line) 1px,transparent 1px),linear-gradient(90deg,var(--tb-line) 1px,transparent 1px);
+  background-size:var(--tb-cell) var(--tb-cell);background-position:center top;
+  -webkit-mask-image:radial-gradient(75% 85% at 50% 0%,#000 20%,transparent);mask-image:radial-gradient(75% 85% at 50% 0%,#000 20%,transparent)}
+.top-bg::after{content:"";position:absolute;inset:0;         /* resplandor */
+  background:radial-gradient(55% 55% at 18% 0%,var(--tb-glow-a),transparent 72%),radial-gradient(48% 50% at 86% 6%,var(--tb-glow-b),transparent 72%)}
+.top-bg i{position:absolute;inset:0;opacity:var(--tb-waves);  /* ondas: grano visible solo en franjas curvas */
+  background:var(--grain);background-size:180px;
+  -webkit-mask-image:repeating-radial-gradient(ellipse 130% 95% at 50% -35%,transparent 0 50px,#000 100px,transparent 150px);
+  mask-image:repeating-radial-gradient(ellipse 130% 95% at 50% -35%,transparent 0 50px,#000 100px,transparent 150px)}
+
 /* 1. Hero, buscador, filtros y barra de vista */
 .hero{padding:clamp(26px,7vw,76px) 0 clamp(26px,5vw,48px)}
 .hero-pill{display:inline-flex;align-items:center;gap:9px;margin:0 0 clamp(16px,3vw,26px);padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--glass);font-size:13px;font-weight:500;color:rgba(255,255,255,.82)}

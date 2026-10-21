@@ -1,8 +1,16 @@
-/* site.js · piezas que se repiten en todas las páginas (hoy: el pie de página)
+/* site.js · piezas que se repiten en todas las páginas (cabecera con vidrio al bajar y pie de página)
    Los datos salen de config.js, así que el mail y el Instagram se cambian en un solo lugar.
    Requiere: config.js, utils.js */
 
 (() => {
+  /* Cabecera: transparente arriba, vidrio oscuro apenas se baja la página */
+  const head = document.querySelector("header.top");
+  if (head) {
+    const mark = () => head.classList.toggle("stuck", scrollY > 8);
+    addEventListener("scroll", mark, { passive: true });
+    mark();
+  }
+
   const footer = $("site-footer");
   if (!footer) return;
 

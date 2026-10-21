@@ -54,7 +54,7 @@
       </div>
       <div class="dlg-body" style="--c:${CATS[e.cat]}">
         <div class="dlg-head">
-          <div class="dlg-tags">${e.featured ? `<span class="k-feat">${ico("star")}Featured</span>` : ""}<span class="k-cat"><i></i>${esc(e.cat)}</span></div>
+          <div class="dlg-tags"><span class="k-cat"><i></i>${esc(e.cat)}</span></div>
           <h2 id="dlg-title">${esc(e.title)}</h2>
         </div>
         <p class="dlg-desc">${esc(e.desc)}</p>
@@ -234,7 +234,7 @@
       else if (ev.target.closest("[data-share]")) share();
       return;
     }
-    const card = ev.target.closest(".card[data-id]");
+    const card = ev.target.closest(".card[data-id],.slide[data-id]");
     if (card) { const e = byId(card.dataset.id); if (e) open(e, card); }
   });
 
@@ -250,7 +250,7 @@
       }
       return;
     }
-    const card = ev.target.closest && ev.target.closest(".card[data-id]");
+    const card = ev.target.closest && ev.target.closest(".card[data-id],.slide[data-id]");
     if (card && (ev.key === "Enter" || ev.key === " ")) { ev.preventDefault(); const e = byId(card.dataset.id); if (e) open(e, card); }
   });
 

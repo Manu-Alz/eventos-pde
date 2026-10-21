@@ -1,64 +1,94 @@
-/* portada.css · Hot topic: un único lugar, degradé de color tipo Karambit Fade
-   Estructura: .hot > .hot-main [.hot-head, h2, .ref?, p, .hot-foot] + .hot-img? */
+/* portada.css · slider de la portada (lo arma js/portada.js)
+   Estructura: .portada > .port-track > .slide [.cover, .s-main [.s-top, .s-bottom], .s-poster?] + .port-nav [.port-bars, .port-arrow x2]
+   Índice: 1 Ajustes rápidos · 2 Diapositiva · 3 Contenido · 4 Póster · 5 Barras y flechas · 6 Celular
+   Todos los tamaños salen de las variables de la sección 1: cambiá ahí y se acomoda todo junto. */
 
 /* 1. Ajustes rápidos */
 :root{
-  --fade:linear-gradient(135deg,#7b2ff7 0%,#d6389b 30%,#ff6a3d 58%,#ffb02e 82%,#f2e55c 100%);
-  --hot-pad:34px 38px;                        /* aire interno de la caja */
-  --hot-gap:14px;                             /* separación entre bloques */
-  --hot-radius:28px;
-  --hot-glass:rgba(255,255,255,.08);          /* fondo translúcido de las piezas */
-  --hot-glass-line:rgba(255,255,255,.22);     /* borde de esas piezas */
-  --hot-glass-hover:rgba(255,255,255,.14);
-  --hot-travel:420px                          /* recorrido de las luces: igual en PC y celular */
+  --por-radius:32px;                       /* redondeo de la diapositiva */
+  --por-pad:clamp(22px,4.4vw,48px);          /* aire interno */
+  --por-gap:clamp(20px,4vw,48px);          /* espacio entre el texto y el póster */
+  --por-min-h:400px;                       /* alto mínimo (la diapositiva crece sola si el contenido lo necesita) */
+  --por-flow:18px;                         /* espacio entre las piezas del texto */
+  --por-poster-w:clamp(200px,26vw,300px);  /* ancho máximo del póster */
+  --por-poster-h:400px;                    /* alto máximo del póster */
+  --por-title:clamp(32px,5.6vw,60px);      /* tamaño del título */
+  --por-slide-gap:14px;                    /* espacio entre diapositivas mientras se desliza */
+}
+.portada{margin:0 0 clamp(26px,5vw,44px)}
+
+/* 2. Diapositiva. Sin bordes. Sin alto fijo: nunca se corta nada. Todas miden lo mismo (la más alta manda). */
+.port-track{display:flex;gap:var(--por-slide-gap);overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.port-track::-webkit-scrollbar{display:none}
+.slide{position:relative;isolation:isolate;overflow:hidden;flex:0 0 100%;scroll-snap-align:start;scroll-snap-stop:always;
+  display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:var(--por-gap);
+  min-height:var(--por-min-h);padding:var(--por-pad);border-radius:var(--por-radius);
+  background:#0b0b0e;color:var(--ink);cursor:pointer;transition:transform .5s var(--ease)}
+.slide:not(:has(.s-poster)){grid-template-columns:minmax(0,1fr)}
+.slide:active{transform:scale(.99)}
+.slide:focus-visible{outline:2px solid #fff;outline-offset:3px}
+/* Fondo: la foto desenfocada y con grano; la sombra va de izquierda a derecha para que se lea el texto */
+.slide .cover img{filter:blur(34px) saturate(1.15);transform:scale(1.25)}
+.slide .cover::before{background:linear-gradient(90deg,rgba(5,5,8,.92) 0%,rgba(5,5,8,.62) 55%,rgba(5,5,8,.3) 100%)}
+@media (hover:hover){
+  .slide:hover .s-cta i{transform:rotate(45deg)}
+  .slide:hover .s-poster img{transform:scale(var(--zoom))}
 }
 
-/* 2. Caja con degradé */
-.portada{margin:0 0 24px}
-.hot{position:relative;isolation:isolate;overflow:hidden;display:grid;gap:28px;align-items:center;padding:var(--hot-pad);border:2px solid transparent;border-radius:var(--hot-radius);animation:rise .4s ease-out;
-  background:linear-gradient(#0c0a10,#0c0a10) padding-box,var(--fade) border-box;
-  box-shadow:0 0 44px -16px rgba(214,56,155,.6)}
-/* Luces de color que flotan despacio dentro de la caja (movimiento muy suave, siempre activo) */
-.hot::before,.hot::after{content:"";position:absolute;z-index:-1;width:max(70%,520px);aspect-ratio:1;border-radius:50%;filter:blur(60px);pointer-events:none;will-change:transform}
-.hot::before{top:-45%;left:-15%;background:radial-gradient(circle,rgba(123,47,247,.55),rgba(214,56,155,.25) 55%,transparent 70%);animation:hot-drift-a 3.5s ease-in-out infinite alternate}
-.hot::after{right:-20%;bottom:-55%;background:radial-gradient(circle,rgba(255,176,46,.38),rgba(255,106,61,.2) 55%,transparent 70%);animation:hot-drift-b 4.2s ease-in-out infinite alternate}
-@keyframes hot-drift-a{from{transform:translate(0,0) scale(1)}to{transform:translate(var(--hot-travel),calc(var(--hot-travel) * .45)) scale(1.2)}}
-@keyframes hot-drift-b{from{transform:translate(0,0) scale(1.1)}to{transform:translate(calc(var(--hot-travel) * -1),calc(var(--hot-travel) * -.4)) scale(.9)}}
-.hot.has-img{grid-template-columns:1fr auto}
-.hot-main{display:flex;flex-direction:column;align-items:flex-start;gap:var(--hot-gap);min-width:0}
+/* 3. Contenido: un solo bloque centrado (etiquetas, título, descripción, datos y botón), con el mismo espacio entre cada pieza */
+.s-main{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:var(--por-flow);min-width:0}
+.s-top{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.s-when{display:inline-flex;align-items:center;min-height:34px;padding:0 14px;border-radius:999px;font-size:13px;font-weight:700;
+  background:rgba(10,10,14,.4);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.slide .k-cat{min-height:34px;padding-top:0;padding-bottom:0;background:rgba(10,10,14,.4)}
+.slide h2{font-size:var(--por-title);font-weight:600;line-height:1;letter-spacing:-.04em;text-wrap:balance;max-width:16ch;overflow-wrap:anywhere}
+.s-desc{margin:0;max-width:46ch;font-size:clamp(14px,3.8vw,16px);color:rgba(255,255,255,.74);
+  display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;-webkit-line-clamp:2;line-clamp:2}
+/* Fecha, hora y lugar: tres píldoras de vidrio en una fila (bajan de línea si no entran) */
+.s-meta{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px;max-width:100%}
+.s-meta li{display:inline-flex;align-items:center;gap:8px;min-width:0;max-width:100%;min-height:38px;padding:0 14px 0 12px;border-radius:999px;font-size:14px;color:rgba(255,255,255,.92);
+  background:rgba(255,255,255,.09);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.s-meta .ico{flex:none;width:16px;height:16px;color:#fff}
+.s-meta span{min-width:0;white-space:nowrap}
+.s-place{overflow:hidden;text-overflow:ellipsis}
+/* Botón principal: píldora blanca con círculo oscuro (como las referencias) */
+.s-cta{display:inline-flex;align-items:center;gap:14px;min-height:var(--tap);padding:0 6px 0 22px;border-radius:999px;font-size:15px;font-weight:700;white-space:nowrap;
+  background:#F4F4F5;color:#08080a;transition:transform .5s var(--ease)}
+.s-cta i{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#08080a;color:#fff;line-height:0;transition:transform .5s var(--ease)}
+.s-cta .ico{display:block;width:18px;height:18px}
 
-/* 3. Cabecera: fecha + etiqueta + categoría */
-.hot-head{display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px}
-.hot .date{background:var(--hot-glass);border:1px solid var(--hot-glass-line)}
-.hot .date b{font-size:26px;background:var(--fade);-webkit-background-clip:text;background-clip:text;color:transparent}
-.hot .date small{color:var(--ink);opacity:.85}
-.hot-badge{background:var(--fade);color:#1a0b14;font:800 12px 'DM Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;padding:5px 12px;border-radius:999px}
+/* 4. Póster: la foto del evento, nítida y completa (nunca recortada), a la derecha. Solo en pantallas anchas. */
+.s-poster{display:grid;place-items:center;border-radius:calc(var(--por-radius) - 12px);overflow:hidden;box-shadow:0 30px 60px -20px rgba(0,0,0,.7)}
+.s-poster img{display:block;width:auto;height:auto;max-width:var(--por-poster-w);max-height:var(--por-poster-h);transition:transform .9s var(--ease)}
 
-/* 4. Título y descripción */
-.hot h2{font-size:clamp(30px,5vw,50px);line-height:1.05;letter-spacing:-.025em;text-wrap:balance;max-width:20ch}
-.hot p{margin:0;color:var(--muted);font-size:clamp(15px,4vw,17px);max-width:56ch}
+/* 5. Barras de progreso (el timer) y flechas */
+.port-nav{display:flex;align-items:center;gap:10px;margin-top:10px}
+.port-bars{flex:1;display:flex;gap:6px}
+.port-bar{flex:1;height:28px;padding:0;border:0;background:none;position:relative;cursor:pointer}
+.port-bar::before,.port-bar i{content:"";position:absolute;left:0;right:0;top:50%;height:4px;margin-top:-2px;border-radius:4px}
+.port-bar::before{background:rgba(255,255,255,.14)}
+.port-bar i{background:#F4F4F5;transform:scaleX(0);transform-origin:left}
+.port-bar.done i{transform:scaleX(1);opacity:.55}
+.port-bar.on i{animation:port-fill var(--port-interval,6500ms) linear forwards}
+.portada.paused .port-bar.on i{animation-play-state:paused}
+.portada.still .port-bar.on i{animation:none;transform:scaleX(1)}   /* sin autoplay: la barra queda llena */
+@keyframes port-fill{to{transform:scaleX(1)}}
+.port-arrow{flex:none;width:44px;height:44px;border-radius:50%;border:0;display:grid;place-items:center;line-height:0;color:var(--ink);cursor:pointer;background:var(--glass);transition:background .25s}
+.port-arrow:hover{background:var(--glass-hover)}
+.port-arrow:focus-visible,.port-bar:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.port-arrow .ico{display:block;width:20px;height:20px}
+.port-arrow[data-dir="-1"] .ico{transform:rotate(-135deg)}   /* el ícono mira arriba a la derecha: se gira */
+.port-arrow[data-dir="1"] .ico{transform:rotate(45deg)}
 
-/* 5. Embed de entradas o link: del tamaño de su contenido, sin fondo negro */
-.hot .ref{max-width:100%;background:var(--hot-glass);border-color:var(--hot-glass-line)}
-.hot .ref:hover{background:var(--hot-glass-hover);border-color:rgba(255,255,255,.45)}
-
-/* 6. Pie: hora y lugar a la izquierda, contacto a la derecha */
-.hot-foot{align-self:stretch;padding-top:6px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;margin-top:4px}
-.hot-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px 24px;min-width:0}
-.hot .contact{background:var(--hot-glass);border-color:var(--hot-glass-line)}
-.hot .contact:hover{background:var(--hot-glass-hover);border-color:rgba(255,255,255,.45)}
-
-/* 7. Flyer opcional (campo img del evento) */
-.hot-img{width:min(300px,34vw);aspect-ratio:4/5;object-fit:cover;border-radius:20px}
-
-/* 8. Celulares: todo a lo ancho para tocar fácil */
-@media (max-width:700px){
-  :root{--hot-pad:22px 20px;--hot-gap:12px}
-  .hot{gap:18px}
-  .hot.has-img{grid-template-columns:1fr}
-  .hot-img{width:100%;order:-1}
-  .hot h2{font-size:clamp(28px,8.4vw,38px)}
-  .hot .ref{align-self:stretch}
-  .hot-foot{flex-direction:column;align-items:stretch;gap:14px}
-  .hot .contact{justify-content:center;min-height:var(--tap);font-size:15px}
+/* 6. Celular: una sola columna; el póster pasa a ser el fondo (sin desenfoque), con sombra fuerte abajo */
+@media (max-width:760px){
+  :root{--por-min-h:500px;--por-radius:28px;--por-flow:14px}
+  .slide{grid-template-columns:minmax(0,1fr)}
+  .s-poster{display:none}
+  .slide .cover img{filter:none;transform:scale(1.02)}
+  .slide .cover::before{background:linear-gradient(to top,rgba(5,5,8,.97) 0%,rgba(5,5,8,.9) 55%,rgba(5,5,8,.35) 80%,rgba(5,5,8,.3) 100%)}
+  .s-main{justify-content:flex-end}
+  .s-top{margin-bottom:auto}   /* etiquetas arriba, el resto abajo sobre la sombra */
+  .port-arrow{display:none}
 }
+@media (prefers-reduced-motion:reduce){.port-bar.on i{animation:none;transform:scaleX(1)}}

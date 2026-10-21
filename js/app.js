@@ -1,6 +1,6 @@
 /* app.js · home: estado, filtros, lista e inicio
-   El resto vive en: cards.js (tarjetas), hot.js (portada), calendar.js (calendario).
-   Requiere: config.js, data.js, utils.js, analytics.js, site.js, cards.js, hot.js, calendar.js */
+   El resto vive en: cards.js (tarjetas), portada.js (slider), calendar.js (calendario).
+   Requiere: config.js, data.js, utils.js, analytics.js, site.js, cards.js, portada.js, calendar.js */
 
 /* ============ 1. Eventos vigentes ============
    Un evento desaparece solo en dos casos: pasó su fecha (date, o endDate si dura varios días)
@@ -89,5 +89,5 @@ $("q").addEventListener("input", render);
 const heroLive = $("hero-live");
 if (heroLive) heroLive.textContent = `${LIVE.length} ${LIVE.length === 1 ? "evento" : "eventos"} en agenda`;
 
-renderHot(LIVE);
+renderPortada(LIVE);
 render();

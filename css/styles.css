@@ -13,7 +13,8 @@
   --grain-page:.05;                   /* grano sobre toda la página (0 = sin grano) */
   --ease:cubic-bezier(.2,.8,.2,1);
   --gutter:20px;     /* margen lateral de la página */
-  --tap:44px}        /* alto mínimo de un botón táctil */
+  --tap:44px;
+  --head-h:68px}      /* alto de la cabecera (12px + botón 44px + 12px) */
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{margin:0;padding-top:env(safe-area-inset-top,0px);background:var(--bg);color:var(--ink);font:400 16px/1.55 'DM Sans',system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
@@ -27,10 +28,16 @@ button{touch-action:manipulation}
 :focus-visible{outline:3px solid var(--sea);outline-offset:2px}
 
 /* 2. Layout y cabecera */
-.wrap{max-width:1080px;margin:0 auto;padding:0 max(var(--gutter),env(safe-area-inset-right)) 0 max(var(--gutter),env(safe-area-inset-left))}
+.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 max(var(--gutter),env(safe-area-inset-right)) 0 max(var(--gutter),env(safe-area-inset-left))}
 header.top{position:sticky;top:0;z-index:30;display:flex;justify-content:space-between;align-items:center;gap:12px;
-  margin:0 calc(-1 * var(--gutter));padding:12px var(--gutter);
-  background:rgba(8,8,10,.82);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4)}
+  margin:0 calc(-1 * var(--gutter));padding:12px var(--gutter)}
+/* Al bajar (js/site.js agrega .stuck) aparece un velo de vidrio de borde a borde que se desvanece hacia abajo (sin cajas) */
+header.top::before{content:"";position:fixed;top:0;left:0;right:0;z-index:-1;pointer-events:none;opacity:0;transition:opacity .3s;
+  height:calc(var(--head-h) + env(safe-area-inset-top,0px) + 12px);
+  background:linear-gradient(rgba(8,8,10,.9),rgba(8,8,10,.6));
+  -webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);
+  -webkit-mask-image:linear-gradient(#000 72%,transparent);mask-image:linear-gradient(#000 72%,transparent)}
+header.top.stuck::before{opacity:1}
 .logo{font:700 22px 'Bricolage Grotesque',sans-serif;text-decoration:none;letter-spacing:-.01em;white-space:nowrap}
 .logo span{color:var(--sun)}
 .hact{display:flex;gap:8px;align-items:center}

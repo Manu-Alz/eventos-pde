@@ -16,15 +16,17 @@
    │ linkLabel  texto del embed de link, ej. "Ver programa" (por defecto "Más información")│
    │ map        link exacto de Google Maps (si no, se arma con place)                    │
    │ endDate    último día, si dura varios días                                          │
-   │ featured   true -> estilo platinado "Destacado"                                     │
-   │ hot        true -> Hot topic de la portada (se muestra UNO solo)                    │
-   │ hotUntil   último día en portada, "AAAA-MM-DD"                                      │
+   │ photo      nombre del archivo en img/eventos/, ej. "solomun-open-park.webp"         │
+   │            (fondo de la tarjeta y póster de la portada; sin foto: degradé de color)  │
+   │ portada    true -> aparece en el slider de la portada (máx. 6, los más cercanos)   │
    │ from       primer día visible, "AAAA-MM-DD" (opcional; si no, se ve ya)             │
    │ until      último día visible = fin de las semanas pagadas (opcional)               │
-   │ img        flyer del Hot topic, ej. "img/noche-fade.webp"                           │
    └─────────────────────────────────────────────────────────────────────────────────────┘
 
-   CAMBIAR EL HOT TOPIC: sacale `hot` al evento anterior y ponelo en el nuevo (con hotUntil).
+   SOLO PUNTA DEL ESTE: la agenda es local (Punta del Este, La Barra, Manantiales, José Ignacio,
+   Maldonado). Los eventos de Montevideo u otras ciudades no se publican.
+   FOTOS: nombre en minúsculas y con guiones, igual al evento: "artista-lugar.webp" (ej. adam-ten-polo-medellin.webp).
+   PORTADA: el plan Portada = ponerle `portada: true` al evento. Sin eso solo sale en la agenda.
    Cada publicación muestra UN embed: primero entradas (tickets) y, si no hay, el link libre. */
 
 const EV = [
@@ -37,39 +39,39 @@ const EV = [
     place: "Open Park, El Placer (puente de La Barra)",
     desc: "Deep y tech house de Solomun en la carpa de Open Park: una de las fechas fuertes del cierre de 2026.",
     tickets: "https://allmusicparties.com/es/evento/solomun-en-open-park-punta-del-este",
-    photo: "img/eventos/solomun.jpeg",
-    featured: true, hot: true, hotUntil: "2026-12-29"
+    photo: "solomun-open-park.webp",
+    portada: true
   },
   {
     title: "Black Coffee: Noche de Año Nuevo",
     cat: "Fiestas", date: "2026-12-31", time: "A confirmar",
     place: "Cipriani, Punta del Este",
     desc: "Black Coffee recibe el 2027 en Cipriani.",
-    photo: "img/eventos/blackcoffee.png",
-    featured: true
+    photo: "black-coffee-cipriani.webp",
+    portada: true
   },
   {
     title: "Jamie Jones + Franky Rizardo",
     cat: "Fiestas", date: "2026-12-31", time: "A confirmar",
     place: "MACA, Punta del Este",
     desc: "Dos nombres de la escena house y tech house para despedir 2026 en MACA.",
-    featured: true
+    portada: true
   },
   {
     title: "Hot Since 82: NYE 2027",
     cat: "Fiestas", date: "2026-12-31", time: "A confirmar",
     place: "Polo Medellín, Punta del Este",
     desc: "Año Nuevo con Hot Since 82 en Polo Medellín.",
-    photo: "img/eventos/hotsince.jpeg",
-    featured: true
+    photo: "hot-since-82-polo-medellin.webp",
+    portada: true
   },
   {
     title: "Music On: Marco Carola & More",
     cat: "Fiestas", date: "2027-01-02", time: "23:00",
     place: "Open Park, El Placer",
     desc: "Marco Carola trae Music On a Open Park para arrancar enero.",
-    photo: "img/eventos/musiconmarcocarola.jpeg",
-    featured: true
+    photo: "music-on-open-park.webp",
+    portada: true
   },
   {
     title: "FOMO Fest",
@@ -78,7 +80,7 @@ const EV = [
     desc: "Festival electrónico de dos días en Open Park. El viernes abren puertas a las 16:00.",
     link: "https://www.technoairlines.com/festival/fomo-fest-punta-del-este-uruguay-2027", linkLabel: "Más información",
     endDate: "2027-01-16",
-    featured: true
+    portada: true
   },
   {
     title: "Adam Ten b2b Mita Gami",
@@ -157,43 +159,15 @@ const EV = [
     endDate: "2027-02-26"
   },
 
-  /* Cargados el 20/10 desde la lista de fiestas del equipo (Dance & Night Club): solo se confirmaron fecha y
-     Instagram. Lugar y hora se completan con cada organizador. El primero es un show del miércoles. */
+  /* Cargados el 20/10 desde la lista de fiestas del equipo: solo se confirmó la fecha y el Instagram.
+     Lugar y hora se completan con cada organizador. (Los eventos de Montevideo se sacaron: la agenda es solo PDE.) */
   {
     title: "Lo vi en Filosofía",
     cat: "Música en vivo", date: "2026-10-21", time: "21:00",
     place: "Box Garden, Punta del Este",
     desc: "Show en vivo de la banda de rock Lo vi en Filosofía.",
-    photo: "img/eventos/lo-vi-en-filosofia.jpg",
-    featured: true
-  },
-  {
-    title: "Volvé Mi Negra",
-    cat: "Fiestas", date: "2026-11-07", time: "A confirmar",
-    place: "Punta del Este (a confirmar)",
-    desc: "Noche de fiesta en Punta del Este. Lugar y hora a confirmar.",
-    contact: "https://instagram.com/volveminegra"
-  },
-  {
-    title: "El Rancho Pub",
-    cat: "Fiestas", date: "2026-11-14", time: "A confirmar",
-    place: "Punta del Este (a confirmar)",
-    desc: "Noche en El Rancho Pub. Lugar y hora a confirmar.",
-    contact: "https://instagram.com/elranchopub"
-  },
-  {
-    title: "Pawsa",
-    cat: "Fiestas", date: "2026-11-20", time: "22:00",
-    place: "Punta del Este (a confirmar)",
-    desc: "Noche con Pawsa en Punta del Este. Lugar a confirmar.",
-    contact: "https://instagram.com/pawsaofficial"
-  },
-  {
-    title: "Volvé Mi Negra",
-    cat: "Fiestas", date: "2026-12-24", time: "A confirmar",
-    place: "Punta del Este (a confirmar)",
-    desc: "Noche de fiesta en Punta del Este. Lugar y hora a confirmar.",
-    contact: "https://instagram.com/volveminegra"
+    photo: "lo-vi-en-filosofia.webp",
+    portada: true
   },
   {
     title: "Sensation Punta del Este",
@@ -202,8 +176,8 @@ const EV = [
     map: "https://www.google.com/maps/search/?api=1&query=-34.870806,-54.819389",
     desc: "Fiesta de Año Nuevo para recibir el 2027.",
     contact: "https://instagram.com/sensation_pde",
-    photo: "img/eventos/sensacion.jpeg",
-    featured: true
+    photo: "sensation-pde.webp",
+    portada: true
   },
   {
     title: "Volvé Mi Negra",

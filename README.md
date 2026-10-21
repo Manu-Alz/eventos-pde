@@ -5,13 +5,13 @@ Agenda de eventos de Punta del Este. Sitio estático (HTML, CSS y JS puros): se 
 ## Estructura
 
 ```
-index.html          home: Hot topic, filtros, lista y calendario (botón de calendario antes de "Todos")
+index.html          home: slider de portada, filtros, lista y calendario (botón de calendario antes de "Todos")
 publicar.html       planes, formulario y pago
 css/
   styles.css        base compartida (colores, botones, pie)
   eventos.css       hero, filtros y grilla de tarjetas
   calendario.css    calendario
-  portada.css       Hot topic
+  portada.css       slider de portada
   publicar.css      planes y pago
 js/
   config.js         contacto, pagos, categorías, afiliados y planes  (se edita una vez)
@@ -20,7 +20,7 @@ js/
   analytics.js      Google Analytics y conteo de clics
   site.js           pie de página
   cards.js          piezas de una publicación y tarjeta
-  hot.js            Hot topic
+  portada.js        slider de portada
   calendar.js       calendario
   app.js            filtros, lista e inicio
   publicar.js       página de publicar
@@ -37,7 +37,7 @@ js/
 ## Tareas de todos los días (en `js/data.js`)
 
 - **Agregar un evento:** copiá uno existente y cambiá los campos. La lista de campos está al principio del archivo.
-- **Cambiar el Hot topic:** sacale `hot` al evento anterior y ponelo en el nuevo, con `hotUntil` (último día en portada). Se muestra uno solo. Flyer opcional: `img: "img/nombre.webp"`.
+- **Poner un evento en la portada (slider):** agregale `portada: true` al evento. Se ven hasta 6, los más cercanos primero. Los eventos sin `portada` solo aparecen en la agenda, ordenada por fecha.
 - **Publicaciones pagas (por semana):** al cargar el evento poné `from` (primer día) y `until` (último día pagado, ej. 7 días después). Pasado `until` deja de verse solo, aunque el evento sea después.
 - **Un evento vence solo** después de su fecha (`date`, o `endDate` si dura varios días). No hace falta borrarlo.
 - **Links:** cada publicación muestra un solo embed.
@@ -69,3 +69,6 @@ La pestaña "Solicitudes" tiene las columnas "Pagó", "Publicado desde" y "Hasta
 
 - Categorías (7): Fiestas, Música en vivo, Náutica, Autos, Deportes, Festivales y Gastronomía. Para cambiar una, editá `CATS` (`config.js`).
 - Dominio: las direcciones públicas (canonical, og:url, og:image y sitemap) apuntan a https://eventospde.com/. Al activarlo en GitHub Pages, el archivo `CNAME` tiene que quedar en la raíz del repo.
+
+- **Fotos de eventos:** guardalas en `img/eventos/` con nombre `artista-lugar.webp` (minúsculas y guiones) y en data.js poné solo `photo: "artista-lugar.webp"`. Si el archivo no existe, la tarjeta usa el degradé de color.
+- **Solo Punta del Este:** la agenda es local; los eventos de Montevideo u otras ciudades no se publican.

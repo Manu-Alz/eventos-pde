@@ -44,12 +44,10 @@ const AFFILIATES = {
 /* ============ 4. Planes de publicación ============
    Los precios son POR SEMANA: quien quiere más tiempo elige más semanas en el formulario y paga price x semanas. */
 const PLANS = [
-  { name: "Básico",    price: 25,  features: ["Publicación en su categoría", "Visible durante la semana contratada"],
-    blurb: "Para empezar a mostrar tu evento" },
-  { name: "Destacado", price: 60,  popular: true,
-    features: ["Insignia “Destacado”", "Arriba en su categoría", "Enlace a entradas o WhatsApp"],
-    blurb: "Ideal para eventos que quieren llenar" },
-  { name: "Portada",   price: 120,
-    features: ["Un lugar único en la portada (Hot topic)", "Todo lo del plan Destacado", "Confirmamos la fecha antes del pago"],
+  { name: "Básico",  price: 25,
+    features: ["Publicación en su categoría", "Ordenada por fecha en la agenda", "Enlace a entradas o WhatsApp", "Visible durante la semana contratada"],
+    blurb: "Para mostrar tu evento en la agenda" },
+  { name: "Portada", price: 120, popular: true,
+    features: ["Todo lo del plan Básico", "Lugar en el slider de portada, lo primero que se ve", "Foto grande de tu evento", "Confirmamos disponibilidad antes del pago"],
     blurb: "Máxima visibilidad en Punta" }
 ];

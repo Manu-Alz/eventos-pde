@@ -1,5 +1,5 @@
 /* cards.js · piezas de una publicación y tarjeta de la grilla
-   Las usan la grilla, el Hot topic y el calendario.
+   Las usan la grilla, el calendario y el detalle.
    Requiere: config.js, utils.js */
 
 /* ============ 1. Textos de fecha y hora ============ */
@@ -7,9 +7,8 @@ const timeLabel  = e => (/^\d/.test(e.time) ? `${e.time} hs` : e.time);
 const dayLabel   = e => parseInt(e.date.slice(8), 10) + (e.endDate ? `–${parseInt(e.endDate.slice(8), 10)}` : "");
 const monthLabel = e => MES[+e.date.slice(5, 7) - 1];
 
-/* Orden de las listas: destacados primero, después por fecha y hora */
-const compareEvents = (a, b) =>
-  (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || a.date.localeCompare(b.date) || a.time.localeCompare(b.time);
+/* Orden de las listas: siempre por fecha y hora */
+const compareEvents = (a, b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time);
 
 /* ============ 2. Links ============ */
 const trackAttrs = (name, e) => `data-ev="${name}" data-n="${esc(e.title)}" data-c="${esc(e.cat)}"`;
@@ -102,18 +101,22 @@ function longDate(e) {
 /* ============ 5. Portada de la tarjeta ============
    Con foto (campo photo en data.js): la foto. Sin foto: un degradé con el color de la categoría,
    en una posición distinta para cada evento. El grano y la sombra los pone tarjetas.css. */
+/* photo en data.js puede ser solo el nombre del archivo ("solomun-open-park.webp"): se busca en img/eventos/ */
+const photoUrl = e => !e.photo ? "" : /[\/]/.test(e.photo) ? e.photo : "img/eventos/" + e.photo;
+
+/* Si la foto no existe o no carga, la tarjeta queda con el degradé de color (nunca un hueco roto) */
 const coverHtml = e => e.photo
-  ? `<div class="cover"><img src="${esc(e.photo)}" alt="" loading="lazy" decoding="async"></div>`
+  ? `<div class="cover"><img src="${esc(photoUrl(e))}" alt="" loading="lazy" decoding="async" onerror="this.parentNode.classList.add('gen');this.remove()"></div>`
   : '<div class="cover gen"></div>';
 
 const coverStyle = e => { const h = hashOf(e.title); return `--gx:${18 + h % 64}%;--gy:${12 + (h >> 4) % 50}%`; };
 
 /* ============ 6. Tarjeta de la grilla ============
-   Estructura: .cover + .k-top [.k-date, .k-cat] + .k-bottom [.k-feat?, h3, .k-meta, .k-go]
+   Estructura: .cover + .k-top [.k-date, .k-cat] + .k-bottom [h3, .k-meta, .k-go]
    Al tocarla se abre el detalle (detalle.js). Los links y botones viven adentro del detalle. */
 function cardEl(e) {
   const card = document.createElement("article");
-  card.className = "card" + (e.featured ? " top" : "");
+  card.className = "card";
   card.dataset.id = slugOf(e);
   card.tabIndex = 0;
   card.setAttribute("role", "button");
@@ -127,7 +130,6 @@ function cardEl(e) {
       <span class="k-cat"><i></i>${esc(e.cat)}</span>
     </div>
     <div class="k-bottom">
-      ${e.featured ? `<span class="k-feat">${ico("star")}Featured</span>` : ""}
       <h3>${esc(e.title)}</h3>
       <div class="k-row">
         <ul class="k-meta">
