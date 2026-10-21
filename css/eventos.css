@@ -49,6 +49,22 @@
 .tag{font-size:13px;font-weight:700;color:var(--c);white-space:nowrap}
 .feat{font-size:12px;font-weight:700;background:var(--c);color:#000;border-radius:6px;padding:2px 7px;margin-left:10px}
 
+/* 2b. Foto de fondo (opcional): campo photo del evento en data.js.
+   Es una capa propia (::before) detrás del contenido, con un velo oscuro encima para que el texto se lea siempre.
+   No toca el fondo de la tarjeta, así que funciona igual en las normales y en las destacadas.
+   Ajustes rápidos: */
+:root{
+  --photo-veil-top:.60;     /* opacidad del velo arriba (0 = foto pura, 1 = sin foto) */
+  --photo-veil-bottom:.90;  /* opacidad del velo abajo, donde van la hora y el lugar */
+}
+.card.has-photo{overflow:hidden}
+.card.has-photo::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    linear-gradient(180deg,color-mix(in srgb,var(--surface) calc(var(--photo-veil-top)*100%),transparent),color-mix(in srgb,var(--surface) calc(var(--photo-veil-bottom)*100%),transparent)),
+    var(--photo) center/cover no-repeat}
+.card.has-photo>*{position:relative}   /* contenido por encima de la foto */
+.card.has-photo .band{border-radius:0}
+
 /* 3. Piezas reutilizables: hora/lugar, contacto, embed de entradas */
 .meta{display:grid;gap:4px}
 .when,.where{display:flex;align-items:center;gap:8px;min-width:0;font-size:14px}

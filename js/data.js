@@ -37,6 +37,7 @@ const EV = [
     place: "Open Park, El Placer (puente de La Barra)",
     desc: "Deep y tech house de Solomun en la carpa de Open Park: una de las fechas fuertes del cierre de 2026.",
     tickets: "https://allmusicparties.com/es/evento/solomun-en-open-park-punta-del-este",
+    photo: "img/eventos/solomun.jpeg",
     featured: true, hot: true, hotUntil: "2026-12-29"
   },
   {
@@ -160,6 +161,7 @@ const EV = [
     cat: "Música en vivo", date: "2026-10-21", time: "21:00",
     place: "Box Garden, Punta del Este",
     desc: "Show en vivo de la banda de rock Lo vi en Filosofía.",
+    photo: "img/eventos/lo-vi-en-filosofia.jpg",
     featured: true
   },
   {

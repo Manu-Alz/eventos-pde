@@ -82,8 +82,11 @@ const dateHtml = e => `<div class="date"><b>${dayLabel(e)}</b><small>${monthLabe
    Estructura: .band + .body > [.card-head, h3, .ref?, p, .card-foot] */
 function cardEl(e) {
   const card = document.createElement("article");
-  card.className = "card" + (e.featured ? " top" : "");
+  card.className = "card" + (e.featured ? " top" : "") + (e.photo ? " has-photo" : "");
   card.style.setProperty("--c", CATS[e.cat]);
+  /* Foto de fondo (campo photo en data.js). Se pasa con ruta completa porque una url() dentro de una
+     variable CSS se resuelve desde la carpeta css/, no desde la página. */
+  if (e.photo) card.style.setProperty("--photo", `url("${new URL(e.photo, document.baseURI).href}")`);
   card.innerHTML = `
     <div class="band"></div>
     <div class="body">
