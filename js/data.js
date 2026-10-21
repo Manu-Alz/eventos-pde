@@ -44,7 +44,7 @@ const EV = [
   },
   {
     title: "Black Coffee: Noche de Año Nuevo",
-    cat: "Fiestas", date: "2026-12-31", time: "A confirmar",
+    cat: "Fiestas", date: "2026-12-31", time: "23:00",
     place: "Cipriani, Punta del Este",
     desc: "Black Coffee recibe el 2027 en Cipriani.",
     photo: "black-coffee-cipriani.webp",
@@ -59,9 +59,9 @@ const EV = [
   },
   {
     title: "Hot Since 82: NYE 2027",
-    cat: "Fiestas", date: "2026-12-31", time: "A confirmar",
-    place: "Polo Medellín, Punta del Este",
-    desc: "Año Nuevo con Hot Since 82 en Polo Medellín.",
+    cat: "Fiestas", date: "2026-12-31", time: "23:55",
+    place: "Medellín Polo Club, Ruta 10 km 176 (Punta del Este)",
+    desc: "Año Nuevo en La Pista con Hot Since 82, Manu Desrets y Báez & Saint.",
     photo: "hot-since-82-polo-medellin.webp",
     portada: true
   },
@@ -77,7 +77,7 @@ const EV = [
     title: "FOMO Fest",
     cat: "Fiestas", date: "2027-01-15", time: "16:00",
     place: "Open Park, El Placer",
-    desc: "Festival electrónico de dos días en Open Park. El viernes abren puertas a las 16:00.",
+    desc: "Festival electrónico de dos días en Open Park con Artbat, Boris Brejcha, Colyn, Innellea y Tale of Us. El viernes abren puertas a las 16:00.",
     link: "https://www.technoairlines.com/festival/fomo-fest-punta-del-este-uruguay-2027", linkLabel: "Más información",
     endDate: "2027-01-16",
     portada: true
@@ -85,14 +85,16 @@ const EV = [
   {
     title: "Adam Ten b2b Mita Gami",
     cat: "Fiestas", date: "2026-12-26", time: "A confirmar",
-    place: "Polo Medellín, Punta del Este",
-    desc: "Primera gran fecha del verano en Polo Medellín."
+    place: "Medellín Polo Club, Ruta 10 km 176 (Punta del Este)",
+    desc: "Apertura de temporada en La Pista, con Facundo Mohrr y Mar Monzon.",
+    photo: "adam-ten-polo-medellin.webp"
   },
   {
     title: "Nick Warren + Sébastien Léger",
-    cat: "Fiestas", date: "2026-12-27", time: "A confirmar",
-    place: "Narbona, La Barra",
-    desc: "My Tribe en Narbona con progressive house."
+    cat: "Fiestas", date: "2026-12-27", time: "19:00",
+    place: "Narbona Wine Lodge, Punta del Este",
+    desc: "My Tribe en Narbona: progressive house con Nick Warren, Sébastien Léger, ffiña y Jero Rosella.",
+    photo: "nick-warren-narbona.webp"
   },
   {
     title: "Blavicio en Open Park",
@@ -102,9 +104,10 @@ const EV = [
   },
   {
     title: "ANOTR en Cipriani",
-    cat: "Fiestas", date: "2026-12-28", time: "A confirmar",
+    cat: "Fiestas", date: "2026-12-28", time: "23:00",
     place: "Cipriani, Punta del Este",
-    desc: "ANOTR en una de las pistas más exclusivas de la costa."
+    desc: "ANOTR en una de las pistas más exclusivas de la costa.",
+    photo: "anotr-cipriani.webp"
   },
   {
     title: "Corona Sunset",
@@ -115,26 +118,68 @@ const EV = [
   {
     title: "Artbat · Mind Against · Mellino",
     cat: "Fiestas", date: "2027-01-03", time: "A confirmar",
-    place: "Narbona, La Barra",
+    place: "Narbona Wine Lodge, Punta del Este",
     desc: "Tres nombres de melodic techno en una sola noche."
   },
   {
-    title: "Adriatique en MACA",
+    title: "Adriatique en Arcana",
     cat: "Fiestas", date: "2027-01-03", time: "16:00",
-    place: "MACA, Punta del Este",
-    desc: "El dúo suizo de melodic house y techno llega a MACA."
+    place: "Arcana, Museo Atchugarry, Ruta 104 km 4,5 (Manantiales)",
+    desc: "Arcana Punta del Este con el dúo suizo Adriatique, NIM y Peter Guzman.",
+    photo: "adriatique-arcana.webp"
   },
   {
-    title: "Miss Monique en Open Park",
+    title: "Miss Monique y Juan Hansen en Open Park",
     cat: "Fiestas", date: "2027-01-04", time: "23:00",
     place: "Open Park, El Placer",
-    desc: "Progressive y melodic techno con Miss Monique."
+    desc: "Progressive y melodic techno con Miss Monique y Juan Hansen."
   },
   {
     title: "Chris Stussy en Open Park",
     cat: "Fiestas", date: "2027-01-09", time: "23:00",
     place: "Open Park, El Placer",
     desc: "House de Chris Stussy en la carpa de Open Park."
+  },
+  {
+    title: "Colyn en Playa Brava",
+    cat: "Fiestas", date: "2026-12-27", time: "21:00",
+    place: "Roll & Rock Beach House, Parada 8, Playa Brava",
+    desc: "Colyn con Belu Clavero y BIØY frente al mar.",
+    photo: "colyn-playa-brava.webp"
+  },
+  {
+    title: "Summer Tale: Pico Bussoli + BNN",
+    cat: "Fiestas", date: "2026-12-28", time: "23:50",
+    place: "El Bosque, Balneario Buenos Aires",
+    desc: "Summer Tale con Pico Bussoli y BNN en El Bosque.",
+    photo: "pico-bussoli-el-bosque.webp"
+  },
+  {
+    title: "Pasan Cosas en Narbona",
+    cat: "Fiestas", date: "2026-12-29", time: "19:00",
+    place: "Narbona Wine Lodge, Punta del Este",
+    desc: "My Tribe presenta Pasan Cosas en Narbona.",
+    photo: "pasan-cosas-narbona.webp"
+  },
+  {
+    title: "Tommy Muñoz + Puli Demaria + Ale Schultz",
+    cat: "Fiestas", date: "2026-12-31", time: "22:00",
+    place: "Narbona Wine Lodge, Punta del Este",
+    desc: "Fin de año en Narbona con Tommy Muñoz, Puli Demaria y Ale Schultz.",
+    photo: "tommy-munoz-narbona.webp"
+  },
+  {
+    title: "Michael Bibi en Narbona",
+    cat: "Fiestas", date: "2027-01-02", time: "18:00",
+    place: "Narbona Wine Lodge, Punta del Este",
+    desc: "Tech house con Michael Bibi en Narbona."
+  },
+  {
+    title: "You Are My Tribe",
+    cat: "Fiestas", date: "2027-01-08", time: "19:00",
+    place: "Narbona Wine Lodge, Punta del Este",
+    desc: "My Tribe vuelve a Narbona.",
+    photo: "you-are-my-tribe-narbona.webp"
   },
   {
     title: "Festival Internacional de Jazz de Punta del Este",
@@ -155,7 +200,7 @@ const EV = [
     title: "Festival de Cine de Punta del Este",
     cat: "Festivales", date: "2027-02-20", time: "A confirmar",
     place: "Maldonado y Punta del Este",
-    desc: "29.ª edición, con funciones libres y gratuitas en salas de la zona.",
+    desc: "29.ª edición, con funciones libres y gratuitas en Sala Cantegril, el Teatro Margarita Xirgú y Grupocine.",
     endDate: "2027-02-26"
   },
 
