@@ -41,13 +41,22 @@ const AFFILIATES = {
   "tuticketera.com": { param: "ref", code: "eventospde" }   // EJEMPLO: reemplazar por una ticketera real
 };
 
-/* ============ 4. Planes de publicación ============
-   Los precios son POR SEMANA: quien quiere más tiempo elige más semanas en el formulario y paga price x semanas. */
+/* ============ 4. Planes y precios ============
+   Se cobra POR DÍA publicado, y cada día extra sale más barato: cuanto más tiempo está online, menos se paga por día.
+   tiers = [[hastaElDía, precioPorDía], ...]  (precios en US$, enteros)
+   Ejemplo Básico: los días 1 y 2 salen US$ 6 c/u, los días 3 al 7 salen US$ 3 c/u, del 8 al 30 US$ 2 c/u y del 31 en adelante US$ 1.
+   Los escalones se suman (nunca conviene que 7 días cuesten menos que 6): 1 día = 6, 7 días = 27, 30 días = 73.
+   La Portada incluye todo lo del Básico, por eso su precio ya trae la publicación en la agenda.
+   Cambiá los números de cada plan y la página recalcula todo sola (tarjetas, total y mensajes). */
+const MAX_DAYS = 90;                 // tope de días por pedido
+
 const PLANS = [
-  { name: "Básico",  price: 25,
-    features: ["Publicación en su categoría", "Ordenada por fecha en la agenda", "Enlace a entradas o WhatsApp", "Visible durante la semana contratada"],
+  { name: "Básico",
+    tiers: [[2, 6], [7, 3], [30, 2], [Infinity, 1]],
+    features: ["Publicación en su categoría", "Ordenada por fecha en la agenda", "Enlace a entradas o WhatsApp", "Desde 1 día: vos elegís cuánto tiempo"],
     blurb: "Para mostrar tu evento en la agenda" },
-  { name: "Portada", price: 120, popular: true,
-    features: ["Todo lo del plan Básico", "Lugar en el slider de portada, lo primero que se ve", "Foto grande de tu evento", "Confirmamos disponibilidad antes del pago"],
+  { name: "Portada", popular: true,
+    tiers: [[2, 30], [7, 12], [30, 8], [Infinity, 5]],
+    features: ["Todo lo del plan Básico", "Lugar en el slider de portada, lo primero que se ve", "Foto grande de tu evento", "Cupos limitados: confirmamos antes del pago"],
     blurb: "Máxima visibilidad en Punta" }
 ];

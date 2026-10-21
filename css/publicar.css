@@ -30,6 +30,13 @@ section.pub .lead{max-width:52ch;color:var(--muted);margin:14px 0 30px}
 @media (hover:hover){.plan .btn:hover{background:var(--sun);border-color:var(--sun);color:var(--on-sun)}}
 @media (min-width:768px){.plan.hl{transform:translateY(-14px)}}
 
+/* Escalones de precio dentro de cada plan */
+.plan .tiers{flex:none;gap:0;margin:0 0 12px;padding:6px 0;border-block:1px solid var(--line);font-size:14px}
+.plan .tiers li{justify-content:space-between;gap:12px;padding:6px 0;color:var(--muted)}
+.plan .tiers b{color:var(--ink);font-weight:700;white-space:nowrap}
+.example{margin:0 0 18px;font-size:13px;color:var(--muted)}
+.example b{color:var(--ink)}
+
 /* 3. Paso 2: formulario */
 #paso2{animation:rise .35s ease-out}
 .chosen{margin:-6px 0 18px;color:var(--muted)}
@@ -58,3 +65,8 @@ form .full{grid-column:1/-1}
 .dl dd{margin:0;font-weight:700;overflow-wrap:anywhere}
 .sendrow{display:flex;flex-wrap:wrap;gap:10px}
 @media (max-width:480px){.sendrow .btn{flex:1 1 100%}}
+
+/* Días de publicación: campo numérico + botones rápidos con su precio */
+.quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.quick .chip{min-height:var(--tap)}
+.daysnote{grid-column:1/-1;margin:-4px 0 0;font-size:14px;color:var(--muted)}

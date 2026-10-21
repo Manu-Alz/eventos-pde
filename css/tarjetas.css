@@ -13,11 +13,17 @@
   --card-title:clamp(22px,6.2vw,27px);
   --zoom:1.09;                 /* cuánto crece la imagen al pasar el mouse (1 = nada) */
 
-  --grain-opacity:.55;         /* intensidad del grano sobre las portadas (0 = sin grano) */
+  --grain-opacity:.75;         /* intensidad del grano sobre las portadas (0 = sin grano) */
   --scrim:.9;                  /* oscuridad de abajo, donde va el texto (0 a 1) */
 
-  /* Grano: ruido fino generado, se repite como mosaico */
-  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.6 -.35'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  /* Grano en dos capas, como película: una fina (la textura) y una media (el carácter).
+     --grain-fine-size / --grain-mid-size: tamaño de cada capa; más chico = grano más fino. */
+  --grain-fine-size:120px;
+  --grain-mid-size:200px;
+  --grain-fine:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.9 -0.4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23n%29'/%3E%3C/svg%3E");
+  --grain-mid:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.7 -0.45'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23n%29'/%3E%3C/svg%3E");
+  --grain:var(--grain-fine),var(--grain-mid);   /* las dos capas juntas */
+  --grain-sizes:var(--grain-fine-size),var(--grain-mid-size);
 }
 
 /* 2. Grilla y tarjeta */
@@ -45,7 +51,7 @@
 .cover::before{content:"";position:absolute;inset:0;z-index:1;   /* sombra: más oscura abajo para que el texto se lea */
   background:linear-gradient(to top,rgba(5,5,8,var(--scrim)) 0%,rgba(5,5,8,calc(var(--scrim)*.55)) 42%,rgba(5,5,8,.12) 78%,rgba(5,5,8,.3) 100%)}
 .cover::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;   /* grano */
-  background:var(--grain);background-size:180px;mix-blend-mode:overlay;opacity:var(--grain-opacity)}
+  background:var(--grain);background-size:var(--grain-sizes);mix-blend-mode:overlay;opacity:var(--grain-opacity)}
 
 /* 4. Contenido */
 .k-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}

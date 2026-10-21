@@ -16,7 +16,7 @@ function doPost(e) {
   lock.waitLock(20000);
   try {
     const hoja = obtenerHoja();
-    hoja.appendRow([new Date(), d.ref, d.title, d.plan, d.weeks, d.total, d.cat, d.date, d.time, d.place,
+    hoja.appendRow([new Date(), d.ref, d.title, d.plan, d.days, d.total, d.cat, d.date, d.time, d.place,
                     d.contactMethod, d.contact, d.tickets, d.link, d.desc, "", "", ""]);
   } finally {
     lock.releaseLock();
@@ -25,7 +25,7 @@ function doPost(e) {
   /* Si se acabó la cuota diaria de mails, la fila igual queda guardada */
   try {
     MailApp.sendEmail(AVISAR_A, `Nueva solicitud ${d.ref}: ${d.title}`,
-      `Plan: ${d.plan} · ${d.weeks} sem · US$ ${d.total}\nEvento: ${d.title} (${d.cat})\nFecha: ${d.date} ${d.time}\nLugar: ${d.place}\n` +
+      `Plan: ${d.plan} · ${d.days} días (hasta ${d.until}) · US$ ${d.total}\nEvento: ${d.title} (${d.cat})\nFecha: ${d.date} ${d.time}\nLugar: ${d.place}\n` +
       `Contacto (${d.contactMethod}): ${d.contact}\nEntradas: ${d.tickets || "-"}\nLink: ${d.link || "-"}\n\n${d.desc || ""}\n\nTodavía falta confirmar el pago.`);
   } catch (err) {}
 

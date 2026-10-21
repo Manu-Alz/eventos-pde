@@ -23,8 +23,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=8">
-<link rel="stylesheet" href="css/publicar.css?v=8">
+<link rel="stylesheet" href="css/styles.css?v=9">
+<link rel="stylesheet" href="css/publicar.css?v=9">
 </head>
 <body>
 <div class="wrap">
@@ -38,7 +38,7 @@
 <div class="wrap">
   <a class="back" href="index.html">‹ Volver a los eventos</a>
   <h2>Publicá tu evento y llegá a todo Punta.</h2>
-  <p class="lead">Tu evento aparece en su categoría, con fecha, hora, lugar y contacto. Los precios son por semana de publicación: si querés más tiempo de visibilidad, elegís más semanas y se multiplica. Primero elegí cuánta visibilidad querés y después completá los datos. ¿Dudas? Escribinos a <a data-email href="mailto:eventospde.uy@gmail.com">eventospde.uy@gmail.com</a>.</p>
+  <p class="lead">Tu evento aparece en su categoría, con fecha, hora, lugar y contacto. Se cobra por día de publicación y cuanto más tiempo está online tu evento, menos pagás por día: podés publicarlo desde un solo día. Primero elegí cuánta visibilidad querés y después completá los datos. ¿Dudas? Escribinos a <a data-email href="mailto:eventospde.uy@gmail.com">eventospde.uy@gmail.com</a>.</p>
 
   <h3 class="step">Paso 1: elegí tu plan</h3>
   <div class="plans" id="plans"></div>
@@ -52,9 +52,12 @@
       <label>Fecha<input type="date" name="date" required></label>
       <label>Hora<input type="time" name="time" required></label>
       <label>Lugar<input name="place" required autocomplete="off"></label>
-      <label class="full">Semanas de publicación
-        <select name="weeks"><option value="1">1 semana</option><option value="2">2 semanas</option><option value="3">3 semanas</option><option value="4">4 semanas</option></select>
-      </label>
+      <div class="full dayfield">
+        <label>Días de publicación<input type="number" name="days" min="1" max="90" value="7" inputmode="numeric" required></label>
+        <div class="quick" id="quickDays" role="group" aria-label="Duraciones frecuentes"></div>
+      </div>
+      <label>Primer día de publicación<input type="date" name="start" required></label>
+      <p class="daysnote" id="daysNote" aria-live="polite"></p>
       <label>Método de contacto
         <select name="contactMethod"><option value="WhatsApp">WhatsApp</option><option value="Email">Email</option><option value="Instagram">Instagram</option></select>
       </label>
@@ -71,10 +74,10 @@
 
 <div class="wrap"><footer class="foot" id="site-footer"><span>Punta del Este, Uruguay</span></footer></div>
 
-<script src="js/config.js?v=8"></script>
-<script src="js/utils.js?v=8"></script>
-<script src="js/analytics.js?v=8"></script>
-<script src="js/site.js?v=8"></script>
-<script src="js/publicar.js?v=8"></script>
+<script src="js/config.js?v=9"></script>
+<script src="js/utils.js?v=9"></script>
+<script src="js/analytics.js?v=9"></script>
+<script src="js/site.js?v=9"></script>
+<script src="js/publicar.js?v=9"></script>
 </body>
 </html>

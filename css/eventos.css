@@ -19,7 +19,7 @@
 .top-bg::after{content:"";position:absolute;inset:0;         /* resplandor */
   background:radial-gradient(55% 55% at 18% 0%,var(--tb-glow-a),transparent 72%),radial-gradient(48% 50% at 86% 6%,var(--tb-glow-b),transparent 72%)}
 .top-bg i{position:absolute;inset:0;opacity:var(--tb-waves);  /* ondas: grano visible solo en franjas curvas */
-  background:var(--grain);background-size:180px;
+  background:var(--grain);background-size:var(--grain-sizes);
   -webkit-mask-image:repeating-radial-gradient(ellipse 130% 95% at 50% -35%,transparent 0 50px,#000 100px,transparent 150px);
   mask-image:repeating-radial-gradient(ellipse 130% 95% at 50% -35%,transparent 0 50px,#000 100px,transparent 150px)}
 
