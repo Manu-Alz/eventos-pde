@@ -17,9 +17,14 @@
   footer.innerHTML = `
     <p class="foot-info"><span>Punta del Este, Uruguay</span><span>© ${new Date().getFullYear()} Eventos PDE</span></p>
     <nav class="foot-links" aria-label="Contacto">
+      ${/publicar/.test(location.pathname) ? "" : '<a href="publicar.html" data-ev="promo_publicar">Publicar evento</a>'}
+      <a href="https://wa.me/${esc(CONFIG.whatsapp)}" target="_blank" rel="noopener" data-ev="whatsapp_sitio">WhatsApp</a>
       <a href="mailto:${esc(CONFIG.email)}" data-ev="email_sitio">${esc(CONFIG.email)}</a>
       <a href="https://instagram.com/${esc(CONFIG.instagram)}" target="_blank" rel="noopener" data-ev="instagram_sitio">Instagram<span>@${esc(CONFIG.instagram)}</span></a>
     </nav>`;
+
+  /* Cualquier <a data-wa> abre el WhatsApp de la configuración */
+  document.querySelectorAll("a[data-wa]").forEach(a => { a.href = "https://wa.me/" + CONFIG.whatsapp; });
 
   /* Cualquier <a data-email> de la página toma el mail de la configuración */
   document.querySelectorAll("a[data-email]").forEach(a => {

@@ -46,7 +46,7 @@ function slideEl(e) {
         <li>${ico("clock")}<span>${esc(timeLabel(e))}</span></li>
         <li>${ico("pin")}<span class="s-place">${esc(e.place)}</span></li>
       </ul>
-      <span class="s-cta">Ver detalles <i>${ico("arrow")}</i></span>
+      <span class="s-cta">${e.tickets ? "Comprar entradas" : "Ver detalles"} <i>${ico("arrow")}</i></span>
     </div>
     ${e.photo ? `<div class="s-poster"><img src="${esc(photoUrl(e))}" alt="" decoding="async" onerror="this.closest('.s-poster').remove()"></div>` : ""}`;
   return s;

@@ -70,3 +70,18 @@ form .full{grid-column:1/-1}
 .quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .quick .chip{min-height:var(--tap)}
 .daysnote{grid-column:1/-1;margin:-4px 0 0;font-size:14px;color:var(--muted)}
+
+/* 5. Cómo funciona (3 pasos) y preguntas frecuentes */
+.how{list-style:none;counter-reset:how;margin:-6px 0 34px;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:12px}
+.how li{counter-increment:how;display:grid;gap:4px;padding:16px 18px 16px 62px;position:relative;border:1px solid var(--line);border-radius:18px;background:var(--glass)}
+.how li::before{content:counter(how);position:absolute;left:16px;top:16px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:700 15px 'Bricolage Grotesque',sans-serif;background:var(--sun);color:var(--on-sun)}
+.how b{font-size:16px}
+.how span{font-size:14px;color:var(--muted)}
+.faq-title{margin-top:48px}
+.faq{max-width:760px;display:grid;gap:10px}
+.faq details{border:1px solid var(--line);border-radius:16px;background:var(--glass)}
+.faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:var(--tap);padding:12px 18px;font-weight:700}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";flex:none;font-size:22px;line-height:1;color:var(--muted);transition:transform .25s var(--ease)}
+.faq details.is-open summary::after{transform:rotate(45deg)}
+.faq p{margin:0;padding:0 18px 16px;overflow:hidden;color:var(--muted);font-size:15px}

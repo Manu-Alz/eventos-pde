@@ -25,11 +25,26 @@ const bounds = (() => {
 })();
 
 /* ============ 3. Filtros ============ */
-function filtered() {
-  const s = $("q").value.trim().toLowerCase();
+/* Lo que se busca: título, lugar, categoría, descripción y fecha ("diciembre", "sábado", "31") */
+const haystack = new Map(LIVE.map(e => [e, norm(`${e.title} ${e.place} ${e.cat} ${e.desc} ${longDate(e)} ${MESES[+e.date.slice(5, 7) - 1]}`)]));
+
+function filtered({ cat = state.cat } = {}) {
+  const words = norm($("q").value.trim()).split(/\s+/).filter(Boolean);
   return LIVE
-    .filter(e => (state.cat === "Todos" || e.cat === state.cat) && (!s || `${e.title} ${e.place} ${e.cat} ${e.desc}`.toLowerCase().includes(s)))
+    .filter(e => (cat === "Todos" || e.cat === cat) && words.every(w => haystack.get(e).includes(w)))
     .sort(compareEvents);
+}
+
+/* Botón de filtro con su cantidad; sin eventos queda apagado (salvo el elegido, para poder salir de él) */
+function chipEl(label, on, count, onClick) {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "chip";
+  b.innerHTML = `${esc(label)}${count != null ? `<small class="chip-n">${count}</small>` : ""}`;
+  b.setAttribute("aria-pressed", on);
+  b.disabled = count === 0 && !on;
+  b.onclick = onClick;
+  return b;
 }
 
 function renderChips() {
@@ -47,25 +62,41 @@ function renderChips() {
   box.appendChild(cal);
 
   ["Todos", ...Object.keys(CATS)].forEach(name => {
-    const b = document.createElement("button");
-    b.type = "button";
-    b.className = "chip";
-    b.textContent = name;
-    b.setAttribute("aria-pressed", name === state.cat);
-    b.onclick = () => { state.cat = name; state.day = null; render(); };
-    box.appendChild(b);
+    box.appendChild(chipEl(name, name === state.cat, name === "Todos" ? null : filtered({ cat: name }).length,
+      () => { state.cat = name; state.day = null; render(); }));
   });
 }
 
 /* ============ 4. Lista ============ */
+/* Tarjeta para organizadores: aparece entre los eventos y lleva a publicar.html */
+function promoEl() {
+  const from = Math.min(...PLANS.map(p => p.tiers[0][1]));
+  const a = document.createElement("a");
+  a.className = "card promo";
+  a.href = "publicar.html";
+  a.dataset.ev = "promo_publicar";
+  a.innerHTML = `
+    <div class="k-top"><span class="k-cat"><i></i>Para organizadores</span></div>
+    <div class="k-bottom">
+      <h3>¿Organizás un evento en Punta?</h3>
+      <p class="promo-text">Publicalo en la agenda desde US$ ${from} por día y llegá a quienes buscan qué hacer esta temporada.</p>
+      <span class="s-cta">Publicar evento <i>${ico("arrow")}</i></span>
+    </div>`;
+  return a;
+}
+
 function renderList(list) {
   const grid = $("grid");
   grid.innerHTML = "";
   if (!list.length) {
-    grid.innerHTML = '<p class="empty">Todavía no hay eventos en esta categoría. Probá otra o publicá el tuyo.</p>';
+    const searching = $("q").value.trim();
+    grid.innerHTML = `<div class="empty"><p>${searching ? "No encontramos eventos con esa búsqueda." : "Todavía no hay eventos en esta categoría."} Probá con otra o publicá el tuyo.</p>
+      <p><button type="button" class="btn ghost" id="reset">Ver todos los eventos</button> <a class="btn" href="publicar.html" data-ev="promo_publicar">Publicar mi evento</a></p></div>`;
+    $("reset").onclick = () => { $("q").value = ""; state.cat = "Todos"; render(); };
     return;
   }
   list.forEach(e => grid.appendChild(cardEl(e)));
+  grid.insertBefore(promoEl(), grid.children[5] || null);
 }
 
 /* ============ 5. Render general ============ */
@@ -82,8 +113,42 @@ function render() {
   else renderList(list);
 }
 
-/* ============ 6. Inicio ============ */
-$("q").addEventListener("input", render);
+/* ============ 6. Datos para Google ============
+   Cada evento vigente va como schema.org/Event: Google puede mostrarlos en sus resultados de eventos. */
+(() => {
+  const BASE = "https://eventospde.com/";
+  const start = e => (/^\d{1,2}:\d{2}$/.test(e.time) ? `${e.date}T${e.time.padStart(5, "0")}:00-03:00` : e.date);
+  const data = LIVE.map(e => {
+    const t = ticketLink(e);
+    return {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      name: e.title,
+      description: e.desc,
+      startDate: start(e),
+      ...(e.endDate ? { endDate: e.endDate } : {}),
+      eventStatus: "https://schema.org/EventScheduled",
+      eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+      location: { "@type": "Place", name: e.place,
+        address: { "@type": "PostalAddress", addressLocality: "Punta del Este", addressRegion: "Maldonado", addressCountry: "UY" } },
+      ...(e.photo ? { image: [new URL(photoUrl(e), BASE).href] } : {}),
+      url: BASE + "#" + slugOf(e),
+      ...(t ? { offers: { "@type": "Offer", url: t.url, availability: "https://schema.org/InStock" } } : {})
+    };
+  });
+  const s = document.createElement("script");
+  s.type = "application/ld+json";
+  s.textContent = JSON.stringify(data);
+  document.head.appendChild(s);
+})();
+
+/* ============ 7. Inicio ============ */
+let typing = 0;
+$("q").addEventListener("input", () => {
+  render();
+  clearTimeout(typing);                          // cuenta la búsqueda cuando se deja de escribir
+  typing = setTimeout(() => { const q = $("q").value.trim(); if (q.length > 2) track("buscar", { busqueda: q }); }, 1200);
+});
 
 /* Etiqueta del hero: cuántos eventos hay en agenda */
 const heroLive = $("hero-live");

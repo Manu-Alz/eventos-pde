@@ -111,6 +111,9 @@ const coverHtml = e => e.photo
 
 const coverStyle = e => { const h = hashOf(e.title); return `--gx:${18 + h % 64}%;--gy:${12 + (h >> 4) % 50}%`; };
 
+/* Aviso en la tarjeta de los eventos con link de entradas */
+const tixHtml = e => (e.tickets ? `<span class="k-tix">${ico("ticket")}Entradas a la venta</span>` : "");
+
 /* ============ 6. Tarjeta de la grilla ============
    Estructura: .cover + .k-top [.k-date, .k-cat] + .k-bottom [h3, .k-meta, .k-go]
    Al tocarla se abre el detalle (detalle.js). Los links y botones viven adentro del detalle. */
@@ -130,6 +133,7 @@ function cardEl(e) {
       <span class="k-cat"><i></i>${esc(e.cat)}</span>
     </div>
     <div class="k-bottom">
+      ${tixHtml(e)}
       <h3>${esc(e.title)}</h3>
       <div class="k-row">
         <ul class="k-meta">

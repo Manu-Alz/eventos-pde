@@ -22,6 +22,12 @@ const TODAY = (() => {
   catch (_) { const t = new Date(); return `${t.getFullYear()}-${pad(t.getMonth() + 1)}-${pad(t.getDate())}`; }
 })();
 
+/* Sumar días a "AAAA-MM-DD" */
+const addDays = (iso, n) => { const d = new Date(iso + "T12:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
+
+/* Texto para buscar: sin tildes y en minúsculas ("musica" encuentra "Música") */
+const norm = s => String(s).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+
 /* ---------- Íconos (trazos SVG) ---------- */
 const ICONS = {
   link:  '<path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/>',

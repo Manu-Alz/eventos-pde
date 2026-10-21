@@ -20,6 +20,20 @@
     } catch (_) { return ""; }
   };
 
+  /* Google Calendar: con hora, 3 horas de duración; sin hora ("A confirmar"), día completo */
+  function calendarUrl(e) {
+    const flat = iso => iso.replace(/-/g, "");
+    let dates;
+    if (/^\d{1,2}:\d{2}$/.test(e.time)) {
+      const t0 = new Date(`${e.date}T${e.time.padStart(5, "0")}:00Z`), t1 = new Date(t0.getTime() + 3 * 36e5);
+      const fmt = d => d.toISOString().slice(0, 19).replace(/[-:]/g, "");
+      dates = `${fmt(t0)}/${fmt(t1)}`;               // hora local de Uruguay (ctz), sin Z
+    } else dates = `${flat(e.date)}/${flat(addDays(e.endDate || e.date, 1))}`;
+    const p = new URLSearchParams({ action: "TEMPLATE", text: e.title, dates, ctz: "America/Montevideo",
+      details: `${e.desc}\n\n${shareUrl(e)}`, location: /a confirmar/i.test(e.place) ? "Punta del Este, Uruguay" : e.place });
+    return "https://calendar.google.com/calendar/render?" + p;
+  }
+
   const infoRow = (icon, label, value) =>
     `<li><span class="k-ic">${ico(icon)}</span><div><small>${label}</small><b>${esc(value)}</b></div></li>`;
 
@@ -31,10 +45,13 @@
     const mUrl = mapUrl(e);
     const embed = mUrl ? mapEmbed(mUrl) : "";
 
-    /* Botón principal: entradas; si no hay, el link libre */
-    let main = "";
+    /* Entradas: van en una barra fija abajo de la ventana (siempre a la vista).
+       Sin entradas, el botón principal es el link libre. */
+    let main = "", buy = "";
     if (t) {
-      main = `<a class="dlg-btn main" href="${esc(t.url)}" target="_blank" rel="${t.affiliate ? "sponsored noopener" : "noopener"}" ${trackAttrs(t.affiliate ? "referido" : "entradas", e)}>${ico("ticket")}Comprar entradas</a>`;
+      buy = `<div class="dlg-buy">
+        <a class="dlg-btn main" href="${esc(t.url)}" target="_blank" rel="${t.affiliate ? "sponsored noopener" : "noopener"}" ${trackAttrs(t.affiliate ? "referido" : "entradas", e)}>${ico("ticket")}Comprar entradas</a>
+      </div>`;
     } else if (free) {
       main = `<a class="dlg-btn main" href="${esc(free)}" target="_blank" rel="noopener" ${trackAttrs("enlace", e)}>${ico("link")}${esc(e.linkLabel || "Más información")}</a>`;
     }
@@ -45,6 +62,7 @@
       const icon = label === "WhatsApp" ? "chat" : label === "Instagram" ? "instagram" : label === "Email" ? "mail" : "link";
       second.push(`<a class="dlg-btn" href="${esc(contact)}" target="_blank" rel="noopener" ${trackAttrs("contacto", e)}>${ico(icon)}${label}</a>`);
     }
+    second.push(`<a class="dlg-btn" href="${esc(calendarUrl(e))}" target="_blank" rel="noopener" ${trackAttrs("agendar", e)}>${ico("calendar")}Agendar</a>`);
     second.push(`<button type="button" class="dlg-btn" data-share>${ico("share")}Compartir</button>`);
 
     return `
@@ -70,7 +88,8 @@
           <div class="${second.length > 1 ? "dlg-row" : ""}">${second.join("")}</div>
           ${t && t.affiliate ? '<p class="dlg-note">Enlace de referido: no cambia el precio.</p>' : ""}
         </div>
-      </div>`;
+      </div>
+      ${buy}`;
   }
 
   /* ============ 3. Estado y animación ============ */
@@ -231,8 +250,7 @@
     if (ev.target.closest(".dlg")) {
       if (ev.target === back) requestClose();
       else if (ev.target.closest(".dlg-x")) requestClose();
-      else if (ev.target.closest("[data-share]")) share();
-      return;
+      else if (ev.target.closest("[data-share]")) share();      return;
     }
     const card = ev.target.closest(".card[data-id],.slide[data-id]");
     if (card) { const e = byId(card.dataset.id); if (e) open(e, card); }

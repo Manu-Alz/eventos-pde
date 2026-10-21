@@ -6,7 +6,8 @@ Agenda de eventos de Punta del Este. Sitio estático (HTML, CSS y JS puros): se 
 
 ```
 index.html          home: slider de portada, filtros, lista y calendario (botón de calendario antes de "Todos")
-publicar.html       planes, formulario y pago
+publicar.html       planes, cómo funciona, formulario, pago y preguntas frecuentes
+404.html            página para links rotos (GitHub Pages la muestra sola)
 css/
   styles.css        base compartida (colores, botones, pie)
   eventos.css       hero, filtros y grilla de tarjetas
@@ -46,6 +47,14 @@ js/
   - `link` + `linkLabel`: link libre (web, programa, reservas) cuando no hay entradas.
   - `contact`: botón de WhatsApp, Instagram o `mailto:`.
 
+## Qué hace la web sola
+
+- **Entradas:** un evento con `tickets` muestra "Entradas a la venta" en la tarjeta, "Comprar entradas" en la portada y un botón fijo abajo del detalle.
+- **Agendar:** cada detalle tiene un botón que agrega el evento a Google Calendar (con hora: 3 horas; "A confirmar": día completo).
+- **Para organizadores:** en la grilla aparece una tarjeta que lleva a publicar.html, con el precio más bajo de `PLANS`.
+- **Google:** cada evento vigente se describe como schema.org/Event para que Google pueda mostrarlo en sus resultados de eventos.
+- **Búsqueda:** sin tildes y también por fecha ("diciembre", "sábado").
+
 ## Precios (en `js/config.js`, `PLANS`)
 
 Se cobra por día publicado y cada tramo sale más barato: `tiers: [[hastaElDía, precioPorDía], ...]`. Los tramos se suman (7 días nunca cuestan menos que 6). Hoy: Básico US$ 6 los días 1-2, US$ 3 del 3 al 7, US$ 2 del 8 al 30 y US$ 1 desde el 31; Portada US$ 30, 12, 8 y 5. `MAX_DAYS` es el tope de días por pedido. La página recalcula tarjetas, total y mensajes sola.
@@ -53,7 +62,7 @@ Se cobra por día publicado y cada tramo sale más barato: `tiers: [[hastaElDía
 ## Cobro (manual)
 
 1. La persona elige plan, completa el formulario y recibe una referencia (`PDE-XXXXX`).
-2. Paga por depósito bancario o PayPal indicando la referencia.
+2. Paga con Mercado Pago, depósito bancario o PayPal indicando la referencia. Mercado Pago usa un link de pago fijo por plan y días (`mercadopago` en `config.js`, para 1, 3, 7, 14 y 30 días); un link vacío no se ofrece.
 3. Manda el comprobante por WhatsApp o mail (`eventospde.uy@gmail.com`).
 4. Verificás el pago, cargás el evento en `data.js` y subís el cambio.
 

@@ -36,8 +36,7 @@ function tierRows(plan) {
   }).join("");
 }
 
-/* Fechas: sumar días a "AAAA-MM-DD" y mostrar "dd/mm/aaaa" */
-const addDays = (iso, n) => { const d = new Date(iso + "T12:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
+/* Fechas: mostrar "dd/mm/aaaa" (addDays está en utils.js) */
 const dmy = iso => iso.split("-").reverse().join("/");
 const todayIso = () => new Date(Date.now() - new Date().getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
 
@@ -186,6 +185,20 @@ function paypalPanel(plan, total, ref) {
   return [a, h("p", "note", `Escribí la referencia ${ref} en la nota del pago y después avisanos por WhatsApp o mail.`)];
 }
 
+/* Mercado Pago: link fijo por plan y días (CONFIG.mercadopago). Solo se ofrece si hay link para esa cantidad de días. */
+const mpUrl = (plan, days) => safeUrl(((CONFIG.mercadopago || {})[plan.name] || {})[days]);
+const mpDays = plan => Object.keys((CONFIG.mercadopago || {})[plan.name] || {}).filter(d => mpUrl(plan, d));
+function mpPanel(plan, days, total, ref) {
+  const url = mpUrl(plan, days);
+  const a = h("a", "btn", `Pagar US$ ${total} con Mercado Pago`);
+  a.target = "_blank";
+  a.rel = "noopener";
+  a.href = url;
+  a.dataset.ev = "pago_mercadopago";
+  a.dataset.c = plan.name;
+  return [a, h("p", "note", `Pagá con tarjeta, débito o efectivo. Después mandanos el comprobante con tu referencia ${ref}.`)];
+}
+
 /* ============ 5. Aviso automático ============
    Si CONFIG.formUrl está cargado, manda la solicitud al script de Google (ver apps-script/Code.gs):
    queda en la planilla y te llega un mail. Si falla, la persona igual puede avisar por WhatsApp o mail. */
@@ -208,7 +221,7 @@ form.addEventListener("submit", ev => {
   const start = data.start || todayIso();
   const ref = newRef();
   notifyRequest(plan, data, ref, total);
-  const methods = [isSet(CONFIG.bank.cuenta) && "Depósito bancario", isSet(CONFIG.paypal) && "PayPal"].filter(Boolean);
+  const methods = [mpUrl(plan, days) && "Mercado Pago", isSet(CONFIG.bank.cuenta) && "Depósito bancario", isSet(CONFIG.paypal) && "PayPal"].filter(Boolean);
 
   const tabs  = h("div", "paytabs");
   const panel = h("div", "pay");
@@ -218,7 +231,8 @@ form.addEventListener("submit", ev => {
   wa.target = "_blank"; wa.rel = "noopener";
 
   function showMethod(method) {
-    panel.replaceChildren(...(method === "Depósito bancario" ? bankPanel(total, ref) : method === "PayPal" ? paypalPanel(plan, total, ref) : []));
+    panel.replaceChildren(...(method === "Depósito bancario" ? bankPanel(total, ref) : method === "PayPal" ? paypalPanel(plan, total, ref)
+      : method === "Mercado Pago" ? mpPanel(plan, days, total, ref) : []));
     tabs.querySelectorAll("button").forEach(t => t.setAttribute("aria-pressed", t.textContent === method));
     const msg = buildMessage(ref, method, plan, data);
     wa.href = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`;
@@ -238,9 +252,12 @@ form.addEventListener("submit", ev => {
     ...(plan.name === "Portada" ? [h("p", "note", "La portada tiene lugares limitados: antes de cobrarte confirmamos por WhatsApp o mail que tu fecha esté libre.")] : []),
     /* Un solo método: se muestra directo, sin botón. Dos o más: botones para elegir. */
     ...(methods.length > 1 ? [h("p", "", "Elegí cómo pagar:"), tabs]
-      : methods.length === 1 ? [h("p", "", `Pagá por ${methods[0] === "PayPal" ? "PayPal" : "depósito bancario"}:`)]
+      : methods.length === 1 ? [h("p", "", `Pagá por ${methods[0] === "Depósito bancario" ? "depósito bancario" : methods[0]}:`)]
       : [h("p", "note", "Te pasamos los datos de pago por WhatsApp o mail.")]),
     panel,
+    /* Mercado Pago tiene links para algunas duraciones: si eligió otra, se le avisa cuáles */
+    ...(!mpUrl(plan, days) && mpDays(plan).length
+      ? [h("p", "note", `Con ${mpDays(plan).join(", ").replace(/, (\d+)$/, " o $1")} días también podés pagar con Mercado Pago (tarjeta o débito).`)] : []),
     h("p", "", "Cuando pagues, mandanos el comprobante:"),
     h("div", "sendrow")
   );
@@ -255,4 +272,28 @@ form.addEventListener("submit", ev => {
   syncContactField();
   updateTotal();
   done.scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+
+/* ============ 7. Preguntas frecuentes ============
+   Cada respuesta se despliega y se recoge con una animación (en vez de aparecer de golpe).
+   Si se toca de nuevo a mitad de camino, sigue desde donde estaba. */
+const FAQ_MS = 320;
+document.querySelectorAll(".faq details").forEach(d => {
+  const body = d.querySelector("p");
+  let anim = null;
+  d.querySelector("summary").addEventListener("click", ev => {
+    ev.preventDefault();
+    const opening = !d.classList.contains("is-open");
+    d.classList.toggle("is-open", opening);
+    const now = d.open ? body.getBoundingClientRect().height : 0;   // alto actual, aunque esté a mitad de la animación
+    if (anim) anim.cancel();
+    d.open = true;
+    const full = body.scrollHeight, pad = getComputedStyle(body).paddingBottom;
+    const shut = { height: "0px", paddingBottom: "0px", opacity: 0 }, open = { height: full + "px", paddingBottom: pad, opacity: 1 };
+    const from = { height: now + "px", paddingBottom: now ? pad : "0px", opacity: now ? 1 : 0 };
+    const ms = matchMedia("(prefers-reduced-motion:reduce)").matches ? 1 : FAQ_MS;
+    const a = anim = body.animate([from, opening ? open : shut], { duration: ms, easing: "cubic-bezier(.4,0,.2,1)", fill: "forwards" });
+    a.onfinish = () => { if (!opening) d.open = false; a.cancel(); if (anim === a) anim = null; };
+    if (opening) track("faq", { pregunta: d.querySelector("summary").textContent });
+  });
 });
