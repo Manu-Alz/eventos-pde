@@ -38,13 +38,17 @@ js/
 
 - **Agregar un evento:** copiá uno existente y cambiá los campos. La lista de campos está al principio del archivo.
 - **Poner un evento en la portada (slider):** agregale `portada: true` al evento. Se ven hasta 6, los más cercanos primero. Los eventos sin `portada` solo aparecen en la agenda, ordenada por fecha.
-- **Publicaciones pagas (por semana):** al cargar el evento poné `from` (primer día) y `until` (último día pagado, ej. 7 días después). Pasado `until` deja de verse solo, aunque el evento sea después.
+- **Publicaciones pagas (por día):** al cargar el evento poné `from` (primer día pagado) y `until` (último día pagado; con 7 días contratados desde el 1/12, `until` es el 7/12). Pasado `until` deja de verse solo, aunque el evento sea después.
 - **Un evento vence solo** después de su fecha (`date`, o `endDate` si dura varios días). No hace falta borrarlo.
 - **Links:** cada publicación muestra un solo embed.
   - `tickets`: link de entradas. Si el dominio está en `AFFILIATES`, se le agrega tu código y se marca como "enlace de referido".
   - `affiliate: true`: para un link de afiliado que ya viene armado.
   - `link` + `linkLabel`: link libre (web, programa, reservas) cuando no hay entradas.
   - `contact`: botón de WhatsApp, Instagram o `mailto:`.
+
+## Precios (en `js/config.js`, `PLANS`)
+
+Se cobra por día publicado y cada tramo sale más barato: `tiers: [[hastaElDía, precioPorDía], ...]`. Los tramos se suman (7 días nunca cuestan menos que 6). Hoy: Básico US$ 6 los días 1-2, US$ 3 del 3 al 7, US$ 2 del 8 al 30 y US$ 1 desde el 31; Portada US$ 30, 12, 8 y 5. `MAX_DAYS` es el tope de días por pedido. La página recalcula tarjetas, total y mensajes sola.
 
 ## Cobro (manual)
 

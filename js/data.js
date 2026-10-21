@@ -20,7 +20,7 @@
    │            (fondo de la tarjeta y póster de la portada; sin foto: degradé de color)  │
    │ portada    true -> aparece en el slider de la portada (máx. 6, los más cercanos)   │
    │ from       primer día visible, "AAAA-MM-DD" (opcional; si no, se ve ya)             │
-   │ until      último día visible = fin de las semanas pagadas (opcional)               │
+   │ until      último día visible = fin de los días pagados (opcional)                │
    └─────────────────────────────────────────────────────────────────────────────────────┘
 
    SOLO PUNTA DEL ESTE: la agenda es local (Punta del Este, La Barra, Manantiales, José Ignacio,
@@ -198,7 +198,7 @@ const EV = [
     title: "Festival Internacional de Jazz de Punta del Este",
     cat: "Música en vivo", date: "2027-01-04", time: "A confirmar",
     place: "Punta del Este",
-    desc: "31.ª edición del festival de jazz más importante de la costa, declarada de interés nacional: una semana de conciertos en Punta del Este con artistas locales e internacionales. Programación y horarios a confirmar.",
+    desc: "31.ª edición del Festival Internacional de Jazz de Punta del Este, declarada de interés nacional: una semana de conciertos en la ciudad. Programación y horarios a confirmar.",
     endDate: "2027-01-11"
   },
   {

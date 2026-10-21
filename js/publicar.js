@@ -50,7 +50,7 @@ function planCard(plan) {
     ${plan.popular ? `<div class="badge">${ico("star")}Popular</div>` : ""}
     <h3>${esc(plan.name)}</h3>
     <div class="price">US$ ${plan.tiers[0][1]} <small>/ día</small></div>
-    <p class="billed">el primer día. Cuanto más días, menos pagás por día</p>
+    <p class="billed">el primer día. Cuantos más días, menos pagás por día</p>
     <ul class="tiers">${tierRows(plan)}</ul>
     <p class="example">Ejemplo: <b>7 días = US$ ${priceOf(plan, 7)}</b> · 30 días = US$ ${priceOf(plan, 30)} (US$ ${perDay(plan, 30)} por día)</p>
     <ul>${plan.features.map(f => `<li>${ico("check")}<span>${esc(f)}</span></li>`).join("")}</ul>
