@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /apps-script/
+
+Sitemap: https://eventospde.com/sitemap.xml

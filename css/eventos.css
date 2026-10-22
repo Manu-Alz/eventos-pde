@@ -51,35 +51,7 @@
 .empty p{margin:0 0 18px}
 .empty .btn{margin:0 8px 8px 0}
 
-/* 2. Fecha y etiqueta (las usan la portada y el calendario; la grilla tiene las suyas en tarjetas.css) */
-.date{display:inline-flex;align-items:baseline;gap:6px;padding:6px 12px;border-radius:12px;background:var(--ref-glass);box-shadow:inset 0 0 0 1px var(--ref-glass-line)}   /* vidrio, igual que el botón de link (variables en la sección 3) */
-.date b{font:800 21px/1 'Bricolage Grotesque',sans-serif}
-.date small{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-.tag{font-size:13px;font-weight:700;color:var(--c);white-space:nowrap}
-
-/* 3. Piezas reutilizables: hora/lugar, contacto, embed de entradas */
-.meta{display:grid;gap:4px}
-.when,.where{display:flex;align-items:center;gap:8px;min-width:0;font-size:14px}
-.when .ico,.where .ico{color:rgba(255,255,255,.85)}   /* íconos neutros: el color de la categoría vive solo en el punto de la etiqueta */
-.place{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.maplink{color:inherit;text-decoration:underline;text-decoration-color:rgba(255,255,255,.4);text-underline-offset:3px}
-.maplink:hover{text-decoration-color:currentColor}
-.contact{display:inline-flex;align-items:center;font-size:14px;font-weight:700;text-decoration:none;color:var(--ink);border:1.5px solid rgba(255,255,255,.22);border-radius:999px;padding:5px 14px;background:rgba(255,255,255,.12)}
-.contact:hover{background:rgba(255, 255, 255, 0.021);border-color:var(--c)}
-:root{
-  --ref-glass:rgba(255,255,255,.07);        /* fondo translúcido del botón de link (como en la portada) */
-  --ref-glass-line:rgba(255,255,255,.16);   /* borde del botón de link */
-  --ref-glass-hover:rgba(255,255,255,.11);  /* fondo al pasar el mouse */
-}
-.ref{display:flex;align-items:center;gap:10px;padding:7px 10px;border:1px solid var(--ref-glass-line);border-radius:12px;background:var(--ref-glass);text-decoration:none;min-width:0}
-.ref:hover{background:var(--ref-glass-hover);border-color:var(--c)}
-.ref .ri{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;line-height:0;background:rgba(255,255,255,.1);color:#fff}
-.ref .ri .ico{display:block;width:16px;height:16px}
-.ref .rt{min-width:0;display:flex;flex-direction:column;line-height:1.25}
-.ref b{font-size:14px}
-.ref small{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-/* 4. Traslados y alojamiento: dos accesos debajo de la portada (llevan a servicios.html) */
+/* 2. Traslados y alojamiento: dos accesos debajo de la portada (llevan a servicios.html) */
 .svc{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 clamp(22px,4vw,34px)}
 .svc-tile{display:flex;align-items:center;gap:14px;min-width:0;padding:14px 14px 14px 16px;border-radius:22px;text-decoration:none;color:var(--ink);
   border:1px solid var(--line);background:var(--glass);transition:background .25s,border-color .25s}

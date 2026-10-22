@@ -42,42 +42,7 @@ function ticketLink(e) {
   return { url, affiliate: Boolean(rule || e.affiliate) };
 }
 
-/* ============ 3. Piezas HTML ============ */
-/* Mini embed con ícono de link. Una publicación muestra uno solo: entradas, o si no hay, el link libre. */
-function embedHtml(e) {
-  const t = ticketLink(e);
-  const free = safeUrl(e.link);
-  if (!t && !free) return "";
-
-  const url   = t ? t.url : free;
-  const label = t ? "Comprar entradas" : (e.linkLabel || "Más información");
-  const note  = t && t.affiliate ? " · enlace de referido" : "";
-  const track = t ? (t.affiliate ? "referido" : "entradas") : "enlace";
-  const rel   = t && t.affiliate ? "sponsored noopener" : "noopener";
-
-  return `<a class="ref" href="${esc(url)}" target="_blank" rel="${rel}" ${trackAttrs(track, e)}>`
-    + `<span class="ri">${ico("link")}</span>`
-    + `<span class="rt"><b>${esc(label)}</b><small>${esc(host(url))}${note}</small></span></a>`;
-}
-
-function contactHtml(e) {
-  const url = safeUrl(e.contact);
-  return url ? `<a class="contact" href="${esc(url)}" target="_blank" rel="noopener" ${trackAttrs("contacto", e)}>${contactLabel(url)}</a>` : "";
-}
-
-const whenHtml = e => `<span class="when">${ico("clock")}<span>${esc(timeLabel(e))}</span></span>`;
-
-function whereHtml(e) {
-  const url = mapUrl(e);
-  const place = url
-    ? `<a class="maplink" href="${esc(url)}" target="_blank" rel="noopener" ${trackAttrs("mapa", e)} aria-label="${esc(e.place)}: ver en Google Maps (abre en otra pestaña)">${esc(e.place)} <span aria-hidden="true">↗</span></a>`
-    : esc(e.place);
-  return `<span class="where">${ico("pin")}<span class="place">${place}</span></span>`;
-}
-
-const dateHtml = e => `<div class="date"><b>${dayLabel(e)}</b><small>${monthLabel(e)}</small></div>`;
-
-/* ============ 4. Identidad de cada evento ============
+/* ============ 3. Identidad de cada evento ============
    slug: nombre corto para el link compartible (eventospde.com/#solomun-en-open-park-2026-12-29)
    hash: número fijo por título; sirve para que cada portada generada se vea distinta pero siempre igual */
 const slugOf = e => (e.title + " " + e.date).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -98,7 +63,7 @@ function longDate(e) {
   return `${wd} ${d(e.date)} de ${MESES[+e.date.slice(5, 7) - 1]}`;
 }
 
-/* ============ 5. Portada de la tarjeta ============
+/* ============ 4. Portada de la tarjeta ============
    Con foto (campo photo en data.js): la foto. Sin foto: un degradé con el color de la categoría,
    en una posición distinta para cada evento. El grano y la sombra los pone tarjetas.css. */
 /* photo en data.js puede ser solo el nombre del archivo ("solomun-open-park.webp"): se busca en img/eventos/ */
@@ -114,7 +79,7 @@ const coverStyle = e => { const h = hashOf(e.title); return `--gx:${18 + h % 64}
 /* Aviso en la tarjeta de los eventos con link de entradas */
 const tixHtml = e => (e.tickets ? `<span class="k-tix">${ico("ticket")}Entradas a la venta</span>` : "");
 
-/* ============ 6. Tarjeta de la grilla ============
+/* ============ 5. Tarjeta de la grilla ============
    Estructura: .cover + .k-top [.k-date, .k-cat] + .k-bottom [h3, .k-meta, .k-go]
    Al tocarla se abre el detalle (detalle.js). Los links y botones viven adentro del detalle. */
 function cardEl(e) {

@@ -61,9 +61,16 @@ function renderCalendar(box, list, { state, bounds, onChange }) {
   const picked = state.day && state.day.startsWith(prefix) ? state.day : null;
   const shown = picked ? (byDay[picked] || []) : monthEvents;
 
+  /* Las flechas saltan al mes anterior o siguiente que tenga eventos (los meses vacíos se saltean) */
   const idx = y * 12 + m;
-  const canPrev = idx > bounds.min.y * 12 + bounds.min.m;
-  const canNext = idx < bounds.max.y * 12 + bounds.max.m;
+  const minI = bounds.min.y * 12 + bounds.min.m, maxI = bounds.max.y * 12 + bounds.max.m;
+  const withEvents = new Set(Object.keys(byDay).map(k => k.slice(0, 7)));
+  const monthWithEvents = dir => {
+    for (let i = idx + dir; i >= minI && i <= maxI; i += dir) if (withEvents.has(`${Math.floor(i / 12)}-${pad(i % 12 + 1)}`)) return i;
+    return null;
+  };
+  const prevI = monthWithEvents(-1), nextI = monthWithEvents(1);
+  const canPrev = prevI !== null, canNext = nextI !== null;
   const offset = (new Date(y, m, 1).getDay() + 6) % 7;           // la semana empieza el lunes
   const days = new Date(y, m + 1, 0).getDate();
   const cells = Array.from({ length: days }, (_, i) => {
@@ -97,8 +104,8 @@ function renderCalendar(box, list, { state, bounds, onChange }) {
   const redraw = focusSelector => { onChange(); const el = focusSelector && box.querySelector(focusSelector); if (el && !el.disabled) el.focus({ preventScroll: true }); };
 
   const shift = n => {
-    const next = idx + n;
-    if (next < bounds.min.y * 12 + bounds.min.m || next > bounds.max.y * 12 + bounds.max.m) return;
+    const next = n < 0 ? prevI : nextI;
+    if (next === null) return;
     state.month = { y: Math.floor(next / 12), m: next % 12 };
     state.day = null;
     redraw(n < 0 ? "#pv" : "#nx");

@@ -40,7 +40,8 @@ function chipEl(label, on, count, onClick) {
   const b = document.createElement("button");
   b.type = "button";
   b.className = "chip";
-  b.innerHTML = `${esc(label)}${count != null ? `<small class="chip-n">${count}</small>` : ""}`;
+  b.innerHTML = `${esc(label)}${count != null ? `<small class="chip-n" aria-hidden="true">${count}</small>` : ""}`;
+  if (count != null) b.setAttribute("aria-label", `${label}, ${count} ${count === 1 ? "evento" : "eventos"}`);   // el lector de pantalla dice "Fiestas, 26 eventos"
   b.setAttribute("aria-pressed", on);
   b.disabled = count === 0 && !on;
   b.onclick = onClick;
