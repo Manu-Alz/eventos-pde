@@ -53,18 +53,46 @@ form select option{color:#0F2A3D}
 form .full{grid-column:1/-1}
 .hint{font-weight:400;color:var(--muted)}
 
-/* 4. Pago */
-#ok{display:none;max-width:760px;border:1.5px solid var(--sun);border-radius:14px;padding:18px;margin-top:20px}
-#ok p{margin:0 0 12px}
+/* 4. Pago: encabezado · resumen (total, días, referencia) · paso 1 pagar · paso 2 comprobante */
+#ok{display:none;max-width:760px;margin-top:24px;padding:clamp(18px,4vw,28px);border-radius:24px;border:1px solid rgba(124,77,255,.45);
+  background:radial-gradient(120% 80% at 100% 0%,rgba(124,77,255,.16),transparent 60%),var(--bg);animation:rise .4s var(--ease)}
+#ok p{margin:0}
 #ok .note{font-size:14px;color:var(--muted)}
-.refcode{display:inline-block;font:700 22px ui-monospace,Menlo,Consolas,monospace;letter-spacing:.08em;background:var(--bg);border:1.5px dashed var(--sun);border-radius:10px;padding:6px 14px;margin:0 0 16px}
-.paytabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
-.pay{margin:10px 0 18px}
-.dl{display:grid;grid-template-columns:auto 1fr;gap:8px 18px;margin:0 0 10px}
-.dl dt{color:var(--muted)}
-.dl dd{margin:0;font-weight:700;overflow-wrap:anywhere}
-.sendrow{display:flex;flex-wrap:wrap;gap:10px}
-@media (max-width:480px){.sendrow .btn{flex:1 1 100%}}
+.ok-head{display:flex;align-items:flex-start;gap:14px}
+.ok-check{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#46d9a0;color:#08080a}
+.ok-check .ico{width:22px;height:22px;stroke-width:2.6}
+.ok-head h3{font-size:clamp(20px,4.6vw,24px);line-height:1.15;overflow-wrap:anywhere}
+.ok-head p{margin-top:4px!important;color:var(--muted);font-size:15px}
+.ok-sum{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:22px 0 0}
+.ok-stat{display:grid;align-content:start;gap:2px;padding:14px 16px;border-radius:16px;background:var(--glass);border:1px solid var(--line);min-width:0}
+.ok-stat small{font-size:12px;color:var(--muted);letter-spacing:.04em}
+.ok-stat b{font:700 22px/1.15 'Bricolage Grotesque',sans-serif;overflow-wrap:anywhere}
+.ok-stat span{font-size:13px;color:var(--muted)}
+.ok-ref{border:1.5px dashed rgba(124,77,255,.7);background:rgba(124,77,255,.1)}
+.ok-ref b{font:700 20px/1.2 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.06em}
+.ok-callout{margin-top:14px!important;padding:12px 16px;border-radius:14px;background:rgba(255,176,46,.1);border:1px solid rgba(255,176,46,.35);font-size:14px}
+.ok-step{display:grid;gap:14px;margin-top:22px;padding-top:22px;border-top:1px solid var(--line)}
+.ok-step h4{display:flex;align-items:center;gap:10px;margin:0;font:700 17px 'DM Sans',sans-serif}
+.ok-step h4 span{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:700 14px 'Bricolage Grotesque',sans-serif;background:var(--sun);color:var(--on-sun)}
+/* Forma de pago: control segmentado con la píldora que se desliza */
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);padding:4px;border-radius:999px;background:var(--glass);border:1px solid var(--line)}
+.seg button{min-height:44px;padding:0 12px;border:0;border-radius:999px;background:none;color:var(--ink);font:700 15px 'DM Sans',sans-serif;cursor:pointer;transition:color .5s var(--ease);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.seg button[aria-pressed="true"]{color:var(--bg)}
+.pay{display:grid;gap:10px}
+.pay .btn{width:100%;min-height:52px;font-size:16px}
+.dl{display:grid;grid-template-columns:auto 1fr;margin:0;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.dl dt,.dl dd{margin:0;padding:11px 16px;border-top:1px solid var(--line)}
+.dl dt:first-of-type,.dl dd:first-of-type{border-top:0}
+.dl dt{color:var(--muted);font-size:14px}
+.dl dd{font-weight:700;text-align:right;overflow-wrap:anywhere}
+.sendrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sendrow .btn{width:100%}
+@media (max-width:560px){
+  .ok-sum{grid-template-columns:1fr 1fr}
+  .ok-ref{grid-column:1/-1}
+  .sendrow{grid-template-columns:1fr}
+  .seg button{font-size:14px;padding:0 8px}
+}
 
 /* Días de publicación: campo numérico + botones rápidos con su precio */
 .quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}

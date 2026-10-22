@@ -73,3 +73,11 @@ footer{padding:28px 0 max(36px,calc(env(safe-area-inset-bottom) + 20px));color:v
 /* 5. Animación compartida */
 @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+
+/* 6. Píldora que se desliza (utils.js slidePill): el fondo blanco del botón elegido viaja de un botón al otro */
+.has-pill{position:relative}
+.has-pill>:not(.pill){position:relative;z-index:1}
+.has-pill>.chip{transition:background .25s,border-color .25s,color .5s var(--ease)}   /* el texto cambia de color al ritmo de la píldora */
+.has-pill>.chip:not(.chip-cal)[aria-pressed="true"]{background:transparent;border-color:transparent}
+.pill{position:absolute;left:0;top:0;z-index:0;border-radius:999px;background:var(--ink);pointer-events:none;
+  transition:transform .5s var(--ease),width .5s var(--ease),height .5s var(--ease),opacity .2s}

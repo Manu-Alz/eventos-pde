@@ -47,9 +47,12 @@ function chipEl(label, on, count, onClick) {
   return b;
 }
 
+/* El botón elegido de categoría (no el del calendario): ahí va la píldora blanca */
+const activeChip = box => box.querySelector('.chip:not(.chip-cal)[aria-pressed="true"]');
+
 function renderChips() {
   const box = $("chips");
-  box.innerHTML = "";
+  box.querySelectorAll(":scope > :not(.pill)").forEach(n => n.remove());   // la píldora queda y se desliza a la nueva
 
   /* Botón circular del calendario: va antes de "Todos" y abre/cierra la vista de calendario */
   const cal = document.createElement("button");
@@ -63,8 +66,13 @@ function renderChips() {
 
   ["Todos", ...Object.keys(CATS)].forEach(name => {
     box.appendChild(chipEl(name, name === state.cat, name === "Todos" ? null : filtered({ cat: name }).length,
-      () => { state.cat = name; state.day = null; render(); }));
+      () => {
+        state.cat = name; state.day = null; render();
+        const a = activeChip(box);                   // en el celular la fila se desliza para centrar el elegido
+        box.scrollTo({ left: a.offsetLeft - (box.clientWidth - a.offsetWidth) / 2, behavior: "smooth" });
+      }));
   });
+  slidePill(box, activeChip(box));
 }
 
 /* ============ 4. Lista ============ */
@@ -156,3 +164,8 @@ if (heroLive) heroLive.textContent = `${LIVE.length} ${LIVE.length === 1 ? "even
 
 renderPortada(LIVE);
 render();
+
+/* La píldora sigue al botón si cambia el ancho (fuentes que terminan de cargar, giro del celular, ventana) */
+const pillFix = () => slidePill($("chips"), activeChip($("chips")), true);
+addEventListener("resize", pillFix);
+if (document.fonts) document.fonts.ready.then(pillFix);

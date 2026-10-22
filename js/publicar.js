@@ -172,7 +172,7 @@ function bankPanel(total, ref) {
   [["Monto", bankAmount(total)], ["Titular", b.titular], ["Banco", b.banco], ["Tipo de cuenta", b.tipo], ["N° de cuenta", b.cuenta], ["Referencia", ref]]
     .filter(([label, value]) => label === "Monto" || label === "Referencia" || isSet(value))
     .forEach(([label, value]) => { dl.append(h("dt", "", label), h("dd", "", value)); });
-  return [dl, h("p", "note", "Depositá el monto indicando la referencia y mandanos el comprobante por WhatsApp o mail.")];
+  return [dl, h("p", "note", "Depositá o transferí el monto exacto y poné la referencia en el concepto.")];
 }
 
 function paypalPanel(plan, total, ref) {
@@ -182,7 +182,7 @@ function paypalPanel(plan, total, ref) {
   a.href = `https://www.paypal.me/${encodeURIComponent(CONFIG.paypal)}/${total}USD`;
   a.dataset.ev = "pago_paypal";
   a.dataset.c = plan.name;
-  return [a, h("p", "note", `Escribí la referencia ${ref} en la nota del pago y después avisanos por WhatsApp o mail.`)];
+  return [a, h("p", "note", `Escribí la referencia ${ref} en la nota del pago.`)];
 }
 
 /* Mercado Pago: link de monto libre en pesos (CONFIG.mercadopago). Se muestra cuántos pesos escribir. */
@@ -190,13 +190,13 @@ const MP = CONFIG.mercadopago || {};
 const mpOn = Boolean(safeUrl(MP.link)) && MP.uyuRate > 0;
 const pesos = usd => "$U " + Math.round(usd * MP.uyuRate).toLocaleString("es-UY");
 function mpPanel(plan, total, ref) {
-  const a = h("a", "btn", `Pagar ${pesos(total)} con Mercado Pago`);
+  const a = h("a", "btn", `Pagar ${pesos(total)}`);
   a.target = "_blank";
   a.rel = "noopener";
   a.href = safeUrl(MP.link);
   a.dataset.ev = "pago_mercadopago";
   a.dataset.c = plan.name;
-  return [a, h("p", "note", `Se abre Mercado Pago: escribí ${pesos(total)} (US$ ${total}) y pagá con tarjeta, débito o efectivo. Después mandanos el comprobante con tu referencia ${ref}.`)];
+  return [a, h("p", "note", `Se abre Mercado Pago: escribí ${pesos(total)} (US$ ${total} a $U ${MP.uyuRate}) y pagá con tarjeta, débito o efectivo.`)];
 }
 
 /* ============ 5. Aviso automático ============
@@ -223,7 +223,10 @@ form.addEventListener("submit", ev => {
   notifyRequest(plan, data, ref, total);
   const methods = [mpOn && "Mercado Pago", isSet(CONFIG.bank.cuenta) && "Depósito bancario", isSet(CONFIG.paypal) && "PayPal"].filter(Boolean);
 
-  const tabs  = h("div", "paytabs");
+  /* Cuadro de pago: encabezado · resumen (total, días, referencia) · paso 1 pagar · paso 2 comprobante */
+  const tabs  = h("div", "seg has-pill");
+  tabs.setAttribute("role", "group");
+  tabs.setAttribute("aria-label", "Forma de pago");
   const panel = h("div", "pay");
   const wa    = h("a", "btn", "Enviar por WhatsApp");
   const mail  = h("a", "btn ghost", "Enviar por mail");
@@ -232,36 +235,62 @@ form.addEventListener("submit", ev => {
 
   function showMethod(method) {
     panel.replaceChildren(...(method === "Depósito bancario" ? bankPanel(total, ref) : method === "PayPal" ? paypalPanel(plan, total, ref)
-      : method === "Mercado Pago" ? mpPanel(plan, total, ref) : []));
+      : method === "Mercado Pago" ? mpPanel(plan, total, ref) : [h("p", "note", "Te pasamos los datos de pago por WhatsApp o mail.")]));
     tabs.querySelectorAll("button").forEach(t => t.setAttribute("aria-pressed", t.textContent === method));
+    slidePill(tabs, tabs.querySelector('[aria-pressed="true"]'));
     const msg = buildMessage(ref, method, plan, data);
     wa.href = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`;
     mail.href = `mailto:${CONFIG.email}?subject=${encodeURIComponent("Publicar evento " + ref)}&body=${encodeURIComponent(msg)}`;
   }
 
   methods.forEach(m => {
-    const t = h("button", "chip", m);
+    const t = h("button", "", m);
     t.type = "button";
     t.onclick = () => showMethod(m);
     tabs.appendChild(t);
   });
 
+  const stat = (label, value, sub, cls = "") => {
+    const d = h("div", "ok-stat " + cls);
+    d.append(h("small", "", label), h("b", "", value));
+    if (sub) d.append(h("span", "", sub));
+    return d;
+  };
+  const head = h("div", "ok-head");
+  const check = h("span", "ok-check");
+  check.innerHTML = ico("check");
+  const headText = h("div");
+  headText.append(h("h3", "", CONFIG.formUrl ? `¡Recibimos “${data.title}”!` : `Armamos tu solicitud de “${data.title}”`),
+    h("p", "", "Falta el pago para publicarlo. Guardá tu referencia."));
+  head.append(check, headText);
+
+  const sum = h("div", "ok-sum");
+  sum.append(
+    stat("Total", `US$ ${total}`, mpOn ? pesos(total) : ""),
+    stat("Publicación", daysText(days), `${dmy(start).slice(0, 5)} al ${dmy(addDays(start, days - 1)).slice(0, 5)}`),
+    stat("Tu referencia", ref, "", "ok-ref"));
+
+  const step = (n, title, ...body) => {
+    const s = h("section", "ok-step");
+    const t = h("h4");
+    t.append(h("span", "", n), title);
+    s.append(t, ...body);
+    return s;
+  };
+  const payTitle = methods.length === 1 ? `Pagá con ${methods[0] === "Depósito bancario" ? "depósito bancario" : methods[0]}` : "Elegí cómo pagar";
+  const sendrow = h("div", "sendrow");
+  sendrow.append(wa, mail);
+
   done.replaceChildren(
-    h("p", "", `${CONFIG.formUrl ? `¡Recibimos “${data.title}”!` : `Armamos tu solicitud de “${data.title}”.`} Falta el pago de US$ ${total} (${daysText(days)}, del ${dmy(start)} al ${dmy(addDays(start, days - 1))}) para publicarlo. Tu referencia es:`),
-    h("div", "refcode", ref),
-    ...(plan.name === "Portada" ? [h("p", "note", "La portada tiene lugares limitados: antes de cobrarte confirmamos por WhatsApp o mail que tu fecha esté libre.")] : []),
-    /* Un solo método: se muestra directo, sin botón. Dos o más: botones para elegir. */
-    ...(methods.length > 1 ? [h("p", "", "Elegí cómo pagar:"), tabs]
-      : methods.length === 1 ? [h("p", "", `Pagá por ${methods[0] === "Depósito bancario" ? "depósito bancario" : methods[0]}:`)]
-      : [h("p", "note", "Te pasamos los datos de pago por WhatsApp o mail.")]),
-    panel,
-    h("p", "", "Cuando pagues, mandanos el comprobante:"),
-    h("div", "sendrow")
+    head,
+    sum,
+    ...(plan.name === "Portada" ? [h("p", "ok-callout", "La portada tiene lugares limitados: antes de cobrarte confirmamos por WhatsApp o mail que tu fecha esté libre.")] : []),
+    step("1", payTitle, ...(methods.length > 1 ? [tabs] : []), panel),
+    step("2", "Mandanos el comprobante", h("p", "note", `Con tu referencia ${ref}: lo verificamos y publicamos tu evento.`), sendrow)
   );
-  done.querySelector(".sendrow").append(wa, mail);
+  done.style.display = "block";
   showMethod(methods[0] || null);
 
-  done.style.display = "block";
   track("enviar_evento", { plan: plan.name, categoria: data.cat });
   form.reset();
   form.elements.days.value = 7;
@@ -270,6 +299,9 @@ form.addEventListener("submit", ev => {
   updateTotal();
   done.scrollIntoView({ behavior: "smooth", block: "nearest" });
 });
+
+/* La píldora de la forma de pago sigue al botón si cambia el ancho de la pantalla */
+addEventListener("resize", () => document.querySelectorAll(".seg").forEach(s => slidePill(s, s.querySelector('[aria-pressed="true"]'), true)));
 
 /* ============ 7. Preguntas frecuentes ============
    Cada respuesta se despliega y se recoge con una animación (en vez de aparecer de golpe).

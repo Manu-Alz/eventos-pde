@@ -28,6 +28,20 @@ const addDays = (iso, n) => { const d = new Date(iso + "T12:00:00Z"); d.setUTCDa
 /* Texto para buscar: sin tildes y en minúsculas ("musica" encuentra "Música") */
 const norm = s => String(s).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 
+/* ---------- Píldora que se desliza ----------
+   El fondo blanco del botón elegido es una sola pieza (.pill) que viaja de un botón al otro.
+   box: contenedor con la clase has-pill · active: botón elegido (null = se esconde) · instant: sin animación */
+function slidePill(box, active, instant = false) {
+  let pill = box.querySelector(":scope > .pill");
+  const fresh = !pill;
+  if (fresh) { pill = document.createElement("i"); pill.className = "pill"; pill.setAttribute("aria-hidden", "true"); box.prepend(pill); }
+  if (!active) { pill.style.opacity = "0"; return; }
+  const jump = fresh || instant || pill.style.opacity === "0";
+  if (jump) pill.style.transition = "none";
+  Object.assign(pill.style, { transform: `translate(${active.offsetLeft}px,${active.offsetTop}px)`, width: active.offsetWidth + "px", height: active.offsetHeight + "px", opacity: "1" });
+  if (jump) { void pill.offsetWidth; pill.style.transition = ""; }
+}
+
 /* ---------- Íconos (trazos SVG) ---------- */
 const ICONS = {
   link:  '<path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/>',
