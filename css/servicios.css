@@ -27,3 +27,12 @@ fieldset.grp .full{grid-column:1/-1}
 .ok-gap{margin:16px 0!important}
 .ok-ref b{white-space:nowrap}
 @media (max-width:560px){.ok-sum2 .ok-ref{grid-column:auto}.ok-sum2 .ok-stat b{font-size:17px}}
+
+/* 4. Envío: aclaración bajo el botón y "qué sigue" en la confirmación */
+.secure{margin:10px 0 0;font-size:13px;color:var(--muted)}
+.next-steps{list-style:none;counter-reset:ns;margin:18px 0 0;padding:0;display:grid;gap:10px}
+.next-steps li{counter-increment:ns;position:relative;display:grid;gap:2px;padding:12px 14px 12px 52px;border-radius:16px;background:var(--glass);border:1px solid var(--line)}
+.next-steps li::before{content:counter(ns);position:absolute;left:14px;top:12px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:700 13px 'Bricolage Grotesque',sans-serif;background:#F7F5F2;color:#151518}
+.next-steps b{font-size:15px}
+.next-steps span{font-size:14px;color:var(--muted)}
+#ok .ok-gap a{color:var(--ink);font-weight:700}

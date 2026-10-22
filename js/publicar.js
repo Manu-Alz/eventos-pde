@@ -1,5 +1,5 @@
 /* publicar.js · página de publicación: 1) elegir plan  2) datos del evento  3) pago
-   El cobro es manual: la persona recibe una referencia, paga por depósito o PayPal y manda el
+   Cobro: la persona recibe una referencia y paga con Mercado Pago (monto exacto) o por depósito; si paga por depósito manda el
    comprobante por WhatsApp o mail. Vos verificás el pago y cargás el evento en data.js.
    Requiere: config.js, utils.js, analytics.js, site.js */
 
@@ -189,30 +189,39 @@ function paypalPanel(plan, total, ref) {
 const MP = CONFIG.mercadopago || {};
 const mpOn = Boolean(safeUrl(MP.link)) && MP.uyuRate > 0;
 const pesos = usd => "$U " + Math.round(usd * MP.uyuRate).toLocaleString("es-UY");
-function mpPanel(plan, total, ref) {
+/* Con el script nuevo, Mercado Pago cobra el monto exacto (payUrl); si no, queda el link de monto libre */
+function mpPanel(plan, total, ref, payUrl) {
   const a = h("a", "btn", `Pagar ${pesos(total)}`);
   a.target = "_blank";
   a.rel = "noopener";
-  a.href = safeUrl(MP.link);
+  a.href = safeUrl(payUrl) || safeUrl(MP.link);
   a.dataset.ev = "pago_mercadopago";
   a.dataset.c = plan.name;
-  return [a, h("p", "note", `Se abre Mercado Pago: escribí ${pesos(total)} (US$ ${total} a $U ${MP.uyuRate}) y pagá con tarjeta, débito o efectivo.`)];
+  return [a, h("p", "note", payUrl
+    ? `Se abre Mercado Pago con el monto exacto (US$ ${total} = ${pesos(total)}): pagá con tarjeta, débito o efectivo. Se confirma solo.`
+    : `Se abre Mercado Pago: escribí ${pesos(total)} (US$ ${total} a $U ${MP.uyuRate}) y pagá con tarjeta, débito o efectivo.`)];
 }
 
 /* ============ 5. Aviso automático ============
    Si CONFIG.formUrl está cargado, manda la solicitud al script de Google (ver apps-script/Code.gs):
-   queda en la planilla y te llega un mail. Si falla, la persona igual puede avisar por WhatsApp o mail. */
-function notifyRequest(plan, d, ref, total) {
-  if (!CONFIG.formUrl) return;
+   queda en la planilla y te llega un mail. Con el script nuevo contesta { ok, pago }: pago = link de Mercado Pago
+   por el monto exacto. Si no contesta, devuelve null (la solicitud igual queda enviada) y se usa el link de monto libre. */
+async function notifyRequest(plan, d, ref, total) {
+  if (!CONFIG.formUrl) return null;
   const days = clampDays(d.days);
   const body = JSON.stringify({ ...d, days, until: addDays(d.start || todayIso(), days - 1), ref, plan: plan.name, total });
-  fetch(CONFIG.formUrl, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain" }, body }).catch(() => {});
+  try {
+    const res = await fetch(CONFIG.formUrl, { method: "POST", headers: { "Content-Type": "text/plain" }, body });
+    return await res.json();
+  } catch (_) { return null; }
 }
 
 /* ============ 6. Envío ============ */
-form.addEventListener("submit", ev => {
+form.addEventListener("submit", async ev => {
   ev.preventDefault();
   if (!selectedPlan) return;
+  const sendBtn = form.querySelector('[type="submit"]');
+  sendBtn.disabled = true; sendBtn.textContent = "Enviando…";
 
   const plan = selectedPlan;
   const data = Object.fromEntries(new FormData(form));
@@ -220,7 +229,9 @@ form.addEventListener("submit", ev => {
   const total = priceOf(plan, days);
   const start = data.start || todayIso();
   const ref = newRef();
-  notifyRequest(plan, data, ref, total);
+  const answer = await notifyRequest(plan, data, ref, total);
+  const payUrl = answer && answer.pago;
+  sendBtn.disabled = false; sendBtn.textContent = "Enviar evento";
   const methods = [mpOn && "Mercado Pago", isSet(CONFIG.bank.cuenta) && "Depósito bancario", isSet(CONFIG.paypal) && "PayPal"].filter(Boolean);
 
   /* Cuadro de pago: encabezado · resumen (total, días, referencia) · paso 1 pagar · paso 2 comprobante */
@@ -235,7 +246,7 @@ form.addEventListener("submit", ev => {
 
   function showMethod(method) {
     panel.replaceChildren(...(method === "Depósito bancario" ? bankPanel(total, ref) : method === "PayPal" ? paypalPanel(plan, total, ref)
-      : method === "Mercado Pago" ? mpPanel(plan, total, ref) : [h("p", "note", "Te pasamos los datos de pago por WhatsApp o mail.")]));
+      : method === "Mercado Pago" ? mpPanel(plan, total, ref, payUrl) : [h("p", "note", "Te pasamos los datos de pago por WhatsApp o mail.")]));
     tabs.querySelectorAll("button").forEach(t => t.setAttribute("aria-pressed", t.textContent === method));
     slidePill(tabs, tabs.querySelector('[aria-pressed="true"]'));
     const msg = buildMessage(ref, method, plan, data);

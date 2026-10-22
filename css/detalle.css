@@ -5,7 +5,7 @@
 
 /* 1. Ajustes rápidos */
 :root{
-  --dlg-width:560px;          /* ancho máximo de la ventana en pantallas grandes */
+  --dlg-width:600px;          /* ancho máximo de la ventana en pantallas grandes */
   --dlg-radius:30px;          /* redondeo */
   --dlg-bg:#1b1b20;           /* fondo de la ventana */
 }
@@ -26,7 +26,7 @@
 
 /* 3. Contenido */
 .dlg-cover{position:relative;isolation:isolate;height:clamp(200px,32vh,250px)}
-.dlg-cover .k-date{position:absolute;left:18px;top:16px;z-index:3}
+.dlg-cover .k-date,.dlg-cover .k-day{position:absolute;left:18px;top:16px;z-index:3}
 .dlg-body{position:relative;display:grid;gap:18px;padding:0 22px 26px;margin-top:-30px}
 .dlg-head{display:grid;gap:12px;justify-items:start}
 .dlg-tags{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
@@ -59,8 +59,8 @@
 .dlg-btn:active{opacity:.8}
 .dlg-btn.main{background:#F4F4F5;color:#000;box-shadow:none}
 .dlg-btn small{font-weight:500;opacity:.6;font-size:13px}
-.dlg-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.dlg-row>:last-child:nth-child(odd){grid-column:1/-1}   /* con 3 botones, el último ocupa todo el ancho */
+.dlg-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(132px,100%),1fr));gap:10px}
+.dlg-row .dlg-btn{min-width:0;padding:12px 14px;white-space:nowrap}   /* en pantallas angostas los botones se apilan en vez de cortarse */
 .dlg-note{margin:0;font-size:13px;color:var(--muted);text-align:center}
 .dlg-toast{position:absolute;left:50%;bottom:20px;z-index:8;transform:translate(-50%,10px);opacity:0;pointer-events:none;padding:10px 18px;border-radius:999px;
   background:#F4F4F5;color:#000;font-weight:700;font-size:14px;transition:opacity .25s,transform .25s}
@@ -77,7 +77,7 @@ body.dlg-open{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 /* 6. Traslado y alojamiento para el evento (llevan a servicios.html con el evento ya elegido) */
 .dlg-svc{display:grid;gap:10px;padding-top:18px;border-top:1px solid rgba(255,255,255,.1)}
 .dlg-svc p{margin:0;font-size:14px;font-weight:700;color:var(--muted)}
-.dlg-svc>div{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dlg-svc>div{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(140px,100%),1fr));gap:10px}
 .dlg-svc a{display:flex;align-items:center;gap:12px;min-width:0;padding:12px 14px;border-radius:18px;text-decoration:none;color:var(--ink);
   background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);transition:background .25s}
 .dlg-svc a:hover{background:rgba(255,255,255,.11)}

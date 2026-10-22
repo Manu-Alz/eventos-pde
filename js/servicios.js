@@ -1,6 +1,6 @@
 /* servicios.js · página de traslados y alojamiento
-   La persona elige qué necesita, completa el pedido y lo manda por WhatsApp; vos le conseguís opciones y precio.
-   Con CONFIG.formServicios en true, el pedido también queda en la planilla (apps-script/Code.gs, pestaña "Servicios").
+   La persona elige qué necesita y manda el pedido; le llega la cotización por mail y paga online (ver la sección 4).
+   El pedido queda en la planilla (apps-script/Code.gs, pestaña "Servicios") si CONFIG.formServicios está en true.
    Se puede abrir ya armado: servicios.html?s=traslado&e=<id del evento>  (s = traslado | alojamiento | ambos)
    Índice: 1 Qué necesita · 2 Evento · 3 Mensaje · 4 Envío
    Requiere: config.js, data.js, utils.js, analytics.js, site.js, cards.js */
@@ -80,27 +80,48 @@ function buildServiceMessage(ref, d) {
   if (need !== "traslado") lines.push(
     `— Alojamiento: del ${dm(d.aIn)} al ${dm(d.aOut)} (${nights(d.aIn, d.aOut)} ${nights(d.aIn, d.aOut) === 1 ? "noche" : "noches"})`,
     `  Zona: ${d.aZone} · Tipo: ${d.aType} · Presupuesto por noche: ${d.aBudget}`);
-  lines.push(`Nombre: ${d.name}`, `WhatsApp: ${d.phone}`);
+  lines.push(`Nombre: ${d.name}`, `Mail: ${d.email}`, `Celular: ${d.phone}`);
   if (d.notes) lines.push(`Algo más: ${d.notes}`);
   return lines.join("\n");
 }
 
-/* ============ 4. Envío ============ */
+/* ============ 4. Envío ============
+   El pedido va al script de Google (apps-script/Code.gs): queda en la planilla, al cliente le llega un mail de
+   confirmación y después la cotización con el link para pagar online. No hace falta que nos escriba.
+   Si el script no responde, queda el plan B: mandar el pedido por WhatsApp o mail. */
 const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+const NEED_TXT = { traslado: "traslado", alojamiento: "alojamiento", ambos: "traslado y alojamiento" };
+const okStat = (label, value, cls = "") => { const s = el("div", "ok-stat " + cls); s.append(el("small", "", label), el("b", "", value)); return s; };
 
-sform.addEventListener("submit", ev => {
-  ev.preventDefault();
-  const d = Object.fromEntries(new FormData(sform));
-  const ref = newSrvRef();
+function okHead(title, text) {
+  const head = el("div", "ok-head");
+  const check = el("span", "ok-check"); check.innerHTML = ico("check");
+  const txt = el("div");
+  txt.append(el("h3", "", title), el("p", "", text));
+  head.append(check, txt);
+  return head;
+}
+
+/* Pedido recibido por el sistema: confirmación con los pasos que siguen */
+function showReceived(ref, d, e) {
+  const steps = el("ol", "next-steps");
+  [["Cotizamos", "Armamos opciones con nuestros choferes y alojamientos."],
+   ["Te llega por mail", `La cotización va a ${d.email}, con el total y el botón de pago.`],
+   ["Pagás online y listo", "Con tarjeta, débito o transferencia. Después coordinamos los detalles."]]
+    .forEach(([b, s]) => { const li = el("li"); li.append(el("b", "", b), el("span", "", s)); steps.append(li); });
+  const sum = el("div", "ok-sum ok-sum2");
+  sum.append(okStat("Pedís", NEED_TXT[need].replace(/^./, c => c.toUpperCase())), okStat("Tu pedido", ref, "ok-ref"));
+  const help = el("p", "note ok-gap");
+  help.append("¿Algo urgente o un cambio? ");
+  const a = el("a", "", "Escribinos");
+  a.href = `mailto:${CONFIG.email}?subject=${encodeURIComponent("Pedido " + ref)}`;
+  help.append(a, e ? ` · Para ${e.title}, ${longDate(e)}.` : "");
+  sdone.replaceChildren(okHead(`¡Pedido recibido, ${d.name.trim().split(/\s+/)[0]}!`, `Te mandamos la cotización a ${d.email}. Revisá también la carpeta de promociones o spam.`), sum, steps, help);
+}
+
+/* Plan B: el sistema no respondió; el pedido se manda por WhatsApp o mail */
+function showManual(ref, d, e) {
   const msg = buildServiceMessage(ref, d);
-  const e = chosenEvent();
-
-  /* Planilla: solo si ya está el Code.gs nuevo (CONFIG.formServicios) */
-  if (CONFIG.formUrl && CONFIG.formServicios) {
-    fetch(CONFIG.formUrl, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify({ kind: "servicio", ref, need, event: e ? `${e.title} (${e.date})` : "", ...d }) }).catch(() => {});
-  }
-
   const wa = el("a", "btn", "Enviar pedido por WhatsApp");
   wa.href = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`;
   wa.target = "_blank"; wa.rel = "noopener";
@@ -108,23 +129,37 @@ sform.addEventListener("submit", ev => {
   const mail = el("a", "btn ghost", "Enviar por mail");
   mail.href = `mailto:${CONFIG.email}?subject=${encodeURIComponent("Pedido " + ref)}&body=${encodeURIComponent(msg)}`;
   mail.dataset.ev = "servicio_mail"; mail.dataset.n = need;
-
-  const head = el("div", "ok-head");
-  const check = el("span", "ok-check"); check.innerHTML = ico("check");
-  const txt = el("div");
-  txt.append(el("h3", "", `¡Listo, ${d.name.trim().split(/\s+/)[0]}!`),
-    el("p", "", CONFIG.formServicios ? "Recibimos tu pedido. Te escribimos por WhatsApp con opciones y precio." : "Mandanos el pedido por WhatsApp y te respondemos con opciones y precio."));
-  head.append(check, txt);
   const row = el("div", "sendrow"); row.append(wa, mail);
   const sum = el("div", "ok-sum ok-sum2");
-  const stat = (label, value, cls = "") => { const s = el("div", "ok-stat " + cls); s.append(el("small", "", label), el("b", "", value)); return s; };
-  sum.append(stat("Pedís", NEED[need].replace(/^un /, "").replace(/^./, c => c.toUpperCase())), stat("Tu pedido", ref, "ok-ref"));
+  sum.append(okStat("Pedís", NEED_TXT[need].replace(/^./, c => c.toUpperCase())), okStat("Tu pedido", ref, "ok-ref"));
+  sdone.replaceChildren(okHead(`¡Casi listo, ${d.name.trim().split(/\s+/)[0]}!`, "Mandanos el pedido con un toque y te respondemos con opciones y precio."),
+    sum, el("p", "note ok-gap", e ? `Para ${e.title}, ${longDate(e)}.` : "Guardá el número de pedido."), row);
+}
 
-  sdone.replaceChildren(head, sum, el("p", "note ok-gap", e ? `Para ${e.title}, ${longDate(e)}.` : "Guardá el número de pedido por si nos escribís."), row);
+sform.addEventListener("submit", async ev => {
+  ev.preventDefault();
+  const d = Object.fromEntries(new FormData(sform));
+  const ref = newSrvRef();
+  const e = chosenEvent();
+  const btn = sform.querySelector('[type="submit"]');
+  btn.disabled = true; btn.textContent = "Enviando…";
+
+  let received = false;
+  if (CONFIG.formUrl && CONFIG.formServicios) {
+    try {
+      const res = await fetch(CONFIG.formUrl, { method: "POST", headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify({ kind: "servicio", ref, need: NEED_TXT[need], event: e ? `${e.title} (${e.date})` : "", ...d }) });
+      received = Boolean((await res.json()).ok);
+    } catch (_) { /* sin respuesta: plan B */ }
+  }
+  received ? showReceived(ref, d, e) : showManual(ref, d, e);
+
+  btn.disabled = false; btn.textContent = "Pedir cotización";
   sdone.style.display = "block";
-  track("pedir_servicio", { servicio: need, evento: e ? e.title : "" });
+  track("pedir_servicio", { servicio: need, evento: e ? e.title : "", via: received ? "sistema" : "manual" });
   sdone.scrollIntoView({ behavior: "smooth", block: "center" });
 });
+
 
 /* ============ Inicio ============ */
 if (q.get("e")) { evSelect.value = q.get("e"); fillDates(); }

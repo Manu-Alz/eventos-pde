@@ -69,3 +69,32 @@
   .svc-go{display:none}
   .svc-t small{font-size:13px}
 }
+
+/* 3. Hablemos: tres tarjetas tipo entrada (cabecera de color + cuerpo claro con troquel) */
+.talk{margin:clamp(56px,9vw,104px) 0 10px}
+.talk-eyebrow{margin:0 0 10px;font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#FF6A3D}
+.talk h2{font-size:clamp(34px,6.4vw,64px);font-weight:600;letter-spacing:-.045em;line-height:1;max-width:16ch;text-wrap:balance}
+.talk-lead{margin:14px 0 28px;max-width:52ch;color:var(--muted)}
+.talk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:18px}
+.tk{position:relative;display:flex;flex-direction:column;border-radius:26px;overflow:hidden;background:var(--tk);box-shadow:0 30px 60px -36px rgba(0,0,0,.9)}
+.tk-top{position:relative;display:flex;justify-content:space-between;align-items:flex-start;min-height:118px;padding:16px 18px}
+.tk-tag{padding:6px 12px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.28)}
+.tk-code{font:800 11px 'DM Sans',sans-serif;letter-spacing:.14em;color:rgba(0,0,0,.55)}
+.tk-ic{position:absolute;left:50%;top:58%;width:40px;height:40px;transform:translate(-50%,-50%);fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* Cuerpo claro: el blanco cálido de la página, con dos muescas de troquel donde se une a la cabecera */
+.tk-body{position:relative;flex:1;display:flex;flex-direction:column;gap:8px;padding:22px 22px 22px;background:#F7F5F2;color:#151518;border-radius:24px 24px 0 0;margin-top:-8px}
+.tk-body::before,.tk-body::after{content:"";position:absolute;top:-1px;width:18px;height:18px;border-radius:50%;background:var(--tk)}
+.tk-body::before{left:-9px}
+.tk-body::after{right:-9px}
+.tk-body small{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:color-mix(in srgb,var(--tk) 70%,#000)}
+.tk-body h3{font-size:24px;font-weight:600;letter-spacing:-.025em;line-height:1.1}
+.tk-body p{margin:0;font-size:15px;color:#55555c}
+.tk-body dl{display:grid;grid-template-columns:1fr 1fr;margin:8px 0 6px;padding:12px 0;border-block:1.5px dashed #d6d2cb}
+.tk-body dl div{padding:0 12px}
+.tk-body dl div:first-child{padding-left:0;border-right:1.5px solid #e2ded7}
+.tk-body dt{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#8a8a92}
+.tk-body dd{margin:2px 0 0;font-weight:700}
+.tk-btn{display:flex;align-items:center;justify-content:center;gap:8px;min-height:54px;margin-top:auto;border-radius:16px;text-decoration:none;font-weight:800;font-size:17px;
+  color:#fff;background:var(--tk);transition:transform .3s var(--ease),filter .3s}
+.tk-btn:hover{filter:brightness(1.08);transform:translateY(-2px)}
+.tk[style*="#4CC3DB"] .tk-btn{color:#08080a}

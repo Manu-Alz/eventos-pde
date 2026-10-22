@@ -1,0 +1,36 @@
+/* pagar.css · página de pago de un pedido (pagar.html, la arma js/pagar.js)
+   Estructura: main.pay-page > .pay-card [.pay-head, .pay-receipt (comprobante claro), botones, .pay-bank-wrap] */
+
+.pay-page{display:grid;place-items:start center;padding:clamp(16px,5vw,48px) 0 40px}
+.pay-card{width:100%;max-width:520px;display:grid;gap:16px;padding:clamp(20px,4vw,30px);border-radius:28px;border:1px solid var(--line);
+  background:radial-gradient(120% 80% at 100% 0%,rgba(124,77,255,.18),transparent 60%),var(--surface);box-shadow:0 30px 60px -36px #000;animation:rise .4s var(--ease)}
+.pay-card.is-loading{min-height:240px;place-items:center}
+.pay-wait{margin:0;color:var(--muted)}
+.pay-eyebrow{margin:0;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.pay-title{font-size:clamp(28px,6vw,38px);font-weight:600;letter-spacing:-.03em;line-height:1.05;margin:4px 0 0}
+.pay-text{margin:0;color:var(--muted)}
+.pay-head{display:grid;gap:4px}
+
+/* Comprobante: el blanco cálido de la página, con troquel punteado */
+.pay-receipt{display:grid;gap:12px;padding:20px;border-radius:20px;background:#F7F5F2;color:#151518}
+.pay-incl{margin:0;font-size:15px;color:#44444a}
+.pay-incl b{color:#151518}
+.pay-lines{list-style:none;margin:0;padding:0 0 12px;display:grid;gap:6px;font-size:14px;color:#44444a;border-bottom:1.5px dashed #d6d2cb}
+.pay-total{display:flex;align-items:baseline;justify-content:space-between}
+.pay-total span{font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#8a8a92}
+.pay-total b{font:700 34px/1 'Bricolage Grotesque',sans-serif;letter-spacing:-.02em}
+.pay-pesos{margin:-6px 0 0;text-align:right;font-size:13px;color:#8a8a92}
+
+.pay-mp{width:100%;min-height:56px;font-size:17px;background:#F4F4F5;color:#08080a}
+.pay-fine{margin:0;font-size:13px;color:var(--muted)}
+.pay-note{margin:0;padding:12px 14px;border-radius:14px;font-size:14px;background:rgba(255,176,46,.1);border:1px solid rgba(255,176,46,.35)}
+.pay-alt{justify-self:center;background:none;border:0;padding:10px;color:var(--ink);font:600 15px 'DM Sans',sans-serif;text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+.pay-bank-wrap{display:grid;gap:10px}
+.pay-bank{display:grid;grid-template-columns:auto 1fr;margin:0;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.pay-bank dt,.pay-bank dd{margin:0;padding:11px 16px;border-top:1px solid var(--line)}
+.pay-bank dt:first-of-type,.pay-bank dd:first-of-type{border-top:0}
+.pay-bank dt{color:var(--muted);font-size:14px}
+.pay-bank dd{font-weight:700;text-align:right;overflow-wrap:anywhere}
+.pay-done{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:2px 14px;padding:16px;border-radius:18px;background:rgba(70,217,160,.12);border:1px solid rgba(70,217,160,.4)}
+.pay-done .ico{grid-row:span 2;width:40px;height:40px;padding:9px;border-radius:50%;background:#46d9a0;color:#08080a;stroke-width:2.6}
+.pay-done span{font-size:14px;color:var(--muted)}

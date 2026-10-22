@@ -29,7 +29,7 @@ button{touch-action:manipulation}
 :focus-visible{outline:3px solid var(--sea);outline-offset:2px}
 
 /* 2. Layout y cabecera */
-.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 max(var(--gutter),env(safe-area-inset-right)) 0 max(var(--gutter),env(safe-area-inset-left))}
+.wrap{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:0 max(var(--gutter),env(safe-area-inset-right)) 0 max(var(--gutter),env(safe-area-inset-left))}
 header.top{position:sticky;top:0;z-index:30;display:flex;justify-content:space-between;align-items:center;gap:12px;
   margin:0 calc(-1 * var(--gutter));padding:12px var(--gutter)}
 /* Al bajar (js/site.js agrega .stuck) aparece un velo de vidrio de borde a borde que se desvanece hacia abajo (sin cajas) */

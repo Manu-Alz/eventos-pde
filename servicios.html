@@ -23,9 +23,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=24">
-<link rel="stylesheet" href="css/publicar.css?v=24">
-<link rel="stylesheet" href="css/servicios.css?v=24">
+<link rel="stylesheet" href="css/styles.css?v=26">
+<link rel="stylesheet" href="css/publicar.css?v=26">
+<link rel="stylesheet" href="css/servicios.css?v=26">
 </head>
 <body>
 <div class="wrap">
@@ -39,7 +39,7 @@
 <div class="wrap">
   <a class="back" href="index.html">‹ Volver a los eventos</a>
   <h2>Traslados y alojamiento en Punta.</h2>
-  <p class="lead">Te ayudamos con todo lo que rodea al evento: un chofer que te lleva y te trae, y dónde quedarte. Sirve para una fiesta, un concierto, una cena o cualquier salida. Contanos qué necesitás y te pasamos opciones y precio por WhatsApp, sin compromiso.</p>
+  <p class="lead">Te ayudamos con todo lo que rodea al evento: un chofer que te lleva y te trae, y dónde quedarte. Sirve para una fiesta, un concierto, una cena o cualquier salida. Contanos qué necesitás: te mandamos la cotización por mail y la pagás online, sin vueltas y sin compromiso.</p>
 
   <!-- Las dos tarjetas también eligen el servicio en el formulario (js/servicios.js) -->
   <div class="svc-cards">
@@ -67,8 +67,8 @@
 
   <ol class="how" aria-label="Cómo funciona">
     <li><b>Contanos qué necesitás</b><span>Completá el pedido: te lleva menos de un minuto.</span></li>
-    <li><b>Te pasamos opciones</b><span>Te escribimos por WhatsApp con alternativas y precio.</span></li>
-    <li><b>Confirmás y listo</b><span>Elegís la que te sirve y coordinamos todo.</span></li>
+    <li><b>Te llega la cotización</b><span>Por mail, con el total y todo lo que incluye.</span></li>
+    <li><b>Pagás online y listo</b><span>Tarjeta, débito o transferencia, con Mercado Pago. Nosotros coordinamos el resto.</span></li>
   </ol>
 
   <h3 class="step" id="pedido">Tu pedido</h3>
@@ -84,7 +84,8 @@
     <label class="full"><span>Evento <span class="hint">(opcional)</span></span><select name="event"></select></label>
     <label>Personas<input type="number" name="people" min="1" max="50" value="2" inputmode="numeric" required></label>
     <label>Tu nombre<input name="name" required autocomplete="name"></label>
-    <label class="full">Tu WhatsApp<input type="tel" name="phone" required autocomplete="tel" placeholder="+598 9X XXX XXX"></label>
+    <label><span>Tu mail <span class="hint">(ahí te llega la cotización)</span></span><input type="email" name="email" required autocomplete="email" placeholder="tu@mail.com" inputmode="email"></label>
+    <label><span>Tu celular <span class="hint">(para el día del evento)</span></span><input type="tel" name="phone" required autocomplete="tel" placeholder="+598 9X XXX XXX"></label>
 
     <fieldset class="full grp" data-g="traslado">
       <legend>Traslado</legend>
@@ -113,7 +114,7 @@
     </fieldset>
 
     <label class="full"><span>Algo más <span class="hint">(opcional)</span></span><textarea name="notes" rows="3" placeholder="Ej.: vamos con equipaje, necesitamos silla de bebé, preferimos cerca de la playa…"></textarea></label>
-    <div class="full"><button class="btn" type="submit">Pedir opciones</button></div>
+    <div class="full"><button class="btn" type="submit">Pedir cotización</button><p class="secure">Sin costo ni compromiso. Pagás recién cuando aceptás la cotización, online y con Mercado Pago.</p></div>
   </form>
   <div id="ok" role="status"></div>
 </div>
@@ -121,12 +122,12 @@
 
 <div class="wrap"><footer class="foot" id="site-footer"><span>Punta del Este, Uruguay</span></footer></div>
 
-<script src="js/config.js?v=24"></script>
-<script src="js/data.js?v=24"></script>
-<script src="js/utils.js?v=24"></script>
-<script src="js/analytics.js?v=24"></script>
-<script src="js/site.js?v=24"></script>
-<script src="js/cards.js?v=24"></script>
-<script src="js/servicios.js?v=24"></script>
+<script src="js/config.js?v=26"></script>
+<script src="js/data.js?v=26"></script>
+<script src="js/utils.js?v=26"></script>
+<script src="js/analytics.js?v=26"></script>
+<script src="js/site.js?v=26"></script>
+<script src="js/cards.js?v=26"></script>
+<script src="js/servicios.js?v=26"></script>
 </body>
 </html>

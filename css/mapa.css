@@ -1,8 +1,10 @@
 /* mapa.css · vista de mapa de la home (la arma js/mapa.js con Leaflet)
-   Estructura: section.mapa > .mapa-box (el mapa) + .mapa-note · pines .pin · globos .mp-pop > .mp */
+   Estructura: section.mapa > .mapa-box (el mapa) + .mapa-note
+   Marcador: .mk [.mk-stack > .mk-card x1-3, .mk-n, .mk-fan > button.mk-card xN, .mk-place]
+   Índice: 1 Caja · 2 Póster · 3 Pila y número · 4 Abanico · 5 Lugar y "Cómo llegar" */
 
 /* 1. Caja del mapa */
-.mapa-box{position:relative;height:clamp(420px,68vh,640px);border-radius:28px;overflow:hidden;background:var(--card);
+.mapa-box{position:relative;height:clamp(460px,72vh,720px);border-radius:28px;overflow:hidden;background:var(--card);
   box-shadow:inset 0 0 0 1px var(--line),0 22px 44px -26px rgba(0,0,0,.9);isolation:isolate}
 .mapa-wait{position:absolute;inset:0;display:grid;place-items:center;margin:0;color:var(--muted);font-size:15px;text-align:center;padding:20px}
 .mapa-note{margin:12px 4px 0;color:var(--muted);font-size:13px}
@@ -12,33 +14,45 @@
 .mapa .leaflet-bar{border:0;box-shadow:0 6px 20px rgba(0,0,0,.4)}
 .mapa .leaflet-bar a{width:36px;height:36px;line-height:36px;background:rgba(27,27,32,.92);color:var(--ink);border-color:var(--line)}
 .mapa .leaflet-bar a:hover{background:#2a2a31}
-
-/* 2. Pines: punto del color de la categoría; con varios eventos lleva el número; los de hoy laten */
-.pin{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;font:700 13px 'DM Sans',sans-serif;color:#fff;
-  background:var(--c);border:3px solid #F4F4F5;box-shadow:0 4px 14px rgba(0,0,0,.55),0 0 0 6px color-mix(in srgb,var(--c) 28%,transparent)}
-.pin:empty{width:22px;height:22px;margin:6px}
-.pin.hoy{animation:pin-hoy 1.6s ease-out infinite}
-@keyframes pin-hoy{0%{box-shadow:0 4px 14px rgba(0,0,0,.55),0 0 0 0 color-mix(in srgb,var(--c) 60%,transparent)}
-  100%{box-shadow:0 4px 14px rgba(0,0,0,.55),0 0 0 16px transparent}}
-
-/* 3. Globo de un lugar */
-.mp-pop .leaflet-popup-content-wrapper{background:#1f1f25;color:var(--ink);border-radius:20px;box-shadow:0 20px 50px -10px rgba(0,0,0,.7),inset 0 0 0 1px rgba(255,255,255,.12)}
-.mp-pop .leaflet-popup-tip{background:#1f1f25}
-.mp-pop .leaflet-popup-content{margin:14px 14px 12px}
-.mp-pop a.leaflet-popup-close-button{color:var(--muted);top:6px;right:8px}
-.mp{display:grid;gap:10px;font:400 14px/1.35 'DM Sans',sans-serif}
-.mp-place{font:600 17px 'Bricolage Grotesque',sans-serif;padding-right:18px}
-.mp ul{list-style:none;margin:0;padding:0;display:grid;gap:6px;max-height:240px;overflow-y:auto}
-.mp li button{display:flex;align-items:center;gap:10px;width:100%;padding:8px;border:0;border-radius:14px;background:rgba(255,255,255,.06);color:var(--ink);text-align:left;cursor:pointer;font:inherit}
-.mp li button:hover{background:rgba(255,255,255,.12)}
-.mp-d{flex:none;display:grid;place-items:center;width:52px;padding:6px 0;border-radius:10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
-  background:color-mix(in srgb,var(--c) 30%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 60%,transparent)}
-.mp-t{display:grid;min-width:0}
-.mp-t b{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.mp-t small{color:var(--muted);font-size:12px}
-.mp-go{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;border-radius:999px;background:#F4F4F5;color:#08080a!important;font-weight:700;text-decoration:none}
-.mp-go .ico{width:16px;height:16px}
-
-@media (max-width:600px){.mapa-box{border-radius:24px;height:clamp(380px,64vh,560px)}}
 /* El mapa de OpenStreetMap es claro: se oscurece para que combine con la página (igual que el mapa del detalle) */
 .mapa .leaflet-tile-pane{filter:invert(.92) hue-rotate(180deg) saturate(.55) brightness(.95) contrast(.95)}
+.mk-icon{background:none;border:0}
+
+/* 2. Póster: tarjeta blanca con la foto y una etiqueta con el día y la hora; abajo, una línea del color de la categoría */
+.mk{position:relative;display:block;width:var(--w,62px);height:var(--h,84px);cursor:pointer;font-family:"DM Sans",sans-serif}
+.mk-card{position:absolute;inset:0;display:flex;flex-direction:column;padding:3px 3px 0;border:0;border-radius:12px;background:#F7F5F2;color:#111;
+  box-shadow:0 10px 24px -6px rgba(0,0,0,.7),inset 0 -3px 0 var(--c);transition:transform .45s var(--ease),opacity .3s}
+.mk-card img,.mk-gen{display:block;width:100%;height:calc(var(--h,84px) - 26px);border-radius:9px;object-fit:cover;flex:none}
+.mk-gen{display:grid;place-items:center;font:700 26px 'Bricolage Grotesque',sans-serif;color:#fff;background:color-mix(in srgb,var(--c) 75%,#000)}
+.mk-card b{flex:1;display:grid;place-items:center;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;padding-bottom:3px}
+@media (hover:hover){.mk:not(.open) .mk-stack:hover .s0{transform:translateY(-4px) scale(1.04)}}
+
+/* 3. Pila (varios eventos en el mismo lugar asoman detrás) y número */
+.mk-stack{position:absolute;inset:0}
+.mk-stack .s1{transform:rotate(-7deg) translate(-5px,2px)}
+.mk-stack .s2{transform:rotate(7deg) translate(5px,2px)}
+.mk-n{position:absolute;top:-9px;right:-9px;z-index:2;min-width:22px;height:22px;padding:0 6px;border-radius:999px;display:grid;place-items:center;
+  font-size:12px;font-weight:800;color:#fff;background:#151518;box-shadow:0 0 0 2px #F7F5F2}
+/* Hoy: un halo que late alrededor del póster */
+.mk.hoy .mk-stack::after{content:"";position:absolute;inset:-4px;border-radius:15px;pointer-events:none;box-shadow:0 0 0 0 rgba(70,217,160,.7);animation:mk-hoy 1.8s ease-out infinite}
+@keyframes mk-hoy{to{box-shadow:0 0 0 14px rgba(70,217,160,0)}}
+
+/* 4. Abanico: al tocar un lugar con varios eventos, los pósters se abren en arco hacia arriba */
+.mk-fan{position:absolute;inset:0;pointer-events:none}
+.mk-fan .mk-card{transform-origin:50% 260%;transform:rotate(0) scale(.6);opacity:0;cursor:pointer;font:inherit}
+.mk.open .mk-stack,.mk.open .mk-n{opacity:0;pointer-events:none;transition:opacity .2s}
+.mk.open .mk-fan{pointer-events:auto}
+.mk.open .mk-fan .mk-card{opacity:1;transform:translateY(-34px) rotate(var(--a)) scale(1);transition-delay:calc(var(--i) * 25ms)}
+@media (hover:hover){.mk.open .mk-fan .mk-card:hover{transform:translateY(-46px) rotate(var(--a)) scale(1.08);z-index:5}}
+.mk-fan .mk-card:focus-visible{outline:2px solid #fff;outline-offset:2px}
+
+/* 5. Debajo del abanico: nombre del lugar y "Cómo llegar" */
+.mk-place{position:absolute;left:50%;top:calc(100% + 8px);transform:translateX(-50%) translateY(-6px);display:none;align-items:center;gap:8px;white-space:nowrap;
+  padding:6px 6px 6px 14px;border-radius:999px;background:#F7F5F2;color:#111;font-size:13px;box-shadow:0 10px 24px -6px rgba(0,0,0,.7)}
+.mk.open .mk-place{display:inline-flex;animation:mk-place .35s var(--ease) forwards}
+@keyframes mk-place{to{transform:translateX(-50%)}}
+.mk-place b{font-weight:800}
+.mk-place a{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:999px;background:#151518;color:#fff;text-decoration:none;font-weight:700;font-size:12px}
+.mk-place .ico{width:13px;height:13px}
+
+@media (max-width:600px){.mapa-box{border-radius:24px;height:clamp(420px,66vh,600px)}}

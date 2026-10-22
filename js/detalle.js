@@ -68,11 +68,11 @@
     return `
       <div class="dlg-cover" style="--c:${CATS[e.cat]};${coverStyle(e)}">
         ${coverHtml(e)}
-        <div class="k-date"><b>${dayLabel(e)}</b><small>${monthLabel(e)}</small></div>
+        <div class="k-day"><small>${monthLabel(e)}</small><b>${dayLabel(e)}</b></div>
       </div>
       <div class="dlg-body" style="--c:${CATS[e.cat]}">
         <div class="dlg-head">
-          <div class="dlg-tags"><span class="k-cat"><i></i>${esc(e.cat)}</span></div>
+          ${eyebrowHtml(e)}
           <h2 id="dlg-title">${esc(e.title)}</h2>
         </div>
         <p class="dlg-desc">${esc(e.desc)}</p>
@@ -188,9 +188,13 @@
 
     cancelAnims();
     const d = REDUCED.matches ? 1 : DUR_OPEN;
+    let finished = false;
     const finish = () => {
+      if (finished || !S.open) return;
+      finished = true;
       cancelAnims();
-      setWin(fin); win.style.borderRadius = "";
+      setWin(finalRect()); win.style.borderRadius = "";      // se mide de nuevo: la pantalla pudo cambiar durante la animación
+      content.style.width = "100%";                           // de acá en más el contenido sigue a la ventana (nunca queda más ancho)
       face.style.display = "none"; content.style.opacity = ""; back.style.opacity = 1; xBtn.style.opacity = "";
       root.querySelectorAll("iframe[data-src]").forEach(f => { f.src = f.dataset.src; f.removeAttribute("data-src"); });
       S.busy = false;
@@ -204,6 +208,7 @@
     run(xBtn, [{ opacity: 0 }, { opacity: 0, offset: .5 }, { opacity: 1 }], { duration: d, easing: "linear" })
       .onfinish = finish;
     if (d === 1) finish();
+    else setTimeout(finish, d + 250);                         // por las dudas: si el navegador frenó la animación, igual queda en su tamaño final
   }
 
   function closeAnim() {
@@ -302,7 +307,7 @@
   });
 
   /* Si se gira el celular con la ventana abierta, se vuelve a centrar */
-  addEventListener("resize", () => { if (S.open && !S.busy) setWin(finalRect()); });
+  addEventListener("resize", () => { if (S.open && !S.busy) { setWin(finalRect()); content.style.width = "100%"; } });
 
   /* Link directo: si la página se abre con #evento, se muestra el detalle. Si el evento ya no existe, se limpia el link. */
   const first = location.hash.slice(1);

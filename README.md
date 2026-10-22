@@ -65,6 +65,12 @@ js/
 
 - El botón del pin, al lado del calendario, muestra los eventos en un mapa (los de hoy laten). El pin sale solo si el lugar está en `VENUES` (`js/config.js`); si no, se le pone `geo: [lat, lng]` al evento. Los eventos sin ubicación siguen en la lista y el calendario.
 
+## Cobros online (Mercado Pago, sin que el cliente tenga que escribirnos)
+
+- **Traslados y alojamiento:** el cliente pide en `servicios.html` (con su mail) → le llega un mail de confirmación → vos completás en la pestaña "Servicios" las columnas **"Detalle para el cliente"** y **"Precio USD"** → al poner el precio le llega solo la cotización con el botón de pago → paga en `pagar.html` con Mercado Pago (monto exacto) o transferencia → se marca **"Pagado"** y les llega un mail a los dos.
+- **Publicaciones:** al enviar el formulario, el botón de Mercado Pago ya trae el monto exacto (menos la Portada, que se confirma antes).
+- Configuración (una vez): token de Mercado Pago en Apps Script (Propiedades del script → `MP_TOKEN`), correr `instalar` y publicar una nueva versión. Detalle en el encabezado de `apps-script/Code.gs`.
+
 ## Traslados y alojamiento (`servicios.html`)
 
 - La gente pide chofer, alojamiento o los dos. El pedido (`SRV-XXXXX`) te llega por WhatsApp con todos los datos; vos conseguís opciones y precio y le respondés.

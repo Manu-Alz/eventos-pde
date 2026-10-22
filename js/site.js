@@ -24,8 +24,11 @@
       <a href="https://instagram.com/${esc(CONFIG.instagram)}" target="_blank" rel="noopener" data-ev="instagram_sitio">Instagram<span>@${esc(CONFIG.instagram)}</span></a>
     </nav>`;
 
-  /* Cualquier <a data-wa> abre el WhatsApp de la configuración */
+  /* Cualquier <a data-wa> abre el WhatsApp de la configuración; con data-wa-text, con el mensaje ya escrito */
   document.querySelectorAll("a[data-wa]").forEach(a => { a.href = "https://wa.me/" + CONFIG.whatsapp; });
+  document.querySelectorAll("a[data-wa-text]").forEach(a => { a.href = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(a.dataset.waText)}`; });
+  /* <a data-mail="Asunto"> manda un mail al proyecto con ese asunto */
+  document.querySelectorAll("a[data-mail]").forEach(a => { a.href = `mailto:${CONFIG.email}?subject=${encodeURIComponent(a.dataset.mail)}`; });
 
   /* Cualquier <a data-email> de la página toma el mail de la configuración */
   document.querySelectorAll("a[data-email]").forEach(a => {
