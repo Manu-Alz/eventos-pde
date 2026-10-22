@@ -8,8 +8,8 @@ const CONFIG = {
   email:     "eventospde.uy@gmail.com",     // mail de contacto (pie de página, publicar y comprobantes)
   instagram: "eventos_pde",                 // usuario de Instagram, sin @
   ga:        "G-SC1Y8ZRB66",                // ID de Google Analytics 4. Sin ID no se carga nada.
-  formUrl:   "https://script.google.com/macros/s/AKfycbw3bA6B-pJBWWmT8cY2v-Lf1zUcxGLNRvU6uYToSOMTkQf7eRKdO-oVnZnw9YQSQMFA/exec",                            // dirección de la aplicación web de Google (apps-script/Code.gs). Vacío = no se avisa solo
-  formServicios: false,                     // true = los pedidos de traslado y alojamiento también van a la planilla (pestaña "Servicios").
+  formUrl:   "https://script.google.com/macros/s/AKfycbx5tDOduOG0AgE2KeUL6R5-M5MxpNArbjcv_mNsMsfFQ3p1Svw-wP8sIXxqHFpT3nS8/exec",                            // dirección de la aplicación web de Google (apps-script/Code.gs). Vacío = no se avisa solo
+  formServicios: true,                      // true = los pedidos de traslado y alojamiento también van a la planilla (pestaña "Servicios").
                                             // Activalo recién después de pegar el Code.gs nuevo y volver a implementarlo (ver README)
   paypal:    "TU_USUARIO_PAYPAL",           // lo que va después de paypal.me/
   /* Mercado Pago: link de pago de monto libre (la persona escribe el monto, en pesos).
