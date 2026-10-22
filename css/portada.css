@@ -20,7 +20,7 @@
 /* 2. Diapositiva. Sin bordes. Sin alto fijo: nunca se corta nada. Todas miden lo mismo (la más alta manda). */
 .port-track{display:flex;gap:var(--por-slide-gap);overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
 .port-track::-webkit-scrollbar{display:none}
-.slide{position:relative;isolation:isolate;overflow:hidden;flex:0 0 100%;scroll-snap-align:start;scroll-snap-stop:always;
+.slide{position:relative;isolation:isolate;overflow:hidden;text-decoration:none;flex:0 0 100%;scroll-snap-align:start;scroll-snap-stop:always;
   display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:var(--por-gap);
   min-height:var(--por-min-h);padding:var(--por-pad);border-radius:var(--por-radius);
   background:var(--card);color:var(--ink);cursor:pointer;transition:transform .5s var(--ease)}

@@ -39,7 +39,7 @@
 .ev-row .btn{background:var(--glass)}
 @media (hover:hover){.ev-row .btn:hover{background:var(--glass-hover)}}
 
-/* 4. Traslado y alojamiento (igual que en el detalle de la home) */
+/* 4. Traslado y alojamiento para este evento */
 .ev-svc{display:grid;gap:10px;padding-top:18px;border-top:1px solid var(--line)}
 .ev-svc p{margin:0;font-size:14px;font-weight:700;color:var(--muted)}
 .ev-svc>div{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(140px,100%),1fr));gap:10px}
@@ -63,3 +63,26 @@
 .ev-mini-t small i{width:7px;height:7px;border-radius:50%;background:var(--c)}
 .ev-mini-t b{font-size:15px;line-height:1.2;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
 .ev-all{display:flex;width:max-content;max-width:100%}
+
+/* 6. Mapa del lugar (Google Maps oscurecido, como el mapa de la home) */
+.ev-map{position:relative;height:200px;border-radius:22px;overflow:hidden;background:#232329;box-shadow:inset 0 0 0 1px var(--line)}
+.ev-map iframe{position:absolute;inset:0;width:100%;height:100%;border:0;filter:invert(.92) hue-rotate(180deg) saturate(.6) contrast(.95)}
+.ev-go{position:absolute;right:12px;bottom:12px;display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:8px 16px;border-radius:999px;
+  text-decoration:none;font-weight:700;font-size:14px;color:#08080a;background:#F4F4F5;box-shadow:0 8px 20px rgba(0,0,0,.4)}
+.ev-go .ico{width:16px;height:16px}
+
+/* 7. Mi plan: el botón cambia a "En tu plan" con tilde */
+.ev-plan .ico+.ico,.ev-plan[aria-pressed="true"] .ico:first-child{display:none}
+.ev-plan[aria-pressed="true"] .ico+.ico{display:block}
+.ev-plan[aria-pressed="true"]{background:rgba(70,217,160,.14);border-color:rgba(70,217,160,.55);color:#bff3dc}
+
+/* 8. En el celular, una barra fija abajo con "Comprar entradas" (solo si el evento tiene entradas) */
+.ev-buybar{display:none}
+@media (max-width:859px){
+  .ev-buybar{position:fixed;left:0;right:0;bottom:0;z-index:40;display:block;padding:12px max(var(--gutter),env(safe-area-inset-left)) calc(12px + env(safe-area-inset-bottom,0px));
+    background:linear-gradient(rgba(21,21,24,0),rgba(21,21,24,.92) 35%)}
+  .ev-buybar .btn{width:100%;min-height:54px;gap:10px;font-size:16px;background:#F4F4F5;color:#08080a;box-shadow:0 14px 34px -10px rgba(0,0,0,.8)}
+  .ev-buybar .btn .ico{width:19px;height:19px}
+  body:has(.ev-buybar){padding-bottom:84px}
+  body:has(.ev-buybar) .plan-fab{bottom:calc(86px + env(safe-area-inset-bottom,0px))}
+}

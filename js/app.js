@@ -8,6 +8,12 @@
 const isLive = e => (e.endDate || e.date) >= TODAY && (!e.until || e.until >= TODAY) && (!e.from || e.from <= TODAY);
 const LIVE = EV.filter(isLive);
 
+/* La dirección del inicio queda limpia (eventospde.com, sin /index.html), y los links viejos con #evento
+   (los que ya se compartieron) llevan a la página propia del evento */
+if (/\/index\.html$/.test(location.pathname)) history.replaceState(null, "", "/" + location.search + location.hash);
+const oldHash = decodeURIComponent(location.hash.slice(1));
+if (oldHash && LIVE.some(e => slugOf(e) === oldHash)) location.replace(`/evento/${oldHash}/`);
+
 /* ============ 2. Estado ============ */
 const ymOf = iso => ({ y: +iso.slice(0, 4), m: +iso.slice(5, 7) - 1 });
 

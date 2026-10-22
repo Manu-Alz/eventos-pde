@@ -1,0 +1,121 @@
+/* plan.css · "Mi plan": píldora flotante (en todas las páginas con js/plan.js) y planificador (plan.html, js/planner.js)
+   Índice: 1 Píldora flotante · 2 Encabezado y números · 3 Días y eventos · 4 Panel "Tu viaje" · 5 Vacío y compartido · 6 Celular */
+
+/* 1. Píldora flotante "Mi plan" */
+.plan-fab{white-space:nowrap;position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:60;transform:translateX(-50%);
+  display:flex;align-items:center;gap:12px;padding:7px 7px 7px 8px;border-radius:999px;text-decoration:none;color:#151518;
+  background:#F7F5F2;box-shadow:0 18px 40px -12px rgba(0,0,0,.75),0 0 0 1px rgba(0,0,0,.06);animation:fab-in .45s var(--ease)}
+.plan-fab[hidden]{display:none!important}
+.plan-fab-n{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:#7C4DFF;color:#fff;font:800 16px 'Bricolage Grotesque',sans-serif}
+.plan-fab-t{display:grid;line-height:1.1;font-weight:800;font-size:15px}
+.plan-fab-t small{font-weight:600;font-size:12px;color:#77777f}
+.plan-fab-go{display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:0 6px 0 16px;border-radius:999px;background:#151518;color:#fff;font-weight:700;font-size:14px}
+.plan-fab-go .ico{width:26px;height:26px;padding:5px;border-radius:50%;background:#F7F5F2;color:#151518}
+.plan-fab.bump{animation:fab-bump .5s var(--ease)}
+@keyframes fab-in{from{opacity:0;transform:translate(-50%,20px)}}
+@keyframes fab-bump{40%{transform:translateX(-50%) scale(1.08)}}
+@media (hover:hover){.plan-fab:hover .plan-fab-go .ico{transform:rotate(45deg);transition:transform .4s var(--ease)}}
+
+/* 2. Encabezado y números del viaje */
+.pl{padding:clamp(18px,4vw,40px) 0 40px}
+.pl-eyebrow{margin:0 0 10px;font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#7C4DFF}
+.pl h1{font-size:clamp(40px,8vw,84px);font-weight:600;letter-spacing:-.045em;line-height:.98;max-width:14ch;text-wrap:balance}
+.pl-sub{margin:14px 0 0;max-width:56ch;color:var(--muted);font-size:17px}
+.pl-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:26px 0 34px}
+.pl-stat{display:grid;gap:2px;padding:16px 18px;border-radius:20px;background:var(--glass);border:1px solid var(--line)}
+.pl-stat b{font:600 30px/1 'Bricolage Grotesque',sans-serif;letter-spacing:-.02em}
+.pl-stat small{font-size:13px;color:var(--muted)}
+.pl-stat.hl{background:#F7F5F2;color:#151518;border-color:transparent}
+.pl-stat.hl small{color:#77777f}
+.pl-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,420px);gap:clamp(18px,3vw,36px);align-items:start}
+
+/* 3. Días y eventos (línea de tiempo) */
+.pl-days{display:grid;grid-template-columns:minmax(0,1fr);gap:26px}
+.pl-day{display:grid;grid-template-columns:76px minmax(0,1fr);gap:16px}
+.pl-date{position:sticky;top:84px;align-self:start;display:grid;justify-items:center;gap:2px;padding:12px 0;border-radius:20px;background:#F7F5F2;color:#151518;line-height:1}
+.pl-date small{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#77777f}
+.pl-date b{font:700 32px/1 'Bricolage Grotesque',sans-serif;letter-spacing:-.02em}
+.pl-evs{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+.pl-ev{position:relative;display:grid;grid-template-columns:96px minmax(0,1fr);gap:16px;padding:12px;border-radius:24px;background:var(--surface);border:1px solid var(--line)}
+.pl-poster{display:block;aspect-ratio:4/5;border-radius:16px;overflow:hidden;background:color-mix(in srgb,var(--c) 40%,var(--card))}
+.pl-poster img{width:100%;height:100%;object-fit:cover;display:block}
+.pl-info{display:grid;gap:6px;align-content:start;min-width:0;padding-right:36px}
+.pl-eb{display:flex;align-items:center;gap:8px;margin:0;font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.8)}
+.pl-eb i{width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c)}
+.pl-info h3{font-size:21px;font-weight:600;letter-spacing:-.02em;line-height:1.1}
+.pl-info h3 a{color:inherit;text-decoration:none}
+.pl-info h3 a:hover{text-decoration:underline;text-underline-offset:3px}
+.pl-place{display:flex;align-items:center;gap:6px;margin:0;font-size:14px;color:var(--muted);min-width:0}
+.pl-place .ico{flex:none;width:15px;height:15px}
+.pl-place span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pl-x{position:absolute;top:10px;right:10px;width:34px;height:34px;border:0;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:var(--muted);background:var(--glass)}
+.pl-x:hover{color:var(--ink);background:var(--glass-hover)}
+.pl-x .ico{width:16px;height:16px}
+/* Traslado de cada evento */
+.pl-tr{display:grid;gap:8px;margin-top:6px;padding-top:10px;border-top:1px dashed var(--line)}
+.pl-tr-h{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 10px;font-size:13px;color:var(--muted)}
+.pl-tr-h b{display:flex;align-items:center;gap:6px;color:var(--ink);font-size:14px}
+.pl-tr-h .ico{width:16px;height:16px}
+.pl-seg{display:flex;padding:3px;border-radius:999px;background:var(--glass);border:1px solid var(--line)}
+.pl-seg button{flex:1 1 auto;min-height:36px;padding:0 12px;border:0;border-radius:999px;background:none;color:var(--ink);font:700 13px 'DM Sans',sans-serif;cursor:pointer;transition:color .4s var(--ease);white-space:nowrap}
+.pl-seg button[aria-pressed="true"]{color:var(--bg)}
+.pl-pick{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);white-space:nowrap}
+.pl-pick input{width:auto;min-height:36px;padding:4px 10px;border-radius:10px;border:1px solid var(--line);background:var(--glass);color:var(--ink);font:inherit}
+
+/* 4. Panel "Tu viaje" */
+.pl-side{position:sticky;top:84px;display:grid;gap:16px;padding:20px;border-radius:28px;border:1px solid var(--line);
+  background:radial-gradient(120% 70% at 100% 0%,rgba(124,77,255,.18),transparent 60%),var(--surface);box-shadow:0 30px 60px -36px #000}
+.pl-side h2{font-size:26px;font-weight:600;letter-spacing:-.025em}
+.pl-block{display:grid;gap:10px;padding:14px;border-radius:20px;background:var(--glass);border:1px solid var(--line)}
+.pl-block-h{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.pl-block-h b{display:flex;align-items:center;gap:8px;font-size:15px}
+.pl-block-h .ico{width:18px;height:18px}
+.pl-block small.pl-hint{font-size:13px;color:var(--muted)}
+.pl-two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pl-side label{display:grid;gap:5px;font-size:13px;font-weight:600;color:var(--muted);min-width:0}
+.pl-side input,.pl-side select{width:100%;min-width:0;min-height:44px;padding:9px 12px;border-radius:12px;border:1.5px solid rgba(255,255,255,.22);background:rgba(255,255,255,.07);color:var(--ink);font:500 15px 'DM Sans',sans-serif}
+.pl-side input[type="date"]{-webkit-appearance:none;appearance:none}
+.pl-side select option{color:#151518}
+/* Personas: − 2 + */
+.pl-step{display:flex;align-items:center;gap:6px}
+.pl-step button{width:36px;height:36px;border:0;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:var(--ink);background:var(--glass-hover);font:700 18px 'DM Sans',sans-serif}
+.pl-step output{min-width:28px;text-align:center;font:700 18px 'Bricolage Grotesque',sans-serif}
+/* Interruptor (alojamiento sí/no) */
+.pl-switch{position:relative;width:46px;height:28px;flex:none}
+.pl-switch input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer;min-height:0}
+.pl-switch span{position:absolute;inset:0;border-radius:999px;background:rgba(255,255,255,.18);transition:background .3s}
+.pl-switch span::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .35s var(--ease)}
+.pl-switch input:checked+span{background:#46d9a0}
+.pl-switch input:checked+span::after{transform:translateX(18px)}
+.pl-switch input:focus-visible+span{outline:2px solid #fff;outline-offset:2px}
+.pl-off{opacity:.45;pointer-events:none}
+.pl-cta{width:100%;min-height:56px;font-size:17px;background:#F4F4F5;color:#08080a}
+.pl-fine{margin:-6px 0 0;font-size:13px;color:var(--muted);text-align:center}
+.pl-share{justify-self:center;display:inline-flex;align-items:center;gap:8px;background:none;border:0;padding:8px;color:var(--ink);font:600 14px 'DM Sans',sans-serif;cursor:pointer;text-decoration:underline;text-underline-offset:4px}
+.pl-share .ico{width:16px;height:16px}
+
+/* 5. Plan vacío y plan compartido */
+.pl-empty{display:grid;justify-items:start;gap:14px;padding:clamp(24px,5vw,44px);border-radius:28px;border:1px dashed rgba(255,255,255,.22);background:var(--glass)}
+.pl-empty h2{font-size:clamp(26px,4vw,36px);font-weight:600;letter-spacing:-.03em}
+.pl-empty p{margin:0;max-width:52ch;color:var(--muted)}
+.pl-how{list-style:none;counter-reset:pl;margin:4px 0 6px;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:10px;width:100%}
+.pl-how li{counter-increment:pl;display:grid;gap:2px;padding:14px 14px 14px 52px;position:relative;border-radius:18px;background:var(--surface);border:1px solid var(--line)}
+.pl-how li::before{content:counter(pl);position:absolute;left:14px;top:14px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:700 13px 'Bricolage Grotesque',sans-serif;background:#F7F5F2;color:#151518}
+.pl-how b{font-size:15px}
+.pl-how span{font-size:13px;color:var(--muted)}
+.pl-banner{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin:0 0 22px;padding:14px 16px;border-radius:20px;background:#F7F5F2;color:#151518}
+.pl-banner p{margin:0;font-weight:600}
+.pl-banner .btn{background:#151518;color:#fff;min-height:42px}
+
+/* 6. Celular y tablet */
+@media (max-width:980px){
+  .pl-grid{grid-template-columns:minmax(0,1fr)}
+  .pl-side{position:static}
+}
+@media (max-width:600px){
+  .pl-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pl-day{grid-template-columns:minmax(0,1fr);gap:10px}
+  .pl-date{position:static;display:flex;justify-content:flex-start;align-items:baseline;gap:8px;padding:10px 14px;width:max-content}
+  .pl-ev{grid-template-columns:76px minmax(0,1fr);gap:12px}
+  .pl-two{grid-template-columns:minmax(0,1fr)}
+}

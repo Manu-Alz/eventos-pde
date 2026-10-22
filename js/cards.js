@@ -1,5 +1,5 @@
 /* cards.js · piezas de una publicación y tarjeta de la grilla
-   Las usan la grilla, el calendario y el detalle.
+   Las usan la grilla, el calendario, el mapa y las páginas de eventos (tools/paginas.js).
    Requiere: config.js, utils.js */
 
 /* ============ 1. Textos de fecha y hora ============ */
@@ -99,31 +99,28 @@ function eyebrowHtml(e) {
 }
 
 /* Lugar corto para la tarjeta: sin paréntesis y hasta la primera coma ("Open Park, El Placer (puente…)" -> "Open Park").
-   El detalle muestra el lugar completo. */
+   La página del evento muestra el lugar completo. */
 const shortPlace = e => e.place.replace(/\s*\(.*?\)/g, "").split(", ")[0];
 
 /* ============ 5. Tarjeta de la grilla ============
-   Estructura: .cover + .k-top [.k-day, .k-tix?] + .k-bottom [.k-eyebrow, h3 > a.k-link, .k-row (.k-place, .k-go)]
-   Al tocarla se abre el detalle (detalle.js). El título es un link a la página propia del evento (/evento/<id>/):
-   Google lo sigue, y con Ctrl/Cmd o la ruedita del mouse se abre en otra pestaña. */
+   Estructura: .cover + .k-top [.k-day, .k-acts (.k-tix?, button.k-plan)] + .k-bottom [.k-eyebrow, h3 > a.k-link, .k-row (.k-place, .k-go)]
+   Toda la tarjeta lleva a la página del evento (/evento/<id>/): el link del título se estira sobre la tarjeta (tarjetas.css).
+   El botón + agrega el evento a "Mi plan" (plan.js) sin abrir la página. */
 function cardEl(e) {
+  const id = slugOf(e);
   const card = document.createElement("article");
   card.className = "card";
-  card.dataset.id = slugOf(e);
-  card.tabIndex = 0;
-  card.setAttribute("role", "button");
-  card.setAttribute("aria-haspopup", "dialog");
-  card.setAttribute("aria-label", `${e.title}, ${longDate(e)}. Ver detalles`);
+  card.dataset.id = id;
   card.style.cssText = `--c:${CATS[e.cat]};${coverStyle(e)}`;
   card.innerHTML = `
     ${coverHtml(e)}
     <div class="k-top">
       <div class="k-day"><small>${monthLabel(e)}</small><b>${dayLabel(e)}</b></div>
-      ${tixHtml(e)}
+      <div class="k-acts">${tixHtml(e)}<button type="button" class="k-plan" data-plan="${id}" aria-pressed="false" aria-label="Agregar a mi plan">${ico("plus")}${ico("check")}</button></div>
     </div>
     <div class="k-bottom">
       ${eyebrowHtml(e)}
-      <h3><a class="k-link" href="/evento/${slugOf(e)}/" tabindex="-1">${esc(e.title)}</a></h3>
+      <h3><a class="k-link" href="/evento/${id}/">${esc(e.title)}</a></h3>
       <div class="k-row">
         <p class="k-place">${ico("pin")}<span>${esc(shortPlace(e))}</span></p>
         <span class="k-go" aria-hidden="true">${ico("arrow")}</span>

@@ -14,17 +14,16 @@
 .mapa .leaflet-bar{border:0;box-shadow:0 6px 20px rgba(0,0,0,.4)}
 .mapa .leaflet-bar a{width:36px;height:36px;line-height:36px;background:rgba(27,27,32,.92);color:var(--ink);border-color:var(--line)}
 .mapa .leaflet-bar a:hover{background:#2a2a31}
-/* El mapa de OpenStreetMap es claro: se oscurece para que combine con la página (igual que el mapa del detalle) */
+/* El mapa de OpenStreetMap es claro: se oscurece para que combine con la página (igual que el mapa de cada evento) */
 .mapa .leaflet-tile-pane{filter:invert(.92) hue-rotate(180deg) saturate(.55) brightness(.95) contrast(.95)}
 .mk-icon{background:none;border:0}
 
-/* 2. Póster: tarjeta blanca con la foto y una etiqueta con el día y la hora; abajo, una línea del color de la categoría */
+/* 2. Póster: marco blanco cálido con la foto y, abajo, una línea del color de la categoría (sin textos: se toca y se abre el evento) */
 .mk{position:relative;display:block;width:var(--w,62px);height:var(--h,84px);cursor:pointer;font-family:"DM Sans",sans-serif}
-.mk-card{position:absolute;inset:0;display:flex;flex-direction:column;padding:3px 3px 0;border:0;border-radius:12px;background:#F7F5F2;color:#111;
+.mk-card{position:absolute;inset:0;display:flex;flex-direction:column;padding:3px 3px 6px;border:0;border-radius:12px;background:#F7F5F2;color:#111;
   box-shadow:0 10px 24px -6px rgba(0,0,0,.7),inset 0 -3px 0 var(--c);transition:transform .45s var(--ease),opacity .3s}
-.mk-card img,.mk-gen{display:block;width:100%;height:calc(var(--h,84px) - 26px);border-radius:9px;object-fit:cover;flex:none}
+.mk-card img,.mk-gen{display:block;width:100%;flex:1;min-height:0;border-radius:9px;object-fit:cover}
 .mk-gen{display:grid;place-items:center;font:700 26px 'Bricolage Grotesque',sans-serif;color:#fff;background:color-mix(in srgb,var(--c) 75%,#000)}
-.mk-card b{flex:1;display:grid;place-items:center;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;padding-bottom:3px}
 @media (hover:hover){.mk:not(.open) .mk-stack:hover .s0{transform:translateY(-4px) scale(1.04)}}
 
 /* 3. Pila (varios eventos en el mismo lugar asoman detrás) y número */

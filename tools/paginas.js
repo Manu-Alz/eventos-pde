@@ -9,7 +9,7 @@
 const SITE = "https://eventospde.com";
 const MORE_EVENTS = 6;                        // "Más eventos en Punta" al pie de cada página
 const STATIC_PAGES = [                        // páginas fijas del sitemap: [dirección, prioridad, frecuencia]
-  ["/", "1.0", "daily"], ["/servicios.html", "0.7", "monthly"], ["/publicar.html", "0.6", "monthly"]
+  ["/", "1.0", "daily"], ["/plan.html", "0.7", "monthly"], ["/servicios.html", "0.7", "monthly"], ["/publicar.html", "0.6", "monthly"]
 ];
 
 /* ============ 2. Piezas ============ */
@@ -59,6 +59,15 @@ function eventJsonLd(e) {
       { "@type": "ListItem", position: 2, name: e.title, item: SITE + eventPath(e) }
     ]
   }];
+}
+
+/* Mapa del lugar (Google Maps sin cuenta ni clave): con las coordenadas si se conocen, si no con la dirección */
+function mapEmbed(e, route) {
+  if (!route) return "";
+  const g = geoOf(e);
+  const q = g ? g.join(",") : (new URL(route).searchParams.get("query") || e.place);
+  return `<div class="ev-map"><iframe src="https://maps.google.com/maps?q=${encodeURIComponent(q)}&amp;z=15&amp;output=embed" title="Mapa: ${esc(e.place)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <a class="ev-go" href="${esc(route)}" target="_blank" rel="noopener" data-ev="mapa" data-n="${esc(e.title)}">${ico("pin")}Cómo llegar</a></div>`;
 }
 
 const fact = (icon, label, value) =>
@@ -117,6 +126,7 @@ function eventPage(e, live, v) {
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/styles.css?v=${v}">
 <link rel="stylesheet" href="/css/evento.css?v=${v}">
+<link rel="stylesheet" href="/css/plan.css?v=${v}">
 <script type="application/ld+json">${JSON.stringify(eventJsonLd(e)).replace(/</g, "\\u003c")}</script>
 </head>
 <body>
@@ -140,7 +150,12 @@ function eventPage(e, live, v) {
         ${fact("pin", "Lugar", route ? `<a href="${esc(route)}" target="_blank" rel="noopener" data-ev="mapa" data-n="${esc(e.title)}">${esc(e.place)} ↗</a>` : esc(e.place))}
         ${e.price ? fact("ticket", "Entradas (puede cambiar según el lote)", esc(e.price)) : ""}
       </ul>
-      <div class="ev-actions">${main}<div class="ev-row">${second}</div></div>
+      ${mapEmbed(e, route)}
+      <div class="ev-actions">
+        ${main}
+        <button type="button" class="btn ghost ev-plan" data-plan="${esc(slugOf(e))}" aria-pressed="false">${ico("plus")}${ico("check")}<span class="plan-label">Agregar a mi plan</span></button>
+        <div class="ev-row">${second}</div>
+      </div>
       <div class="ev-svc">
         <p>¿Cómo llegás y dónde te quedás?</p>
         <div>
@@ -159,12 +174,14 @@ function eventPage(e, live, v) {
   </section>` : ""}
 </div>
 
+${t ? `<div class="ev-buybar"><a class="btn" href="${esc(t.url)}" target="_blank" rel="${t.affiliate ? "sponsored noopener" : "noopener"}" data-ev="${t.affiliate ? "referido" : "entradas"}" data-n="${esc(e.title)}">${ico("ticket")}Comprar entradas${e.price ? ` · ${esc(e.price.replace(/^Desde /, "desde "))}` : ""}</a></div>` : ""}
 <div class="wrap"><footer class="foot" id="site-footer"><span>Punta del Este, Uruguay</span></footer></div>
 
 <script src="/js/config.js?v=${v}"></script>
 <script src="/js/utils.js?v=${v}"></script>
 <script src="/js/analytics.js?v=${v}"></script>
 <script src="/js/site.js?v=${v}"></script>
+<script src="/js/plan.js?v=${v}"></script>
 </body>
 </html>
 `;

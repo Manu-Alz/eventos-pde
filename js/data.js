@@ -12,7 +12,7 @@
    │ contact    botón de contacto: link de WhatsApp, Instagram o "mailto:..."            │
    │ tickets    link de entradas -> embed "Comprar entradas"                             │
    │ affiliate  true si el link de tickets ya es un link de afiliado tuyo                │
-   │ price      precio de referencia, ej. "Desde USD 40" (sale en el detalle)            │
+   │ price      precio de referencia, ej. "Desde USD 40" (sale en su página)             │
    │ link       otro link (web, programa, reservas) -> embed; solo si no hay tickets     │
    │ linkLabel  texto del embed de link, ej. "Ver programa" (por defecto "Más información")│
    │ map        link exacto de Google Maps (si no, se arma con place)                    │

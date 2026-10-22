@@ -1,6 +1,6 @@
 /* tarjetas.css · grilla y tarjetas del home
    Estructura de la tarjeta: .cover (foto o degradé) + .k-top [.k-day, .k-tix?] + .k-bottom [.k-eyebrow, h3, .k-row (.k-place, .k-go)]
-   Al tocar una tarjeta se abre el detalle (detalle.css / detalle.js).
+   Al tocar una tarjeta se abre la página del evento (/evento/<id>/, la arma tools/paginas.js).
    Índice: 1 Ajustes rápidos · 2 Grilla y tarjeta · 3 Portada (foto o generada) · 4 Contenido */
 
 /* 1. Ajustes rápidos: cambiá los valores acá y se aplican a todas las tarjetas */
@@ -108,5 +108,20 @@
 .k-tix{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;font-size:12px;font-weight:700;background:rgba(244,244,245,.94);color:#08080a}
 .k-tix .ico{width:14px;height:14px}
 
-/* 7. El título es un link a la página del evento, pero se ve como texto (toda la tarjeta abre el detalle) */
+/* 7. Toda la tarjeta es un link: el del título se estira sobre la tarjeta. Arriba quedan "Entradas" y el botón de Mi plan */
 .k-link{color:inherit;text-decoration:none}
+.k-link::after{content:"";position:absolute;inset:0;z-index:1;border-radius:inherit}
+.k-link:focus-visible{outline:0}
+.card:has(.k-link:focus-visible){outline:2px solid #fff;outline-offset:3px}
+.k-top{position:relative;z-index:2;pointer-events:none}
+.k-acts{display:flex;align-items:center;gap:8px;pointer-events:auto}
+.k-plan{flex:none;width:38px;height:38px;border:0;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:#fff;
+  background:rgba(10,10,14,.42);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  transition:background .25s,color .25s,transform .3s var(--ease)}
+.k-plan .ico{width:18px;height:18px;stroke-width:2.4}
+.k-plan .ico+.ico,.k-plan[aria-pressed="true"] .ico:first-child{display:none}
+.k-plan[aria-pressed="true"] .ico+.ico{display:block}
+.k-plan[aria-pressed="true"]{background:#F4F4F5;color:#08080a;box-shadow:none}
+.k-plan:active{transform:scale(.9)}
+@media (hover:hover){.k-plan:hover{background:rgba(255,255,255,.22)}.k-plan[aria-pressed="true"]:hover{background:#fff}}
+.k-acts .k-tix{pointer-events:none}   /* el aviso de entradas no tapa el link de la tarjeta */

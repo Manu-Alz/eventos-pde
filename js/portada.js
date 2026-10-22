@@ -1,8 +1,8 @@
 /* portada.js · slider automático de la portada (lo contratan los planes "Portada")
    Muestra los eventos con portada: true en data.js, del más cercano al más lejano.
-   - Pasa solo cada INTERVAL ms; se frena al pasar el mouse, al tocar, al abrir un detalle o si la pestaña no se ve.
+   - Pasa solo cada INTERVAL ms; se frena al pasar el mouse, al tocar o si la pestaña no se ve.
    - Se desliza con el dedo (scroll-snap) y tiene flechas y barras de progreso (la barra llena = el "timer").
-   - Al tocar una diapositiva se abre el mismo popup de detalle que las tarjetas (detalle.js).
+   - Cada diapositiva es un link a la página del evento (/evento/<id>/).
    Índice: 1 Ajustes · 2 Piezas · 3 Armado · 4 Movimiento
    Requiere: config.js, utils.js, cards.js, css/portada.css */
 
@@ -24,13 +24,12 @@ function whenLabel(e) {
 const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 
 function slideEl(e) {
-  const s = document.createElement("article");
+  const s = document.createElement("a");                 // cada diapositiva lleva a la página del evento
   s.className = "slide";
+  s.href = `/evento/${slugOf(e)}/`;
   s.dataset.id = slugOf(e);
-  s.tabIndex = 0;
-  s.setAttribute("role", "group");
   s.setAttribute("aria-roledescription", "diapositiva");
-  s.setAttribute("aria-label", `${e.title}, ${longDate(e)}. Ver detalles`);
+  s.setAttribute("aria-label", `${e.title}, ${longDate(e)}. Ver evento`);
   s.style.cssText = `--c:${CATS[e.cat]};${coverStyle(e)}`;
   s.innerHTML = `
     ${coverHtml(e)}
@@ -46,7 +45,7 @@ function slideEl(e) {
         <li>${ico("clock")}<span>${esc(timeLabel(e))}</span></li>
         <li>${ico("pin")}<span class="s-place">${esc(e.place)}</span></li>
       </ul>
-      <span class="s-cta">${e.tickets ? "Comprar entradas" : "Ver detalles"} <i>${ico("arrow")}</i></span>
+      <span class="s-cta">${e.tickets ? "Comprar entradas" : "Ver evento"} <i>${ico("arrow")}</i></span>
     </div>
     ${e.photo ? `<div class="s-poster"><img src="${esc(photoUrl(e))}" alt="" decoding="async" onerror="this.closest('.s-poster').remove()"></div>` : ""}`;
   return s;
@@ -130,8 +129,6 @@ function portadaMotion(box, track, n) {
   box.addEventListener("focusout", () => hold("focus", false));
   document.addEventListener("visibilitychange", () => hold("tab", document.hidden));
   new IntersectionObserver(([en]) => hold("offscreen", !en.isIntersecting), { threshold: .25 }).observe(box);
-  new MutationObserver(() => hold("popup", document.body.classList.contains("dlg-open")))
-    .observe(document.body, { attributes: true, attributeFilter: ["class"] });
   addEventListener("resize", () => { track.scrollTo({ left: idx * track.clientWidth }); });
 
   paint(); restart();

@@ -61,6 +61,12 @@ js/
 - **No se hacen a mano.** Las arma GitHub solo (`.github/workflows/eventos.yml` → `tools/build-eventos.js` → `tools/paginas.js`) cada vez que cambia `js/data.js`, y todos los días a las 6:15 para borrar las de eventos vencidos. También rehace `sitemap.xml` (no editarlo a mano).
 - Como el robot sube esos cambios a `main`, antes de subir algo desde tu compu hacé **`git pull`** (o "Fetch/Pull" en GitHub Desktop).
 
+## Mi plan (planificador de viaje)
+
+- Con el **+** de cada tarjeta o "Agregar a mi plan" en la página del evento, la persona arma su lista (queda guardada en su navegador; aparece abajo la píldora "Mi plan").
+- En `plan.html` ve sus eventos por día, elige traslado para cada uno (ida y vuelta, solo ida o no) y la hora a la que la buscamos, y el alojamiento con fechas y zona sugeridas. Manda **una sola cotización** con todo: entra a la pestaña "Servicios" como cualquier pedido (referencia `PLN-XXXXX`, itinerario completo en "Algo más") y sigue el mismo camino de cotización y pago online.
+- "Compartir mi plan" genera un link (`plan.html?e=...`) para mandarle a los amigos.
+
 ## Mapa
 
 - El botón del pin, al lado del calendario, muestra los eventos en un mapa (los de hoy laten). El pin sale solo si el lugar está en `VENUES` (`js/config.js`); si no, se le pone `geo: [lat, lng]` al evento. Los eventos sin ubicación siguen en la lista y el calendario.
