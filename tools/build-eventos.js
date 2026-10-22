@@ -9,8 +9,9 @@ const vm = require("vm");
 const root = path.join(__dirname, "..");
 const read = f => fs.readFileSync(path.join(root, f), "utf8");
 
-/* Los mismos archivos que usa la web, en el mismo orden; comparten variables como en el navegador */
-const ctx = vm.createContext({ console });
+/* Los mismos archivos que usa la web, en el mismo orden; comparten variables como en el navegador.
+   URL y URLSearchParams no vienen solos en un contexto nuevo de Node: se pasan de afuera. */
+const ctx = vm.createContext({ console, URL, URLSearchParams });
 for (const f of ["js/config.js", "js/data.js", "js/utils.js", "js/cards.js", "tools/paginas.js"]) {
   vm.runInContext(read(f), ctx, { filename: f });
 }
