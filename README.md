@@ -59,7 +59,7 @@ js/
 
 - La gente pide chofer, alojamiento o los dos. El pedido (`SRV-XXXXX`) te llega por WhatsApp con todos los datos; vos conseguís opciones y precio y le respondés.
 - Se llega desde: los dos accesos debajo de la portada, el detalle de cada evento (abre la página con el evento y las fechas ya puestas), la cabecera en PC y el pie.
-- **Para que los pedidos también queden en la planilla:** pegá el `apps-script/Code.gs` nuevo en Apps Script, **Implementar > Gestionar implementaciones > editar > Nueva versión**, y después poné `formServicios: true` en `config.js`. Se crea sola la pestaña "Servicios" (con columnas Estado, Precio pasado y Comisión para tu control).
+- **Para que los pedidos también queden en la planilla:** pegá el `apps-script/Code.gs` nuevo en el script "Eventos PDE – Script de avisos" (es independiente, abre la planilla por su ID), **Implementar > Gestionar implementaciones > editar > Nueva versión**, y después poné `formServicios: true` en `config.js`. Se crea sola la pestaña "Servicios" (con columnas Estado, Precio pasado y Comisión para tu control).
 
 ## Precios (en `js/config.js`, `PLANS`)
 
