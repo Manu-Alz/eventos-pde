@@ -80,6 +80,7 @@
           ${infoRow("calendar", "Fecha", longDate(e))}
           ${infoRow("clock", "Hora", timeLabel(e))}
           ${infoRow("pin", "Lugar", e.place)}
+          ${e.price ? infoRow("ticket", "Entradas (puede cambiar según el lote)", e.price) : ""}
         </ul>
         ${mUrl ? `<div class="dlg-map">${embed ? `<iframe data-src="${esc(embed)}" title="Mapa: ${esc(e.place)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>` : ""}
           <a class="dlg-go" href="${esc(mUrl)}" target="_blank" rel="noopener" ${trackAttrs("mapa", e)}>${ico("pin")}Cómo llegar</a></div>` : ""}
@@ -117,7 +118,7 @@
 
   const S = { open: false, busy: false, card: null, ev: null, scrollY: 0, anims: [] };
 
-  const shareUrl = e => location.origin + location.pathname + "#" + slugOf(e);
+  const shareUrl = e => location.origin + "/evento/" + slugOf(e) + "/";   // la página propia del evento: al compartirla se ve el póster
 
   /* Rectángulo final: centrado, del alto del contenido (con tope). Deja el contenido medido y dimensionado. */
   function finalRect() {
@@ -253,14 +254,28 @@
   /* ============ 5. Eventos ============ */
   const byId = id => LIVE.find(e => slugOf(e) === id);
 
+  /* Para abrir un detalle desde otras vistas (el mapa): sale de la tarjeta si se ve; si no, del centro */
+  window.openEvent = id => {
+    const e = byId(id);
+    if (e) open(e, document.querySelector(`#grid .card[data-id="${CSS.escape(id)}"]`));
+  };
+
   document.addEventListener("click", ev => {
     if (ev.target.closest(".dlg")) {
       if (ev.target === back) requestClose();
       else if (ev.target.closest(".dlg-x")) requestClose();
-      else if (ev.target.closest("[data-share]")) share();      return;
+      else if (ev.target.closest("[data-share]")) share();
+      return;
     }
     const card = ev.target.closest(".card[data-id],.slide[data-id]");
-    if (card) { const e = byId(card.dataset.id); if (e) open(e, card); }
+    if (!card) return;
+    /* El título de la tarjeta es un link a la página del evento: con Ctrl/Cmd/Shift se abre aparte; si no, se abre el detalle */
+    if (ev.target.closest("a.k-link")) {
+      if (ev.ctrlKey || ev.metaKey || ev.shiftKey || ev.button) return;
+      ev.preventDefault();
+    }
+    const e = byId(card.dataset.id);
+    if (e) open(e, card);
   });
 
   document.addEventListener("keydown", ev => {

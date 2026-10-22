@@ -11,9 +11,13 @@
    │ desc       descripción corta (1 o 2 líneas)                           (obligatorio) │
    │ contact    botón de contacto: link de WhatsApp, Instagram o "mailto:..."            │
    │ tickets    link de entradas -> embed "Comprar entradas"                             │
-   │ affiliate  true si el link de tickets ya es un link de afiliado tuyo                │   │ link       otro link (web, programa, reservas) -> embed; solo si no hay tickets     │
+   │ affiliate  true si el link de tickets ya es un link de afiliado tuyo                │
+   │ price      precio de referencia, ej. "Desde USD 40" (sale en el detalle)            │
+   │ link       otro link (web, programa, reservas) -> embed; solo si no hay tickets     │
    │ linkLabel  texto del embed de link, ej. "Ver programa" (por defecto "Más información")│
    │ map        link exacto de Google Maps (si no, se arma con place)                    │
+   │ geo        [latitud, longitud] para el mapa. Si el lugar está en VENUES (config.js) │
+   │            no hace falta: el pin sale solo                                          │
    │ endDate    último día, si dura varios días                                          │
    │ photo      nombre del archivo en img/eventos/, ej. "solomun-open-park.webp"         │
    │            (fondo de la tarjeta y póster de la portada; sin foto: degradé de color)  │
@@ -37,7 +41,7 @@ const EV = [
     cat: "Fiestas", date: "2026-12-29", time: "23:59",
     place: "Open Park, El Placer (puente de La Barra)",
     desc: "Solomun, el DJ bosnio-alemán fundador del sello Diynamic y figura de Ibiza, llega a la carpa de Open Park con su deep y tech house melódico. Una de las noches más esperadas del cierre de 2026 en Punta del Este.",
-    tickets: "https://allmusicparties.com/es/evento/solomun-en-open-park-punta-del-este",
+    tickets: "https://app.entraste.com/events/solomun-pde-2026", price: "Desde USD 120",
     photo: "solomun-open-park.webp",
     portada: true
   },
@@ -84,9 +88,10 @@ const EV = [
   },
   {
     title: "Adam Ten b2b Mita Gami",
-    cat: "Fiestas", date: "2026-12-26", time: "A confirmar",
+    cat: "Fiestas", date: "2026-12-26", time: "23:00",
     place: "Medellín Polo Club, Ruta 10 km 176 (Punta del Este)",
     desc: "Adam Ten y Mita Gami, dos nombres de la escena house y tech house internacional, se juntan en un b2b para abrir la temporada en La Pista del Medellín Polo Club, con Facundo Mohrr y Mar Monzon en la previa.",
+    tickets: "https://redtickets.uy/evento/PM-Pres-ADAM-TEN-b2b-MITA-GAMI/33628/", price: "Desde $ 2.520",
     photo: "adam-ten-polo-medellin.webp"
   },
   {
@@ -101,6 +106,7 @@ const EV = [
     cat: "Fiestas", date: "2026-12-28", time: "23:59",
     place: "Open Park, El Placer",
     desc: "Primera fecha de Blavicio en Open Park esta temporada: una noche de música electrónica bajo la carpa de El Placer, junto al puente de La Barra. Entradas en Entraste; la grilla se confirma con la organización.",
+    tickets: "https://app.entraste.com/events/blavicio-1st-chapter-at-open-park", price: "Desde USD 40",
     photo: "blavicio-open-park.webp"
   },
   {
@@ -112,9 +118,10 @@ const EV = [
   },
   {
     title: "Corona Sunset",
-    cat: "Fiestas", date: "2026-12-30", time: "A confirmar",
-    place: "Manantiales",
-    desc: "Atardecer con música frente al mar en Manantiales: música y la mejor hora de luz de la costa. Line-up y horario a confirmar.",
+    cat: "Fiestas", date: "2026-12-30", time: "18:00",
+    place: "Ruta 104 km 3,5, Manantiales",
+    desc: "Corona Sunset vuelve a Manantiales: música al atardecer desde las 18:00, con la mejor hora de luz de la costa. Line-up a confirmar.",
+    tickets: "https://app.entraste.com/events/corona-sunset", price: "Desde USD 45",
     photo: "corona-sunset-manantiales.webp"
   },
   {
@@ -174,9 +181,10 @@ const EV = [
   },
   {
     title: "Tommy Muñoz + Puli Demaria + Ale Schultz",
-    cat: "Fiestas", date: "2026-12-31", time: "22:00",
+    cat: "Fiestas", date: "2026-12-31", time: "23:55",
     place: "Narbona Wine Lodge, Punta del Este",
-    desc: "Fin de año en Narbona Wine Lodge con tres nombres de la escena local y regional: Tommy Muñoz, Puli Demaria y Ale Schultz. Arranca a las 22:00 para brindar con música.",
+    desc: "LA TM New Year's Eve en Narbona Wine Lodge con tres nombres de la escena local y regional: Tommy Muñoz, Puli Demaria y Ale Schultz. Hay entradas generales y VIP con open bar.",
+    tickets: "https://www.passline.com/eventos/la-tm-new-years-eve-pde-narbona-3112", price: "Desde $ 3.280",
     photo: "tommy-munoz-narbona.webp"
   },
   {
@@ -236,9 +244,10 @@ const EV = [
   },
   {
     title: "2Fancy: Halloween Edition",
-    cat: "Fiestas", date: "2026-10-31", time: "A confirmar",
+    cat: "Fiestas", date: "2026-10-31", time: "23:59",
     place: "OAK, Punta del Este",
-    desc: "Fiesta 2Fancy en su edición de Halloween: sábado 31 de octubre en OAK, Punta del Este. Hora a confirmar con la organización.",
+    desc: "Fiesta 2Fancy en su edición de Halloween: sábado 31 de octubre en OAK, Punta del Este. Entradas en CobraTicket, con promo 3x2.",
+    tickets: "https://cobraticket.uy/e/halloween-en-2fancy-361398", price: "Desde $ 466",
     photo: "2fancy-oak.webp"
   },
   {
@@ -246,7 +255,8 @@ const EV = [
     cat: "Fiestas", date: "2026-12-31", time: "23:59",
     place: "Ruta 104 km 3,5, Punta del Este",
     map: "https://www.google.com/maps/search/?api=1&query=-34.870806,-54.819389",
-    desc: "Sensation, la fiesta que nació en Ámsterdam y se hizo famosa por su producción y su código de vestimenta, recibe el 2027 en Ruta 104 km 3,5. Seguí su Instagram para entradas y novedades.",
+    desc: "Sensation, la fiesta que nació en Ámsterdam y se hizo famosa por su producción y su código de vestimenta, recibe el 2027 en Ruta 104 km 3,5. Entradas en Entraste; seguí su Instagram para novedades.",
+    tickets: "https://app.entraste.com/events/sensation-new-years-eve", price: "Desde USD 130",
     contact: "https://instagram.com/sensation_pde",
     photo: "sensation-pde.webp",
     portada: true
@@ -266,5 +276,71 @@ const EV = [
     desc: "Argy en Open Park: una noche de música electrónica bajo la carpa de El Placer, junto al puente de La Barra.",
     contact: "https://instagram.com/argy",
     photo: "argy-open-park.webp"
+  },
+
+  /* Cargados el 22/10 desde las ticketeras (vía quejoda.uy/punta-del-este): fecha, hora, lugar y precio de referencia. */
+  {
+    title: "Cumbiancha: La cumbia nunca muere",
+    cat: "Fiestas", date: "2026-10-23", time: "22:00",
+    place: "Sala Maldonado, Maldonado",
+    desc: "Noche de cumbia en Sala Maldonado: Cumbiancha y su fiesta \"La cumbia nunca muere\". Entrada con y sin límite de horario.",
+    tickets: "https://www.passline.com/eventos/cumbiancha-la-cumbia-nunca-muere", price: "Desde $ 390",
+    photo: "cumbiancha-sala-maldonado.webp"
+  },
+  {
+    title: "MITIC en Soho",
+    cat: "Fiestas", date: "2026-10-24", time: "23:59",
+    place: "Soho, Rambla General Artigas, Punta del Este",
+    desc: "MITIC llega a Soho, sobre la rambla de Punta del Este, con el español Sampol y Enzo en las bandejas.",
+    tickets: "https://redtickets.uy/evento/MITIC--SOHO--24-DE-OCTUBRE/34171/", price: "Desde $ 500",
+    photo: "mitic-soho.webp"
+  },
+  {
+    title: "Mala Maldonado: Halloween",
+    cat: "Fiestas", date: "2026-10-31", time: "23:55",
+    place: "Sala Maldonado, Maldonado",
+    desc: "Mala Maldonado festeja Halloween en Sala Maldonado: noche de disfraces y fiesta en la previa de la temporada.",
+    tickets: "https://www.passline.com/eventos/mala-maldonado-halloween", price: "Desde $ 500",
+    photo: "mala-sala-maldonado.webp"
+  },
+  {
+    title: "Lokeo del Terror",
+    cat: "Fiestas", date: "2026-10-31", time: "23:59",
+    place: "Rambla General Artigas 652, Punta del Este",
+    desc: "Lokeo vuelve con su edición de Halloween, el Lokeo del Terror, sobre la rambla de Punta del Este.",
+    tickets: "https://cobraticket.uy/e/lokeo-del-terror-778506", price: "Desde $ 350",
+    photo: "lokeo-del-terror-pde.webp"
+  },
+  {
+    title: "Custom by Coco Club",
+    cat: "Fiestas", date: "2026-12-29", time: "23:55",
+    place: "Centro de Convenciones de Punta del Este",
+    desc: "Custom, de Coco Club, desembarca en el Centro de Convenciones de Punta del Este en la semana más fuerte de la temporada. Hay entradas generales y VIP Standing (+20).",
+    tickets: "https://redtickets.uy/evento/CUSTOM-by-Coco-Club--PDE/34409/", price: "Desde USD 35",
+    photo: "custom-centro-convenciones.webp"
+  },
+  {
+    title: "Montoya New Year's Eve",
+    cat: "Fiestas", date: "2026-12-31", time: "23:59",
+    place: "Playa Montoya, La Barra",
+    desc: "Fin de año frente al mar en Playa Montoya, La Barra, con open bar para recibir el 2027.",
+    tickets: "https://redtickets.uy/evento/MONTOYA-NYE/34168/", price: "Desde USD 110",
+    photo: "montoya-nye-playa-montoya.webp"
+  },
+  {
+    title: "Box NYE 2027",
+    cat: "Fiestas", date: "2026-12-31", time: "23:59",
+    place: "La Barra, Punta del Este",
+    desc: "Box recibe el 2027 en La Barra con open bar. Hay entradas generales y VIP Standing.",
+    tickets: "https://app.entraste.com/events/box-nye-2027", price: "Desde USD 130",
+    photo: "box-nye-la-barra.webp"
+  },
+  {
+    title: "Fantasy NYE 2027",
+    cat: "Fiestas", date: "2026-12-31", time: "23:59",
+    place: "Open Park, El Placer",
+    desc: "Fantasy, la fiesta de Año Nuevo de Open Park, con open bar junto al puente de La Barra. Organizan About, Blackout, Kabûl y Brothers.",
+    tickets: "https://app.entraste.com/events/fantasy-nye-2027", price: "Desde USD 110",
+    photo: "fantasy-nye-open-park.webp"
   }
 ];

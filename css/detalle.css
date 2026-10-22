@@ -7,7 +7,7 @@
 :root{
   --dlg-width:560px;          /* ancho máximo de la ventana en pantallas grandes */
   --dlg-radius:30px;          /* redondeo */
-  --dlg-bg:#0b0b0e;           /* fondo de la ventana */
+  --dlg-bg:#1b1b20;           /* fondo de la ventana */
 }
 
 /* 2. Capas y ventana */
@@ -41,7 +41,7 @@
 .dlg-info small{font-size:12px;color:var(--muted);letter-spacing:.04em}
 .dlg-info b{font-size:16px;font-weight:700;overflow-wrap:anywhere}
 
-.dlg-map{position:relative;height:170px;border-radius:20px;overflow:hidden;background:#15151b;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.dlg-map{position:relative;height:170px;border-radius:20px;overflow:hidden;background:#232329;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
 .dlg-map iframe{position:absolute;inset:0;width:100%;height:100%;border:0;filter:invert(.92) hue-rotate(180deg) saturate(.7) contrast(.95)}
 .dlg-map::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
 
@@ -71,7 +71,7 @@ body.dlg-open{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 
 /* 5. Entradas: barra fija abajo de la ventana (siempre a la vista) */
 .dlg-buy{position:sticky;bottom:0;z-index:4;display:grid;gap:10px;padding:28px 22px calc(18px + env(safe-area-inset-bottom,0px));margin-top:-26px;
-  background:linear-gradient(rgba(11,11,14,0),var(--dlg-bg) 34%)}
+  background:linear-gradient(rgba(27,27,32,0),var(--dlg-bg) 34%)}
 .dlg-win:has(.dlg-buy) .dlg-toast{bottom:auto;top:70px}
 
 /* 6. Traslado y alojamiento para el evento (llevan a servicios.html con el evento ya elegido) */

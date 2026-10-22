@@ -30,7 +30,7 @@
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(var(--grid-min),1fr));gap:var(--grid-gap)}
 .card{position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;
   aspect-ratio:var(--card-ratio);padding:var(--card-pad);border-radius:var(--card-radius);
-  background:#0b0b0e;box-shadow:0 22px 44px -26px rgba(0,0,0,.9);color:var(--ink);cursor:pointer;
+  background:var(--card);box-shadow:0 22px 44px -26px rgba(0,0,0,.9);color:var(--ink);cursor:pointer;
   transition:transform .5s var(--ease)}
 .card:active{transform:scale(.985)}
 .card:focus-visible{outline:2px solid #fff;outline-offset:3px}
@@ -41,12 +41,12 @@
 }
 
 /* 3. Portada: foto o degradé generado, con sombra abajo y grano arriba de todo */
-.cover{position:absolute;inset:0;z-index:-1;overflow:hidden;background:#0b0b0e}
+.cover{position:absolute;inset:0;z-index:-1;overflow:hidden;background:var(--card)}
 .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.02);transition:transform .9s var(--ease)}
 .cover.gen{background:     /* el color cubre toda la tarjeta: base teñida + dos manchas grandes (subí/bajá los % para cubrir más o menos) */
   radial-gradient(120% 95% at var(--gx) var(--gy),color-mix(in srgb,var(--c) 92%,#000) 0%,color-mix(in srgb,var(--c) 38%,#000) 55%,transparent 100%) center/100% 100% no-repeat,
   radial-gradient(110% 85% at calc(100% - var(--gx)) calc(100% - var(--gy)),color-mix(in srgb,color-mix(in srgb,var(--c) 40%,var(--sun)) 70%,#000) 0%,transparent 90%) center/100% 100% no-repeat,
-  color-mix(in srgb,var(--c) 26%,#0b0b0e);
+  color-mix(in srgb,var(--c) 26%,var(--card));
   transition:background-size .9s var(--ease)}
 .cover::before{content:"";position:absolute;inset:0;z-index:1;   /* sombra: más oscura abajo para que el texto se lea */
   background:linear-gradient(to top,rgba(5,5,8,var(--scrim)) 0%,rgba(5,5,8,calc(var(--scrim)*.86)) 26%,rgba(5,5,8,calc(var(--scrim)*.5)) 48%,rgba(5,5,8,.1) 74%,rgba(5,5,8,.32) 100%)}
@@ -107,3 +107,6 @@
 /* 6. Aviso de entradas arriba a la derecha (solo eventos con link de entradas) */
 .k-tix{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;font-size:12px;font-weight:700;background:rgba(244,244,245,.94);color:#08080a}
 .k-tix .ico{width:14px;height:14px}
+
+/* 7. El título es un link a la página del evento, pero se ve como texto (toda la tarjeta abre el detalle) */
+.k-link{color:inherit;text-decoration:none}

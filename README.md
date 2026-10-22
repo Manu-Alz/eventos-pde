@@ -55,6 +55,16 @@ js/
 - **Google:** cada evento vigente se describe como schema.org/Event para que Google pueda mostrarlo en sus resultados de eventos.
 - **Búsqueda:** sin tildes y también por fecha ("diciembre", "sábado").
 
+## Página propia de cada evento (SEO)
+
+- Cada evento vigente tiene su página: `eventospde.com/evento/<nombre-fecha>/` (HTML completo, con póster, datos para Google y botones). Al compartirla en WhatsApp o Instagram se ve el póster.
+- **No se hacen a mano.** Las arma GitHub solo (`.github/workflows/eventos.yml` → `tools/build-eventos.js` → `tools/paginas.js`) cada vez que cambia `js/data.js`, y todos los días a las 6:15 para borrar las de eventos vencidos. También rehace `sitemap.xml` (no editarlo a mano).
+- Como el robot sube esos cambios a `main`, antes de subir algo desde tu compu hacé **`git pull`** (o "Fetch/Pull" en GitHub Desktop).
+
+## Mapa
+
+- El botón del pin, al lado del calendario, muestra los eventos en un mapa (los de hoy laten). El pin sale solo si el lugar está en `VENUES` (`js/config.js`); si no, se le pone `geo: [lat, lng]` al evento. Los eventos sin ubicación siguen en la lista y el calendario.
+
 ## Traslados y alojamiento (`servicios.html`)
 
 - La gente pide chofer, alojamiento o los dos. El pedido (`SRV-XXXXX`) te llega por WhatsApp con todos los datos; vos conseguís opciones y precio y le respondés.

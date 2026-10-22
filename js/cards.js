@@ -25,6 +25,17 @@ function mapUrl(e) {
   return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(q);
 }
 
+/* Coordenadas para el mapa: geo del evento, o las del link "map" (query=lat,lng), o el lugar conocido en VENUES (config.js).
+   Sin ninguna de las tres, el evento no tiene pin (null). */
+function geoOf(e) {
+  if (Array.isArray(e.geo)) return e.geo;
+  const m = /query=(-?\d+\.\d+),(-?\d+\.\d+)/.exec(e.map || "");
+  if (m) return [+m[1], +m[2]];
+  const place = norm(e.place);
+  const key = Object.keys(typeof VENUES === "object" ? VENUES : {}).find(k => place.includes(norm(k)));
+  return key ? VENUES[key] : null;
+}
+
 /* Link de entradas. Si el dominio está en AFILIADOS (config.js) se le agrega tu código
    y queda marcado como link de referido. */
 function ticketLink(e) {
@@ -92,8 +103,9 @@ function eyebrowHtml(e) {
 const shortPlace = e => e.place.replace(/\s*\(.*?\)/g, "").split(", ")[0];
 
 /* ============ 5. Tarjeta de la grilla ============
-   Estructura: .cover + .k-top [.k-day, .k-tix?] + .k-bottom [.k-eyebrow, h3, .k-row (.k-place, .k-go)]
-   Al tocarla se abre el detalle (detalle.js). Los links y botones viven adentro del detalle. */
+   Estructura: .cover + .k-top [.k-day, .k-tix?] + .k-bottom [.k-eyebrow, h3 > a.k-link, .k-row (.k-place, .k-go)]
+   Al tocarla se abre el detalle (detalle.js). El título es un link a la página propia del evento (/evento/<id>/):
+   Google lo sigue, y con Ctrl/Cmd o la ruedita del mouse se abre en otra pestaña. */
 function cardEl(e) {
   const card = document.createElement("article");
   card.className = "card";
@@ -111,7 +123,7 @@ function cardEl(e) {
     </div>
     <div class="k-bottom">
       ${eyebrowHtml(e)}
-      <h3>${esc(e.title)}</h3>
+      <h3><a class="k-link" href="/evento/${slugOf(e)}/" tabindex="-1">${esc(e.title)}</a></h3>
       <div class="k-row">
         <p class="k-place">${ico("pin")}<span>${esc(shortPlace(e))}</span></p>
         <span class="k-go" aria-hidden="true">${ico("arrow")}</span>

@@ -40,6 +40,29 @@ const CATS = {
   "Gastronomía":    "#D4572A"    // encuentros de vino y cocina
 };
 
+/* ============ 2b. Lugares para el mapa ============
+   Si el "place" de un evento contiene uno de estos nombres, su pin sale solo en el mapa (sin tildes ni mayúsculas).
+   Van del más específico al más general: gana el primero que coincide. Un evento puede traer su propio geo: [lat, lng].
+   Para sumar un lugar: buscalo en Google Maps, clic derecho > copiar las coordenadas y pegalas acá. */
+const VENUES = {
+  "Open Park":              [-34.91437, -54.87705],
+  "Cipriani":               [-34.93720, -54.90950],
+  "MACA":                   [-34.86629, -54.82137],
+  "Arcana":                 [-34.86553, -54.82109],
+  "Medellín Polo Club":     [-34.85094, -54.73056],
+  "Narbona":                [-34.87146, -54.84897],
+  "Ruta 104 km 3,5":        [-34.87101, -54.82682],
+  "Parada 8":               [-34.94800, -54.92387],
+  "El Bosque":              [-34.89009, -54.79437],
+  "Yacht Club":             [-34.96428, -54.95002],
+  "Sala Maldonado":         [-34.90687, -54.95672],
+  "Soho":                   [-34.96535, -54.94998],
+  "Artigas 652":            [-34.96518, -54.95040],
+  "Centro de Convenciones": [-34.91949, -54.92151],
+  "Playa Montoya":          [-34.91540, -54.84836],
+  "OAK":                    [-34.91545, -54.85244]
+};
+
 /* ============ 3. Afiliados ============
    Para cobrar comisión por entradas: agregá la ticketera una sola vez acá y todos los eventos
    con `tickets` de ese dominio salen con tu código y marcados como "enlace de referido".

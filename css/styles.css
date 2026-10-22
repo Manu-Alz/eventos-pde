@@ -3,8 +3,9 @@
 
 /* 1. Tokens y reset */
 :root{color-scheme:dark;
-  --bg:#08080a;                       /* fondo: negro suave, deja ver el grano y los bordes */
-  --surface:#111115;                  /* tarjetas y cajas */
+  --bg:#151518;                       /* fondo: gris carbón oscuro, más amable a la vista que el negro puro */
+  --surface:#1b1b20;                  /* secciones y cajas */
+  --card:#1d1d22;                     /* fondo de tarjetas y ventanas mientras carga la foto */
   --ink:#F4F4F5;--muted:#9a9aa4;
   --line:rgba(255,255,255,.11);       /* bordes finos translúcidos */
   --glass:rgba(255,255,255,.05);      /* fondo de vidrio: chips, buscador, botones */
@@ -34,7 +35,7 @@ header.top{position:sticky;top:0;z-index:30;display:flex;justify-content:space-b
 /* Al bajar (js/site.js agrega .stuck) aparece un velo de vidrio de borde a borde que se desvanece hacia abajo (sin cajas) */
 header.top::before{content:"";position:fixed;top:0;left:0;right:0;z-index:-1;pointer-events:none;opacity:0;transition:opacity .3s;
   height:calc(var(--head-h) + env(safe-area-inset-top,0px) + 12px);
-  background:linear-gradient(rgba(8,8,10,.9),rgba(8,8,10,.6));
+  background:linear-gradient(rgba(21,21,24,.92),rgba(21,21,24,.62));
   -webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);
   -webkit-mask-image:linear-gradient(#000 72%,transparent);mask-image:linear-gradient(#000 72%,transparent)}
 header.top.stuck::before{opacity:1}

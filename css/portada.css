@@ -23,7 +23,7 @@
 .slide{position:relative;isolation:isolate;overflow:hidden;flex:0 0 100%;scroll-snap-align:start;scroll-snap-stop:always;
   display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:var(--por-gap);
   min-height:var(--por-min-h);padding:var(--por-pad);border-radius:var(--por-radius);
-  background:#0b0b0e;color:var(--ink);cursor:pointer;transition:transform .5s var(--ease)}
+  background:var(--card);color:var(--ink);cursor:pointer;transition:transform .5s var(--ease)}
 .slide:not(:has(.s-poster)){grid-template-columns:minmax(0,1fr)}
 .slide:active{transform:scale(.99)}
 .slide:focus-visible{outline:2px solid #fff;outline-offset:3px}

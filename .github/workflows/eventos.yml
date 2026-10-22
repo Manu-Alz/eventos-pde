@@ -1,0 +1,57 @@
+# Páginas de eventos: arma eventospde.com/evento/<id>/ y el sitemap con tools/build-eventos.js.
+# Corre sola cuando cambia data.js (o el resto de lo que usa) y todos los días a las 6:15 de Uruguay,
+# así los eventos vencidos dejan de tener página. Sube el resultado a main y pide a GitHub Pages que publique.
+name: Páginas de eventos
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "js/data.js"
+      - "js/config.js"
+      - "js/cards.js"
+      - "js/utils.js"
+      - "index.html"
+      - "tools/**"
+      - ".github/workflows/eventos.yml"
+  schedule:
+    - cron: "15 9 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: paginas-eventos
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Armar páginas y sitemap
+        run: node tools/build-eventos.js
+
+      - name: Subir los cambios y publicar
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A evento sitemap.xml
+          if git diff --cached --quiet; then
+            echo "Sin cambios en las páginas."
+            exit 0
+          fi
+          git commit -m "Páginas de eventos al día"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          curl -sS -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/pages/builds" || true

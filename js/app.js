@@ -13,7 +13,7 @@ const ymOf = iso => ({ y: +iso.slice(0, 4), m: +iso.slice(5, 7) - 1 });
 
 const state = {
   cat: "Todos",
-  view: "list",                                  // "list" | "cal"
+  view: "list",                                  // "list" | "cal" | "map"
   day: null,                                     // día elegido en el calendario
   month: (() => { const first = LIVE.map(e => e.date).sort()[0] || TODAY; return ymOf(first < TODAY ? TODAY : first); })()
 };
@@ -65,6 +65,16 @@ function renderChips() {
   cal.onclick = () => { state.view = state.view === "cal" ? "list" : "cal"; render(); };
   box.appendChild(cal);
 
+  /* Botón circular del mapa: al lado del calendario; muestra los lugares de los eventos filtrados */
+  const map = document.createElement("button");
+  map.type = "button";
+  map.className = "chip chip-cal";
+  map.innerHTML = ico("pin");
+  map.setAttribute("aria-label", "Mapa");
+  map.setAttribute("aria-pressed", state.view === "map");
+  map.onclick = () => { state.view = state.view === "map" ? "list" : "map"; render(); if (state.view === "map") track("ver_mapa"); };
+  box.appendChild(map);
+
   ["Todos", ...Object.keys(CATS)].forEach(name => {
     box.appendChild(chipEl(name, name === state.cat, name === "Todos" ? null : filtered({ cat: name }).length,
       () => {
@@ -111,14 +121,16 @@ function renderList(list) {
 /* ============ 5. Render general ============ */
 function render() {
   const list = filtered();
-  const cal = state.view === "cal";
+  const view = state.view;
 
   renderChips();
   $("count").textContent = `${list.length} ${list.length === 1 ? "evento" : "eventos"}`;
-  $("grid").hidden = cal;
-  $("cal").hidden = !cal;
+  $("grid").hidden = view !== "list";
+  $("cal").hidden = view !== "cal";
+  $("mapa").hidden = view !== "map";
 
-  if (cal) renderCalendar($("cal"), list, { state, bounds, onChange: render });
+  if (view === "cal") renderCalendar($("cal"), list, { state, bounds, onChange: render });
+  else if (view === "map") renderMap($("mapa"), list);
   else renderList(list);
 }
 
@@ -141,7 +153,7 @@ function render() {
       location: { "@type": "Place", name: e.place,
         address: { "@type": "PostalAddress", addressLocality: "Punta del Este", addressRegion: "Maldonado", addressCountry: "UY" } },
       ...(e.photo ? { image: [new URL(photoUrl(e), BASE).href] } : {}),
-      url: BASE + "#" + slugOf(e),
+      url: BASE + "evento/" + slugOf(e) + "/",
       ...(t ? { offers: { "@type": "Offer", url: t.url, availability: "https://schema.org/InStock" } } : {})
     };
   });

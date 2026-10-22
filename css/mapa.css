@@ -1,0 +1,44 @@
+/* mapa.css · vista de mapa de la home (la arma js/mapa.js con Leaflet)
+   Estructura: section.mapa > .mapa-box (el mapa) + .mapa-note · pines .pin · globos .mp-pop > .mp */
+
+/* 1. Caja del mapa */
+.mapa-box{position:relative;height:clamp(420px,68vh,640px);border-radius:28px;overflow:hidden;background:var(--card);
+  box-shadow:inset 0 0 0 1px var(--line),0 22px 44px -26px rgba(0,0,0,.9);isolation:isolate}
+.mapa-wait{position:absolute;inset:0;display:grid;place-items:center;margin:0;color:var(--muted);font-size:15px;text-align:center;padding:20px}
+.mapa-note{margin:12px 4px 0;color:var(--muted);font-size:13px}
+.mapa .leaflet-container{background:#1b1b20;font:inherit}
+.mapa .leaflet-control-attribution{background:rgba(21,21,24,.75);color:var(--muted);font-size:10px}
+.mapa .leaflet-control-attribution a{color:var(--ink)}
+.mapa .leaflet-bar{border:0;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.mapa .leaflet-bar a{width:36px;height:36px;line-height:36px;background:rgba(27,27,32,.92);color:var(--ink);border-color:var(--line)}
+.mapa .leaflet-bar a:hover{background:#2a2a31}
+
+/* 2. Pines: punto del color de la categoría; con varios eventos lleva el número; los de hoy laten */
+.pin{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;font:700 13px 'DM Sans',sans-serif;color:#fff;
+  background:var(--c);border:3px solid #F4F4F5;box-shadow:0 4px 14px rgba(0,0,0,.55),0 0 0 6px color-mix(in srgb,var(--c) 28%,transparent)}
+.pin:empty{width:22px;height:22px;margin:6px}
+.pin.hoy{animation:pin-hoy 1.6s ease-out infinite}
+@keyframes pin-hoy{0%{box-shadow:0 4px 14px rgba(0,0,0,.55),0 0 0 0 color-mix(in srgb,var(--c) 60%,transparent)}
+  100%{box-shadow:0 4px 14px rgba(0,0,0,.55),0 0 0 16px transparent}}
+
+/* 3. Globo de un lugar */
+.mp-pop .leaflet-popup-content-wrapper{background:#1f1f25;color:var(--ink);border-radius:20px;box-shadow:0 20px 50px -10px rgba(0,0,0,.7),inset 0 0 0 1px rgba(255,255,255,.12)}
+.mp-pop .leaflet-popup-tip{background:#1f1f25}
+.mp-pop .leaflet-popup-content{margin:14px 14px 12px}
+.mp-pop a.leaflet-popup-close-button{color:var(--muted);top:6px;right:8px}
+.mp{display:grid;gap:10px;font:400 14px/1.35 'DM Sans',sans-serif}
+.mp-place{font:600 17px 'Bricolage Grotesque',sans-serif;padding-right:18px}
+.mp ul{list-style:none;margin:0;padding:0;display:grid;gap:6px;max-height:240px;overflow-y:auto}
+.mp li button{display:flex;align-items:center;gap:10px;width:100%;padding:8px;border:0;border-radius:14px;background:rgba(255,255,255,.06);color:var(--ink);text-align:left;cursor:pointer;font:inherit}
+.mp li button:hover{background:rgba(255,255,255,.12)}
+.mp-d{flex:none;display:grid;place-items:center;width:52px;padding:6px 0;border-radius:10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
+  background:color-mix(in srgb,var(--c) 30%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 60%,transparent)}
+.mp-t{display:grid;min-width:0}
+.mp-t b{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mp-t small{color:var(--muted);font-size:12px}
+.mp-go{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;border-radius:999px;background:#F4F4F5;color:#08080a!important;font-weight:700;text-decoration:none}
+.mp-go .ico{width:16px;height:16px}
+
+@media (max-width:600px){.mapa-box{border-radius:24px;height:clamp(380px,64vh,560px)}}
+/* El mapa de OpenStreetMap es claro: se oscurece para que combine con la página (igual que el mapa del detalle) */
+.mapa .leaflet-tile-pane{filter:invert(.92) hue-rotate(180deg) saturate(.55) brightness(.95) contrast(.95)}
