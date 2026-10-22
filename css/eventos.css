@@ -78,3 +78,22 @@
 .ref .rt{min-width:0;display:flex;flex-direction:column;line-height:1.25}
 .ref b{font-size:14px}
 .ref small{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* 4. Traslados y alojamiento: dos accesos debajo de la portada (llevan a servicios.html) */
+.svc{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 clamp(22px,4vw,34px)}
+.svc-tile{display:flex;align-items:center;gap:14px;min-width:0;padding:14px 14px 14px 16px;border-radius:22px;text-decoration:none;color:var(--ink);
+  border:1px solid var(--line);background:var(--glass);transition:background .25s,border-color .25s}
+.svc-i{flex:none;width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:rgba(124,77,255,.22);color:#fff}
+.svc-tile:nth-child(2) .svc-i{background:rgba(76,195,219,.2)}
+.svc-i .ico{width:24px;height:24px;stroke-width:1.8}
+.svc-t{display:grid;gap:2px;min-width:0;flex:1}
+.svc-t b{font:600 18px/1.15 'Bricolage Grotesque',sans-serif}
+.svc-t small{font-size:14px;color:var(--muted)}
+.svc-go{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.08);transition:transform .5s var(--ease),background .3s,color .3s}
+.svc-go .ico{width:18px;height:18px}
+@media (hover:hover){.svc-tile:hover{background:var(--glass-hover);border-color:rgba(255,255,255,.25)}.svc-tile:hover .svc-go{background:#F4F4F5;color:#08080a;transform:rotate(45deg)}}
+@media (max-width:600px){
+  .svc-tile{flex-direction:column;align-items:flex-start;gap:10px;padding:14px}
+  .svc-go{display:none}
+  .svc-t small{font-size:13px}
+}

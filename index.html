@@ -23,12 +23,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=14">
-<link rel="stylesheet" href="css/eventos.css?v=14">
-<link rel="stylesheet" href="css/tarjetas.css?v=14">
-<link rel="stylesheet" href="css/detalle.css?v=14">
-<link rel="stylesheet" href="css/calendario.css?v=14">
-<link rel="stylesheet" href="css/portada.css?v=14">
+<link rel="stylesheet" href="css/styles.css?v=16">
+<link rel="stylesheet" href="css/eventos.css?v=16">
+<link rel="stylesheet" href="css/tarjetas.css?v=16">
+<link rel="stylesheet" href="css/detalle.css?v=16">
+<link rel="stylesheet" href="css/calendario.css?v=16">
+<link rel="stylesheet" href="css/portada.css?v=16">
 </head>
 <body>
 <!-- Fondo de la parte superior (grilla + resplandor + ondas de grano): css/eventos.css sección 0 -->
@@ -37,7 +37,7 @@
 
   <header class="top">
     <a class="logo" href="index.html" aria-label="Eventos PDE, inicio">Eventos<span>PDE</span></a>
-    <div class="hact"><a class="btn" href="publicar.html">Publicar evento</a></div>
+    <div class="hact"><a class="btn ghost hide-sm" href="servicios.html" data-ev="servicio_cabecera">Traslados y alojamiento</a><a class="btn" href="publicar.html">Publicar evento</a></div>
   </header>
 
   <div class="hero">
@@ -48,6 +48,20 @@
 
   <!-- Portada: slider automático, lo llena js/portada.js -->
   <section class="portada" id="portada" aria-label="Eventos de la portada" aria-roledescription="carrusel" hidden></section>
+
+  <!-- Servicios: traslados y alojamiento (servicios.html). Íconos iguales a ICONS.car y ICONS.bed de utils.js -->
+  <nav class="svc" aria-label="Traslados y alojamiento">
+    <a class="svc-tile" href="servicios.html?s=traslado" data-ev="servicio_inicio" data-n="traslado">
+      <span class="svc-i"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 17H4a1 1 0 0 1-1-1v-3l2-5.2A2 2 0 0 1 6.9 6.5h10.2a2 2 0 0 1 1.9 1.3L21 13v3a1 1 0 0 1-1 1h-1"/><path d="M3 13h18"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M9 17h6"/></svg></span>
+      <span class="svc-t"><b>Traslados</b><small>Chofer ida y vuelta a tu evento</small></span>
+      <span class="svc-go" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24"><path d="M7 17L17 7"/><path d="M8 7h9v9"/></svg></span>
+    </a>
+    <a class="svc-tile" href="servicios.html?s=alojamiento" data-ev="servicio_inicio" data-n="alojamiento">
+      <span class="svc-i"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 19V6"/><path d="M3 15h18v4"/><path d="M21 15v-2.5A3.5 3.5 0 0 0 17.5 9H11v6"/><circle cx="7" cy="11.5" r="2"/></svg></span>
+      <span class="svc-t"><b>Alojamiento</b><small>Hoteles, apartamentos y casas</small></span>
+      <span class="svc-go" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24"><path d="M7 17L17 7"/><path d="M8 7h9v9"/></svg></span>
+    </a>
+  </nav>
 
   <div class="search">
     <input id="q" type="search" placeholder="Buscar evento, lugar o fecha" aria-label="Buscar evento" enterkeyhint="search" autocomplete="off" autocapitalize="off" spellcheck="false">
@@ -68,15 +82,15 @@
 
 <div class="wrap"><footer class="foot" id="site-footer"><span>Punta del Este, Uruguay</span></footer></div>
 
-<script src="js/config.js?v=14"></script>
-<script src="js/data.js?v=14"></script>
-<script src="js/utils.js?v=14"></script>
-<script src="js/analytics.js?v=14"></script>
-<script src="js/site.js?v=14"></script>
-<script src="js/cards.js?v=14"></script>
-<script src="js/portada.js?v=14"></script>
-<script src="js/calendar.js?v=14"></script>
-<script src="js/app.js?v=14"></script>
-<script src="js/detalle.js?v=14"></script>
+<script src="js/config.js?v=16"></script>
+<script src="js/data.js?v=16"></script>
+<script src="js/utils.js?v=16"></script>
+<script src="js/analytics.js?v=16"></script>
+<script src="js/site.js?v=16"></script>
+<script src="js/cards.js?v=16"></script>
+<script src="js/portada.js?v=16"></script>
+<script src="js/calendar.js?v=16"></script>
+<script src="js/app.js?v=16"></script>
+<script src="js/detalle.js?v=16"></script>
 </body>
 </html>

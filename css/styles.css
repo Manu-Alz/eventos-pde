@@ -81,3 +81,5 @@ footer{padding:28px 0 max(36px,calc(env(safe-area-inset-bottom) + 20px));color:v
 .has-pill>.chip:not(.chip-cal)[aria-pressed="true"]{background:transparent;border-color:transparent}
 .pill{position:absolute;left:0;top:0;z-index:0;border-radius:999px;background:var(--ink);pointer-events:none;
   transition:transform .5s var(--ease),width .5s var(--ease),height .5s var(--ease),opacity .2s}
+/* Botón que se esconde en pantallas chicas (ej. "Traslados y alojamiento" en la cabecera: en el celular está debajo de la portada) */
+@media (max-width:720px){.hide-sm{display:none!important}}

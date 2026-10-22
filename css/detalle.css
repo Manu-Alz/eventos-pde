@@ -73,3 +73,15 @@ body.dlg-open{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .dlg-buy{position:sticky;bottom:0;z-index:4;display:grid;gap:10px;padding:28px 22px calc(18px + env(safe-area-inset-bottom,0px));margin-top:-26px;
   background:linear-gradient(rgba(11,11,14,0),var(--dlg-bg) 34%)}
 .dlg-win:has(.dlg-buy) .dlg-toast{bottom:auto;top:70px}
+
+/* 6. Traslado y alojamiento para el evento (llevan a servicios.html con el evento ya elegido) */
+.dlg-svc{display:grid;gap:10px;padding-top:18px;border-top:1px solid rgba(255,255,255,.1)}
+.dlg-svc p{margin:0;font-size:14px;font-weight:700;color:var(--muted)}
+.dlg-svc>div{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dlg-svc a{display:flex;align-items:center;gap:12px;min-width:0;padding:12px 14px;border-radius:18px;text-decoration:none;color:var(--ink);
+  background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);transition:background .25s}
+.dlg-svc a:hover{background:rgba(255,255,255,.11)}
+.dlg-svc .ico{flex:none;width:22px;height:22px}
+.dlg-svc span{display:grid;min-width:0}
+.dlg-svc b{font-size:15px}
+.dlg-svc small{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}

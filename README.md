@@ -55,6 +55,12 @@ js/
 - **Google:** cada evento vigente se describe como schema.org/Event para que Google pueda mostrarlo en sus resultados de eventos.
 - **Búsqueda:** sin tildes y también por fecha ("diciembre", "sábado").
 
+## Traslados y alojamiento (`servicios.html`)
+
+- La gente pide chofer, alojamiento o los dos. El pedido (`SRV-XXXXX`) te llega por WhatsApp con todos los datos; vos conseguís opciones y precio y le respondés.
+- Se llega desde: los dos accesos debajo de la portada, el detalle de cada evento (abre la página con el evento y las fechas ya puestas), la cabecera en PC y el pie.
+- **Para que los pedidos también queden en la planilla:** pegá el `apps-script/Code.gs` nuevo en Apps Script, **Implementar > Gestionar implementaciones > editar > Nueva versión**, y después poné `formServicios: true` en `config.js`. Se crea sola la pestaña "Servicios" (con columnas Estado, Precio pasado y Comisión para tu control).
+
 ## Precios (en `js/config.js`, `PLANS`)
 
 Se cobra por día publicado y cada tramo sale más barato: `tiers: [[hastaElDía, precioPorDía], ...]`. Los tramos se suman (7 días nunca cuestan menos que 6). Hoy: Básico US$ 6 los días 1-2, US$ 3 del 3 al 7, US$ 2 del 8 al 30 y US$ 1 desde el 31; Portada US$ 30, 12, 8 y 5. `MAX_DAYS` es el tope de días por pedido. La página recalcula tarjetas, total y mensajes sola.

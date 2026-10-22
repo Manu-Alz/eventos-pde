@@ -88,6 +88,13 @@
           <div class="${second.length > 1 ? "dlg-row" : ""}">${second.join("")}</div>
           ${t && t.affiliate ? '<p class="dlg-note">Enlace de referido: no cambia el precio.</p>' : ""}
         </div>
+        <div class="dlg-svc">
+          <p>¿Cómo llegás y dónde te quedás?</p>
+          <div>
+            <a href="servicios.html?s=traslado&amp;e=${esc(slugOf(e))}" ${trackAttrs("servicio_evento", e)}>${ico("car")}<span><b>Traslado</b><small>Chofer ida y vuelta</small></span></a>
+            <a href="servicios.html?s=alojamiento&amp;e=${esc(slugOf(e))}" ${trackAttrs("servicio_evento", e)}>${ico("bed")}<span><b>Alojamiento</b><small>Para esas fechas</small></span></a>
+          </div>
+        </div>
       </div>
       ${buy}`;
   }
