@@ -227,6 +227,14 @@ const EV = [
     portada: true
   },
   {
+    title: "The 30 Limones Experience",
+    cat: "Fiestas", date: "2026-10-24", time: "A confirmar",
+    place: "Mía Bistró, Punta del Este",
+    desc: "30 Limones en Mía Bistró, frente al mar: sabores mediterráneos, arte, instrumentos en vivo y percusión, con el house de Tommy de los Santos y Primitivo. Mesas con reserva por Instagram.",
+    contact: "https://instagram.com/30limones",
+    photo: "30-limones-mia-bistro.webp"
+  },
+  {
     title: "2Fancy: Halloween Edition",
     cat: "Fiestas", date: "2026-10-31", time: "A confirmar",
     place: "OAK, Punta del Este",

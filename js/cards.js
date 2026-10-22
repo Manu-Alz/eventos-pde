@@ -77,10 +77,22 @@ const coverHtml = e => e.photo
 const coverStyle = e => { const h = hashOf(e.title); return `--gx:${18 + h % 64}%;--gy:${12 + (h >> 4) % 50}%`; };
 
 /* Aviso en la tarjeta de los eventos con link de entradas */
-const tixHtml = e => (e.tickets ? `<span class="k-tix">${ico("ticket")}Entradas a la venta</span>` : "");
+const tixHtml = e => (e.tickets ? `<span class="k-tix">${ico("ticket")}Entradas</span>` : "");
+
+/* Línea chica sobre el título: "Fiestas · Sáb 23:00" (sin hora: "Fiestas · Sáb"; varios días: "Festivales · Varios días") */
+const DIAS_CORTOS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+function eyebrowHtml(e) {
+  const when = e.endDate && e.endDate !== e.date ? "Varios días"
+    : DIAS_CORTOS[new Date(e.date + "T12:00:00Z").getUTCDay()] + (/^\d/.test(e.time) ? ` ${e.time}` : "");
+  return `<p class="k-eyebrow"><i></i>${esc(e.cat)}<span aria-hidden="true">·</span>${esc(when)}</p>`;
+}
+
+/* Lugar corto para la tarjeta: sin paréntesis y hasta la primera coma ("Open Park, El Placer (puente…)" -> "Open Park").
+   El detalle muestra el lugar completo. */
+const shortPlace = e => e.place.replace(/\s*\(.*?\)/g, "").split(", ")[0];
 
 /* ============ 5. Tarjeta de la grilla ============
-   Estructura: .cover + .k-top [.k-date, .k-cat] + .k-bottom [h3, .k-meta, .k-go]
+   Estructura: .cover + .k-top [.k-day, .k-tix?] + .k-bottom [.k-eyebrow, h3, .k-row (.k-place, .k-go)]
    Al tocarla se abre el detalle (detalle.js). Los links y botones viven adentro del detalle. */
 function cardEl(e) {
   const card = document.createElement("article");
@@ -94,17 +106,14 @@ function cardEl(e) {
   card.innerHTML = `
     ${coverHtml(e)}
     <div class="k-top">
-      <div class="k-date"><b>${dayLabel(e)}</b><small>${monthLabel(e)}</small></div>
-      <span class="k-cat"><i></i>${esc(e.cat)}</span>
+      <div class="k-day"><small>${monthLabel(e)}</small><b>${dayLabel(e)}</b></div>
+      ${tixHtml(e)}
     </div>
     <div class="k-bottom">
-      ${tixHtml(e)}
+      ${eyebrowHtml(e)}
       <h3>${esc(e.title)}</h3>
       <div class="k-row">
-        <ul class="k-meta">
-          <li><span class="k-ic">${ico("clock")}</span><span>${esc(timeLabel(e))}</span></li>
-          <li><span class="k-ic">${ico("pin")}</span><span class="k-place">${esc(e.place)}</span></li>
-        </ul>
+        <p class="k-place">${ico("pin")}<span>${esc(shortPlace(e))}</span></p>
         <span class="k-go" aria-hidden="true">${ico("arrow")}</span>
       </div>
     </div>`;
