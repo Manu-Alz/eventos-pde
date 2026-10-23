@@ -13,12 +13,14 @@
    2. Configuración del proyecto (engranaje) > Propiedades del script > agregá MP_TOKEN con el Access Token
       de producción de tu cuenta de Mercado Pago (Mercado Pago Developers > Tus integraciones > Credenciales).
       El token no va en el código: este archivo está en GitHub, que es público.
-   3. Arriba elegí "instalar" y tocá Ejecutar (acepta los permisos). Activa el aviso automático al poner un precio.
+   3. Arriba elegí "instalar" y tocá Ejecutar (acepta los permisos, incluido Gmail). Activa el aviso automático al poner un precio.
+      Después elegí "probarMail" y Ejecutar: te llega un mail de prueba y dice si salió desde contacto@eventospde.com.
    4. Implementar > Gestionar implementaciones > lápiz > Versión: Nueva versión > Implementar.
       La dirección /exec queda igual: no hay que tocar config.js. */
 
 const ID_PLANILLA = "1S5C63A0civLudKr2fN0r6REh8EoZ4YKDfu7wXxJCAWg";
-const AVISAR_A    = "eventospde.uy@gmail.com";
+const AVISAR_A    = "eventospde.uy@gmail.com";   // avisos internos (pedidos y pagos nuevos)
+const CONTACTO    = "contacto@eventospde.com";   // los mails a clientes salen y se responden desde acá (alias "Enviar como" de Gmail)
 const SITIO       = "https://eventospde.com";
 const COTIZACION  = 42;                  // pesos por dólar para cobrar en Mercado Pago (igual que mercadopago.uyuRate en config.js)
 const NOMBRE      = "Eventos PDE";
@@ -289,7 +291,11 @@ function mailCliente(para, asunto, titulo, texto, lineas, boton) {
     </div>
     <p style="margin:16px 4px 0;font-size:12px;line-height:1.5;color:#9a9aa4">Eventos PDE · Todo lo que pasa en Punta del Este · <a href="${SITIO}" style="color:#9a9aa4">eventospde.com</a><br>Si tenés alguna duda, respondé este mail.</p>
   </div></div>`;
-  try { MailApp.sendEmail({ to: para, subject: asunto, htmlBody: html, name: NOMBRE, replyTo: AVISAR_A }); } catch (err) { console.error(err); }
+  /* Sale desde contacto@eventospde.com si está configurado como "Enviar como" en el Gmail de la cuenta; si no, desde el Gmail,
+     pero igual se responde a contacto@ */
+  const desde = remitente();
+  try { GmailApp.sendEmail(para, asunto, `${titulo}\n\n${texto}`, { htmlBody: html, name: NOMBRE, replyTo: CONTACTO, ...(desde ? { from: desde } : {}) }); }
+  catch (err) { console.error(err); }
 }
 
 /* ============ 7. Utilidades ============ */
@@ -312,12 +318,26 @@ function conCandado(fn) {
 }
 
 /* Correr una vez: activa el envío automático de la cotización al poner un precio en la planilla */
+/* contacto@ solo si Gmail lo tiene como alias (Configuración > Cuentas e importación > Enviar como) */
+let remitenteCache;
+function remitente() {
+  if (remitenteCache === undefined) { try { remitenteCache = GmailApp.getAliases().includes(CONTACTO) ? CONTACTO : ""; } catch (err) { remitenteCache = ""; } }
+  return remitenteCache;
+}
+
+/* Para probar los mails: Ejecutar > probarMail. Manda un mail de cliente de ejemplo a tu Gmail y dice desde qué dirección salió */
+function probarMail() {
+  mailCliente(AVISAR_A, "Prueba de mail · Eventos PDE", "¡Hola!", "Este es un mail de prueba con el diseño que reciben los clientes. Si respondés, la respuesta va a " + CONTACTO + ".", ["Pedido: PRUEBA"], { texto: "Ver la web", url: SITIO });
+  console.log(remitente() ? "Salió desde " + CONTACTO + "." : "Salió desde el Gmail: falta agregar " + CONTACTO + " en Gmail > Configuración > Cuentas e importación > Enviar como.");
+}
+
 function instalar() {
   ScriptApp.getProjectTriggers().filter(t => t.getHandlerFunction() === "alEditar").forEach(t => ScriptApp.deleteTrigger(t));
   ScriptApp.newTrigger("alEditar").forSpreadsheet(ID_PLANILLA).onEdit().create();
   obtenerHoja(HOJA, COLUMNAS);
   obtenerHoja(HOJA_SERVICIOS, COLUMNAS_SERVICIOS);
   UrlFetchApp.fetch("https://api.mercadopago.com", { muteHttpExceptions: true });   // pide el permiso para conectarse a Mercado Pago
+  GmailApp.getAliases();                                                                // pide el permiso para mandar desde contacto@
   console.log("Listo: al poner un precio en Servicios se manda la cotización. MP_TOKEN " +
     (PropertiesService.getScriptProperties().getProperty("MP_TOKEN") ? "cargado." : "FALTA (Configuración del proyecto > Propiedades del script)."));
 }

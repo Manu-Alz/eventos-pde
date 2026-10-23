@@ -27,6 +27,11 @@ js/
   publicar.js       página de publicar
 ```
 
+## Mail
+
+- **Contacto oficial: `contacto@eventospde.com`** (web, mails a clientes, media kit). No es una casilla aparte: Namecheap lo reenvía al Gmail `eventospde.uy@gmail.com`, que sigue administrando todo (planilla, script, Mercado Pago, Analytics, GitHub).
+- Desde Gmail se responde como contacto@ (Configuración > Cuentas e importación > Enviar como). El script manda los mails a clientes desde contacto@ si ese alias está configurado (`probarMail` lo comprueba); los avisos internos llegan al Gmail.
+
 ## Antes de publicar (una sola vez, en `js/config.js`)
 
 1. `whatsapp`: tu número con código de país, sin `+` (hoy es de ejemplo).

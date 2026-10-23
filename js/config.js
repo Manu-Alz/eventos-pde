@@ -5,7 +5,7 @@
 /* ============ 1. Contacto, pagos y analítica ============ */
 const CONFIG = {
   whatsapp:  "59894717738",                 // tu WhatsApp con código de país, sin + ni espacios
-  email:     "eventospde.uy@gmail.com",     // mail de contacto (pie de página, publicar y comprobantes)
+  email:     "contacto@eventospde.com",     // mail de contacto (pie de página, publicar y comprobantes). Llega al Gmail eventospde.uy@gmail.com por reenvío de Namecheap
   instagram: "eventos_pde",                 // usuario de Instagram, sin @
   ga:        "G-SC1Y8ZRB66",                // ID de Google Analytics 4. Sin ID no se carga nada.
   formUrl:   "https://script.google.com/macros/s/AKfycbx5tDOduOG0AgE2KeUL6R5-M5MxpNArbjcv_mNsMsfFQ3p1Svw-wP8sIXxqHFpT3nS8/exec",                            // dirección de la aplicación web de Google (apps-script/Code.gs). Vacío = no se avisa solo
