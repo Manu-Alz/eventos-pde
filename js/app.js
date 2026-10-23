@@ -181,18 +181,23 @@ $("q").addEventListener("input", () => {
 const heroLive = $("hero-live");
 if (heroLive) heroLive.textContent = `${LIVE.length} ${LIVE.length === 1 ? "evento" : "eventos"} en agenda`;
 
-/* Volver de un evento con "atrás": misma vista (lista, calendario o mapa), mismos filtros y misma altura.
-   Se guarda al tocar un evento o al salir de la página; se usa solo cuando se vuelve con "atrás". */
+/* Volver de un evento: misma vista (lista, calendario o mapa), mismos filtros y misma altura.
+   Se guarda al tocar un evento o al salir de la página. Se usa al volver con "atrás" y también al volver con un link
+   desde la página de un evento ("‹ Todos los eventos", el logo), siempre que haya sido hace menos de una hora. */
 const SPOT_KEY = "epde-vuelta";
 const saveSpot = () => {
-  try { sessionStorage.setItem(SPOT_KEY, JSON.stringify({ y: scrollY, cat: state.cat, view: state.view, q: $("q").value, month: state.month, day: state.day })); } catch (_) {}
+  try { sessionStorage.setItem(SPOT_KEY, JSON.stringify({ y: scrollY, cat: state.cat, view: state.view, q: $("q").value, month: state.month, day: state.day, t: Date.now() })); } catch (_) {}
 };
 document.addEventListener("click", ev => { if (ev.target.closest && ev.target.closest('a[href^="/evento/"]')) saveSpot(); }, true);
 addEventListener("pagehide", saveSpot);
 if ("scrollRestoration" in history) history.scrollRestoration = "manual";   // la altura la pone este código, no el navegador
 const nav = performance.getEntriesByType && performance.getEntriesByType("navigation")[0];
+const fromEvent = (() => { try { const r = new URL(document.referrer); return r.origin === location.origin && r.pathname.startsWith("/evento/"); } catch (_) { return false; } })();
 let spot = null;
-try { if (nav && nav.type === "back_forward") spot = JSON.parse(sessionStorage.getItem(SPOT_KEY)); } catch (_) {}
+try {
+  if (nav && (nav.type === "back_forward" || fromEvent)) spot = JSON.parse(sessionStorage.getItem(SPOT_KEY));
+  if (spot && spot.t && Date.now() - spot.t > 36e5) spot = null;
+} catch (_) {}
 if (spot) {
   if (CATS[spot.cat] || spot.cat === "Todos") state.cat = spot.cat;
   if (["list", "cal", "map"].includes(spot.view)) state.view = spot.view;

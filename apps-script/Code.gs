@@ -3,7 +3,7 @@
 
    QUÉ HACE
    - publicar.html  -> fila en "Solicitudes", mail para vos y link de pago de Mercado Pago por el monto exacto.
-   - servicios.html -> fila en "Servicios", mail de confirmación al cliente y mail para vos.
+   - plan.html (Mi plan) -> fila en "Servicios", mail de confirmación al cliente y mail para vos.
      Vos completás "Detalle para el cliente" y "Precio USD" en la planilla: al poner el precio, el cliente recibe
      solo un mail con la cotización y el link para pagar online (eventospde.com/pagar.html).
    - Mercado Pago avisa cuando entra un pago: se marca "Pagado" en la planilla y les llega un mail a vos y al cliente.
@@ -79,7 +79,7 @@ function guardarSolicitud(d) {
   return { ok: true, ref: d.ref, pagina: linkPagina(d.ref, clave), pago };
 }
 
-/* ============ 3. Traslados y alojamiento (servicios.html) ============ */
+/* ============ 3. Entradas, traslados y alojamiento (Mi plan, plan.html) ============ */
 
 function guardarServicio(d) {
   const clave = nuevaClave();
@@ -153,15 +153,17 @@ function leerPedido(ref, k) {
     const precio = Number(r.get("Precio USD")) || 0;
     const itinerario = itinerarioDe(r.get("Algo más"));
     const esPlan = itinerario.length > 0;
+    const eventos = itinerario.filter(l => !/^(Llegada|Regreso):/.test(l)).length;   // la llegada y el regreso no cuentan como eventos
+    const aloj = String(r.get("Tipo") || "");
     return {
       ok: true, ref, tipo: "servicio",
       titulo: String(r.get("Necesita")).replace(/^./, c => c.toUpperCase()),
-      evento: esPlan ? `${itinerario.length} ${itinerario.length === 1 ? "evento" : "eventos"} en Punta del Este` : r.get("Evento"),
+      evento: !esPlan ? r.get("Evento") : eventos ? `${eventos} ${eventos === 1 ? "evento" : "eventos"} en Punta del Este` : "Tu viaje a Punta del Este",
       nombre: primerNombre(r.get("Nombre")),
       detalle: r.get("Detalle para el cliente"),
       lineas: [...(esPlan ? itinerario
                  : [fechaTexto(r.get("Traslado: día")) && `Traslado: ${fechaTexto(r.get("Traslado: día"))}, ida ${horaTexto(r.get("Ida"))} hs desde ${r.get("Desde")}`]),
-               fechaTexto(r.get("Llegada")) && `Alojamiento: del ${fechaTexto(r.get("Llegada"))} al ${fechaTexto(r.get("Salida"))}${r.get("Zona") ? ` · ${r.get("Zona")}` : ""}`,
+               fechaTexto(r.get("Llegada")) && `Alojamiento: del ${fechaTexto(r.get("Llegada"))} al ${fechaTexto(r.get("Salida"))}${r.get("Zona") ? ` · ${r.get("Zona")}` : ""}${aloj && aloj !== "Me da igual" ? ` · ${aloj}` : ""}`,
                `Personas: ${r.get("Personas")}`].filter(Boolean),
       usd: precio, pesos: precio ? pesos(precio) : "", estado: r.get("Estado") || "Nuevo"
     };

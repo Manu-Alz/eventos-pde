@@ -63,6 +63,17 @@ const VENUES = {
   "OAK":                    [-34.91545, -54.85244]
 };
 
+/* ============ 2c. Alojamientos con convenio (catálogo de "Mi plan") ============
+   Cada hotel, apart o casa con el que haya acuerdo aparece en plan.html para elegirlo, con su pin en el mapa y los minutos
+   hasta los eventos de la persona. Vacío = no se muestra el catálogo (se pide zona, tipo y presupuesto y se cotiza a medida).
+   id: nombre corto sin espacios · zone: una de las zonas de planner.js (Península, Playa Brava o Mansa, La Barra, Manantiales,
+   José Ignacio, Maldonado) · type: Hotel, Apartamento o Casa · geo: [lat, lng] · photo: archivo en img/alojamientos/
+   from: precio por noche desde (US$) · sleeps: hasta cuántas personas · perks: hasta 3 cosas cortas.
+   Ejemplo:
+   { id: "hotel-del-mar", name: "Hotel del Mar", zone: "La Barra", type: "Hotel", geo: [-34.9131, -54.8655],
+     photo: "hotel-del-mar.webp", from: 180, sleeps: 4, perks: ["Desayuno", "Frente al mar", "Piscina"] } */
+const STAYS = [];
+
 /* ============ 3. Afiliados ============
    Para cobrar comisión por entradas: agregá la ticketera una sola vez acá y todos los eventos
    con `tickets` de ese dominio salen con tu código y marcados como "enlace de referido".

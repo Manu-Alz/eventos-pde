@@ -11,6 +11,16 @@
     mark();
   }
 
+  /* "‹ Todos los eventos" en la página de un evento: si se llegó desde la agenda, es lo mismo que "atrás"
+     (vuelve a la misma altura al instante, sin recargar) */
+  const back = document.querySelector("a.ev-back");
+  if (back) back.addEventListener("click", ev => {
+    try {
+      const r = new URL(document.referrer);
+      if (r.origin === location.origin && r.pathname === "/" && history.length > 1) { ev.preventDefault(); history.back(); }
+    } catch (_) {}
+  });
+
   const footer = $("site-footer");
   if (!footer) return;
 
@@ -18,7 +28,6 @@
     <p class="foot-info"><span>Punta del Este, Uruguay</span><span>© ${new Date().getFullYear()} Eventos PDE</span></p>
     <nav class="foot-links" aria-label="Contacto">
       ${/plan/.test(location.pathname) ? "" : '<a href="/plan.html" data-ev="plan_pie">Mi plan</a>'}
-      ${/servicios/.test(location.pathname) ? "" : '<a href="/servicios.html" data-ev="servicio_pie">Traslados y alojamiento</a>'}
       ${/publicar/.test(location.pathname) ? "" : '<a href="/publicar.html" data-ev="promo_publicar">Publicar evento</a>'}
       <a href="mailto:${esc(CONFIG.email)}" data-ev="email_sitio">${esc(CONFIG.email)}</a>
       <a href="https://instagram.com/${esc(CONFIG.instagram)}" target="_blank" rel="noopener" data-ev="instagram_sitio">Instagram<span>@${esc(CONFIG.instagram)}</span></a>

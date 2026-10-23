@@ -54,6 +54,7 @@ js/
 - **Para organizadores:** en la grilla aparece una tarjeta que lleva a publicar.html, con el precio más bajo de `PLANS`.
 - **Google:** cada evento vigente se describe como schema.org/Event para que Google pueda mostrarlo en sus resultados de eventos.
 - **Búsqueda:** sin tildes y también por fecha ("diciembre", "sábado").
+- **Volver a la agenda:** desde la página de un evento (con "atrás", "‹ Todos los eventos" o el logo) se vuelve a la misma altura, vista y filtros.
 
 ## Página propia de cada evento (SEO)
 
@@ -61,10 +62,18 @@ js/
 - **No se hacen a mano.** Las arma GitHub solo (`.github/workflows/eventos.yml` → `tools/build-eventos.js` → `tools/paginas.js`) cada vez que cambia `js/data.js`, y todos los días a las 6:15 para borrar las de eventos vencidos. También rehace `sitemap.xml` (no editarlo a mano).
 - Como el robot sube esos cambios a `main`, antes de subir algo desde tu compu hacé **`git pull`** (o "Fetch/Pull" en GitHub Desktop).
 
-## Mi plan (planificador de viaje)
+## Mi plan (planificador de viaje): el único lugar para pedir entradas, traslados y alojamiento
 
-- Con el **+** de cada tarjeta o "Agregar a mi plan" en la página del evento, la persona arma su lista (queda guardada en su navegador; aparece abajo la píldora "Mi plan").
-- En `plan.html` ve sus eventos por día, elige traslado para cada uno (ida y vuelta, solo ida o no) y la hora a la que la buscamos, y el alojamiento con fechas y zona sugeridas. Manda **una sola cotización** con todo: entra a la pestaña "Servicios" como cualquier pedido (referencia `PLN-XXXXX`, itinerario completo en "Algo más") y sigue el mismo camino de cotización y pago online. El mail de cotización y `pagar.html` muestran ese itinerario completo (las líneas que empiezan con "•"), así que no hay que borrarlas de la planilla.
+Pensado sobre todo para quien viene de afuera y quiere resolver todo en un solo lugar. No hay formularios aparte: `servicios.html` quedó solo para los links viejos (lleva a `plan.html` y, con `?e=<id>`, suma ese evento).
+
+- Se llega desde: la tarjeta clara de la portada ("¿Necesitás traslado o alojamiento? Armá tu plan"), el botón "Mi plan" de la cabecera y el pie, el **+** de cada tarjeta, "Agregar a mi plan" y la tarjeta **"Armá tu viaje con este evento"** de la página de cada evento (`plan.html?add=<id>`). La lista queda guardada en el navegador de la persona; abajo aparece la píldora "Mi plan".
+- `plan.html` tiene cuatro pasos y un resumen fijo al costado (en el celular, una barra abajo):
+  1. **Elegí tus eventos:** la agenda adentro del plan (mini tarjetas que se deslizan, con filtro por categoría) para sumar o sacar eventos. Por cada evento elegido: entradas ("Incluilas" o "Ya las tengo") y chofer (**ida y vuelta, solo ida, solo vuelta o no**) con la hora a la que la buscamos.
+  2. **Llegada y regreso:** avión a Montevideo o a Punta, barco a Montevideo o Colonia, ómnibus o por su cuenta; día, hora y vuelo, y el traslado con chofer (**ida y vuelta, solo llegada, solo regreso o no**).
+  3. **Dónde te quedás:** fechas, un mapa con las zonas y sus eventos, los minutos aproximados de cada zona a sus eventos (recomienda la más cercana), tipo y presupuesto. Si hay **alojamientos con convenio** en `STAYS` (`js/config.js`), aparecen para elegir, con pin en el mapa; fotos en `img/alojamientos/`.
+  4. **Tus datos:** nombre, mail, WhatsApp, país e idioma.
+- Se puede pedir **sin eventos** (solo traslado o solo alojamiento).
+- Manda **una sola cotización**: entra a la pestaña "Servicios" (referencia `PLN-XXXXX`). En "Algo más" va el itinerario, una línea "•" por tramo (llegada, cada evento con entradas y chofer, regreso), más país e idioma. El mail de cotización y `pagar.html` muestran esas líneas completas, así que no hay que borrarlas de la planilla.
 - "Compartir mi plan" genera un link (`plan.html?e=...`) para mandarle a los amigos.
 
 ## Mapa
@@ -73,15 +82,9 @@ js/
 
 ## Cobros online (Mercado Pago, sin que el cliente tenga que escribirnos)
 
-- **Traslados y alojamiento:** el cliente pide en `servicios.html` (con su mail) → le llega un mail de confirmación → vos completás en la pestaña "Servicios" las columnas **"Detalle para el cliente"** y **"Precio USD"** → al poner el precio le llega solo la cotización con el botón de pago → paga en `pagar.html` con Mercado Pago (monto exacto) o transferencia → se marca **"Pagado"** y les llega un mail a los dos.
+- **Mi plan (entradas, traslados y alojamiento):** el cliente pide en `plan.html` (con su mail) → le llega un mail de confirmación → vos completás en la pestaña "Servicios" las columnas **"Detalle para el cliente"** y **"Precio USD"** → al poner el precio le llega solo la cotización con el botón de pago → paga en `pagar.html` con Mercado Pago (monto exacto) o transferencia → se marca **"Pagado"** y les llega un mail a los dos.
 - **Publicaciones:** al enviar el formulario, el botón de Mercado Pago ya trae el monto exacto (menos la Portada, que se confirma antes).
 - Configuración (una vez): token de Mercado Pago en Apps Script (Propiedades del script → `MP_TOKEN`), correr `instalar` y publicar una nueva versión. Detalle en el encabezado de `apps-script/Code.gs`.
-
-## Traslados y alojamiento (`servicios.html`)
-
-- La gente pide chofer, alojamiento o los dos. El pedido (`SRV-XXXXX`) entra a la pestaña "Servicios" y te llega por mail; se cotiza y cobra online (ver "Cobros online"). WhatsApp y mail quedan solo como respaldo si el sistema falla.
-- Se llega desde: los dos accesos debajo de la portada, el detalle de cada evento (abre la página con el evento y las fechas ya puestas), la cabecera en PC y el pie.
-- **Para que los pedidos también queden en la planilla:** pegá el `apps-script/Code.gs` nuevo en el script "Eventos PDE – Script de avisos" (es independiente, abre la planilla por su ID), **Implementar > Gestionar implementaciones > editar > Nueva versión**, y después poné `formServicios: true` en `config.js`. Se crea sola la pestaña "Servicios" (con columnas Estado, Precio pasado y Comisión para tu control).
 
 ## Precios (en `js/config.js`, `PLANS`)
 

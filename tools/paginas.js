@@ -9,7 +9,7 @@
 const SITE = "https://eventospde.com";
 const MORE_EVENTS = 6;                        // "Más eventos en Punta" al pie de cada página
 const STATIC_PAGES = [                        // páginas fijas del sitemap: [dirección, prioridad, frecuencia]
-  ["/", "1.0", "daily"], ["/plan.html", "0.7", "monthly"], ["/servicios.html", "0.7", "monthly"], ["/publicar.html", "0.6", "monthly"]
+  ["/", "1.0", "daily"], ["/plan.html", "0.8", "monthly"], ["/publicar.html", "0.6", "monthly"]
 ];
 
 /* ============ 2. Piezas ============ */
@@ -133,7 +133,7 @@ function eventPage(e, live, v) {
 <div class="wrap">
   <header class="top">
     <a class="logo" href="/" aria-label="Eventos PDE, inicio">Eventos<span>PDE</span></a>
-    <div class="hact"><a class="btn ghost hide-sm" href="/servicios.html">Traslados y alojamiento</a><a class="btn" href="/publicar.html">Publicar evento</a></div>
+    <div class="hact"><a class="btn ghost hide-sm" href="/plan.html">Mi plan</a><a class="btn" href="/publicar.html">Publicar evento</a></div>
   </header>
 
   <a class="ev-back" href="/">‹ Todos los eventos de Punta del Este</a>
@@ -156,13 +156,10 @@ function eventPage(e, live, v) {
         <button type="button" class="btn ghost ev-plan" data-plan="${esc(slugOf(e))}" aria-pressed="false">${ico("plus")}${ico("check")}<span class="plan-label">Agregar a mi plan</span></button>
         <div class="ev-row">${second}</div>
       </div>
-      <div class="ev-svc">
-        <p>¿Cómo llegás y dónde te quedás?</p>
-        <div>
-          <a href="/servicios.html?s=traslado&amp;e=${esc(slugOf(e))}" data-ev="servicio_evento" data-n="${esc(e.title)}">${ico("car")}<span><b>Traslado</b><small>Chofer ida y vuelta</small></span></a>
-          <a href="/servicios.html?s=alojamiento&amp;e=${esc(slugOf(e))}" data-ev="servicio_evento" data-n="${esc(e.title)}">${ico("bed")}<span><b>Alojamiento</b><small>Para esas fechas</small></span></a>
-        </div>
-      </div>
+      <a class="ev-trip" href="/plan.html?add=${esc(slugOf(e))}" data-ev="plan_evento" data-n="${esc(e.title)}">
+        <span class="ev-trip-t"><small>¿Venís de afuera?</small><b>Armá tu viaje con este evento</b><span>Entradas, traslado desde el aeropuerto, alojamiento cerca y chofer. Una sola cotización.</span></span>
+        <span class="ev-trip-go">${ico("arrow")}</span>
+      </a>
     </div>
   </main>
 

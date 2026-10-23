@@ -1,5 +1,5 @@
 /* evento.css · página propia de cada evento (evento/<id>/index.html, la arma tools/paginas.js)
-   Estructura: .ev-back · main.ev > [.ev-poster, .ev-body > (.ev-eyebrow, h1, .ev-desc, .ev-facts, .ev-actions, .ev-svc)] · .ev-more
+   Estructura: .ev-back · main.ev > [.ev-poster, .ev-body > (.ev-eyebrow, h1, .ev-desc, .ev-facts, .ev-actions, .ev-trip)] · .ev-more
    Índice: 1 Diseño · 2 Datos · 3 Botones · 4 Traslado y alojamiento · 5 Más eventos */
 
 /* 1. Diseño: póster a la izquierda en PC (queda fijo al bajar), arriba en el celular */
@@ -39,7 +39,17 @@
 .ev-row .btn{background:var(--glass)}
 @media (hover:hover){.ev-row .btn:hover{background:var(--glass-hover)}}
 
-/* 4. Traslado y alojamiento para este evento */
+/* 4. Armar el viaje con este evento (lleva a Mi plan con el evento ya agregado) y, aparte, traslado o alojamiento suelto */
+.ev-trip{display:flex;align-items:center;gap:16px;padding:18px 18px 18px 20px;border-radius:24px;text-decoration:none;color:#151518;background:#F7F5F2;
+  box-shadow:0 20px 40px -26px rgba(0,0,0,.9);transition:transform .35s var(--ease)}
+.ev-trip-t{display:grid;gap:3px;min-width:0;flex:1}
+.ev-trip-t small{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#7C4DFF}
+.ev-trip-t b{font:600 21px/1.1 'Bricolage Grotesque',sans-serif;letter-spacing:-.02em}
+.ev-trip-t span{font-size:14px;color:#55555c;line-height:1.45}
+.ev-trip-go{flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:#151518;color:#fff}
+.ev-trip-go .ico{width:20px;height:20px;transition:transform .35s var(--ease)}
+@media (hover:hover){.ev-trip:hover{transform:translateY(-2px)}.ev-trip:hover .ev-trip-go .ico{transform:rotate(45deg)}}
+/* Páginas de eventos armadas antes de "Armá tu viaje" (las que GitHub todavía no rehízo): mismo estilo de siempre */
 .ev-svc{display:grid;gap:10px;padding-top:18px;border-top:1px solid var(--line)}
 .ev-svc p{margin:0;font-size:14px;font-weight:700;color:var(--muted)}
 .ev-svc>div{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(140px,100%),1fr));gap:10px}
@@ -81,7 +91,7 @@
 @media (max-width:859px){
   .ev-buybar{position:fixed;left:0;right:0;bottom:0;z-index:40;display:block;padding:12px max(var(--gutter),env(safe-area-inset-left)) calc(12px + env(safe-area-inset-bottom,0px));
     background:linear-gradient(rgba(21,21,24,0),rgba(21,21,24,.92) 35%)}
-  .ev-buybar .btn{width:100%;min-height:54px;gap:10px;font-size:16px;background:#F4F4F5;color:#08080a;box-shadow:0 14px 34px -10px rgba(0,0,0,.8)}
+  .ev-buybar .btn{width:100%;min-height:54px;gap:10px;font-size:15px;white-space:nowrap;background:#F4F4F5;color:#08080a;box-shadow:0 14px 34px -10px rgba(0,0,0,.8)}
   .ev-buybar .btn .ico{width:19px;height:19px}
   body:has(.ev-buybar){padding-bottom:84px}
   body:has(.ev-buybar) .plan-fab{bottom:calc(86px + env(safe-area-inset-bottom,0px))}
