@@ -60,6 +60,7 @@ js/
 
 - Cada evento vigente tiene su página: `eventospde.com/evento/<nombre-fecha>/` (HTML completo, con póster, datos para Google y botones). Al compartirla en WhatsApp o Instagram se ve el póster.
 - **No se hacen a mano.** Las arma GitHub solo (`.github/workflows/eventos.yml` → `tools/build-eventos.js` → `tools/paginas.js`) cada vez que cambia `js/data.js`, y todos los días a las 6:15 para borrar las de eventos vencidos. También rehace `sitemap.xml` (no editarlo a mano).
+- **Fotos de eventos vencidos:** el mismo robot borra de `img/eventos/` la foto de cada evento que terminó hace más de 3 días (solo si ningún evento vigente la usa; una foto que todavía no está en `data.js` no se toca). El evento puede quedar en `data.js`: la web ya no lo muestra.
 - Como el robot sube esos cambios a `main`, antes de subir algo desde tu compu hacé **`git pull`** (o "Fetch/Pull" en GitHub Desktop).
 
 ## Mi plan (planificador de viaje): el único lugar para pedir entradas, traslados y alojamiento

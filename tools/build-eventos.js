@@ -29,3 +29,17 @@ for (const [rel, content] of Object.entries(files)) {
 }
 const pages = Object.keys(files).filter(f => f.startsWith("evento/")).length;
 console.log(`Listo: ${pages} páginas de eventos y sitemap.xml (hoy ${vm.runInContext("TODAY", ctx)}, v=${v}).`);
+
+/* Fotos de eventos vencidos: se borran de img/eventos cuando el evento terminó hace más de GRACIA días.
+   Solo se borra una foto que usan únicamente eventos vencidos; una foto que no figura en data.js (subida para un
+   evento que todavía no se cargó) no se toca. El evento puede quedar en data.js: la web ya no lo muestra. */
+const GRACIA = 3;
+const limite = vm.runInContext(`addDays(TODAY, -${GRACIA})`, ctx);
+const enUso = new Set(), vencidas = new Set();
+for (const e of vm.runInContext("EV", ctx)) {
+  if (!e.photo || /\//.test(e.photo)) continue;                     // solo las de img/eventos/
+  ((e.endDate || e.date) >= limite ? enUso : vencidas).add(e.photo);
+}
+const borradas = [...vencidas].filter(f => !enUso.has(f) && fs.existsSync(path.join(root, "img/eventos", f)));
+borradas.forEach(f => fs.rmSync(path.join(root, "img/eventos", f)));
+console.log(borradas.length ? `Fotos borradas de eventos vencidos: ${borradas.join(", ")}` : "Ninguna foto para borrar.");
