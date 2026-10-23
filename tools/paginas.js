@@ -15,7 +15,7 @@ const STATIC_PAGES = [                        // páginas fijas del sitemap: [di
 /* ============ 2. Piezas ============ */
 const isLiveEvent = e => (e.endDate || e.date) >= TODAY && (!e.until || e.until >= TODAY) && (!e.from || e.from <= TODAY);
 const eventPath = e => `/evento/${slugOf(e)}/`;
-const absPhoto = e => (e.photo ? new URL("/" + photoUrl(e), SITE).href : `${SITE}/img/og.jpg`);
+const absPhoto = e => (e.photo ? new URL("/" + photoUrl(e), SITE).href : `${SITE}/img/og.jpg?v=2`);
 const cap1 = s => s.charAt(0).toUpperCase() + s.slice(1);
 const cut = (s, n) => (s.length > n ? s.slice(0, n - 1).replace(/\s+\S*$/, "") + "…" : s);
 const hasTime = e => /^\d{1,2}:\d{2}$/.test(e.time);
