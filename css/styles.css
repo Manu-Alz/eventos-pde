@@ -57,19 +57,32 @@ header.top.stuck::before{opacity:1}
 .ico{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
 /* 4. Pie de página (lo arma site.js) */
-footer{padding:28px 0 max(36px,calc(env(safe-area-inset-bottom) + 20px));color:var(--muted);font-size:14px}
-/* Pie de página: contacto a la derecha y datos a la izquierda; en celular, datos arriba y botones a lo ancho debajo */
-.foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px 24px;margin-top:40px}
-.foot-info{display:flex;flex-wrap:wrap;gap:2px 14px;margin:0;line-height:1.5}
-.foot-links{display:flex;flex-wrap:wrap;gap:10px}
-.foot a{display:inline-flex;align-items:center;gap:6px;min-height:var(--tap);padding:8px 18px;border:1px solid var(--line);border-radius:999px;background:var(--glass);color:var(--ink);font-weight:500;text-decoration:none;transition:border-color .2s,background .2s}
-.foot a:hover{border-color:rgba(255,255,255,.35);background:var(--glass-hover)}
-@media (max-width:600px){
-  .foot{flex-direction:column;align-items:stretch;gap:16px}
-  .foot-info{flex-direction:column;gap:2px}
-  .foot-links{flex-direction:column}
-  .foot a{justify-content:center}
+footer{padding:0 0 max(28px,calc(env(safe-area-inset-bottom) + 16px));color:var(--muted);font-size:14px}
+/* Marca y redes a la izquierda, tres columnas de links a la derecha; abajo, una línea fina con © y lugar.
+   Celular: marca arriba, columnas de a dos (Contacto a lo ancho). Links de texto, no botones. */
+.foot{position:relative;margin-top:clamp(56px,9vw,96px);padding-top:clamp(32px,5vw,48px);border-top:1px solid var(--line)}
+.foot::before{content:"";position:absolute;top:-1px;left:0;width:min(220px,40%);height:1px;background:linear-gradient(90deg,var(--sun),transparent)}
+.foot-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:32px clamp(32px,6vw,80px)}
+.foot-brand{display:grid;gap:14px;align-content:start;max-width:340px}
+.foot-brand p{margin:0;line-height:1.55}
+.foot-social{display:flex;gap:10px}
+.foot-social a{display:grid;place-items:center;width:var(--tap);height:var(--tap);border-radius:50%;border:1px solid var(--line);background:var(--glass);color:var(--ink);transition:background .25s,border-color .25s,color .25s}
+.foot-social .ico{width:19px;height:19px}
+@media (hover:hover){.foot-social a:hover{background:#F4F4F5;border-color:#F4F4F5;color:#08080a}}
+.foot-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px 24px}
+.foot-col{display:grid;align-content:start;justify-items:start;gap:2px;min-width:0}
+.foot-h{margin:0 0 6px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.foot-col a{display:inline-flex;align-items:center;min-height:38px;max-width:100%;color:var(--ink);text-decoration:none;font-weight:500;overflow-wrap:anywhere;transition:color .2s}
+.foot-col a[aria-current="page"]{color:var(--muted)}
+@media (hover:hover){.foot-col a:hover{color:var(--sea)}}
+.foot-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 18px;margin-top:clamp(28px,5vw,44px);padding-top:18px;border-top:1px solid var(--line);font-size:13px}
+@media (max-width:760px){
+  .foot-top{grid-template-columns:minmax(0,1fr)}
+  .foot-cols{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .foot-contact{grid-column:1/-1}
 }
+/* Lo que flota abajo (píldora de Armar plan, barra de entradas o de cotización) nunca tapa el pie: se deja lugar debajo */
+body:has(.plan-fab:not([hidden])) footer{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 
 /* 5. Animación compartida */
 @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}

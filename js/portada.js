@@ -41,11 +41,10 @@ function slideEl(e) {
       <h2>${esc(e.title)}</h2>
       <p class="s-desc">${esc(e.desc)}</p>
       <ul class="s-meta">
-        <li>${ico("calendar")}<span>${esc(cap(longDate(e)))}</span></li>
-        <li>${ico("clock")}<span>${esc(timeLabel(e))}</span></li>
-        <li>${ico("pin")}<span class="s-place">${esc(e.place)}</span></li>
+        <li>${ico("calendar")}<span>${esc(cap(longDate(e)))}<span class="s-sep" aria-hidden="true">·</span>${esc(timeLabel(e))}</span></li>
+        <li>${ico("pin")}<span class="s-place">${esc(shortPlace(e))}</span></li>
       </ul>
-      <span class="s-cta">${e.tickets ? "Comprar entradas" : "Ver evento"} <i>${ico("arrow")}</i></span>
+      <span class="s-cta">Ver evento <i>${ico("arrow")}</i></span>
     </div>
     ${e.photo ? `<div class="s-poster"><img src="${esc(photoUrl(e))}" alt="" decoding="async" onerror="this.closest('.s-poster').remove()"></div>` : ""}`;
   return s;

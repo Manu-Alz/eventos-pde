@@ -51,7 +51,7 @@
 .empty p{margin:0 0 18px}
 .empty .btn{margin:0 8px 8px 0}
 
-/* 2. Mi plan: el acceso único a entradas, traslados y alojamiento (lleva a plan.html) */
+/* 2. Armar plan: el acceso único a entradas, traslados y alojamiento (lleva a plan.html). Es el único lugar del inicio que lo nombra */
 .trip{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:14px 24px;margin:0 0 clamp(22px,4vw,34px);
   padding:clamp(18px,3vw,26px) clamp(18px,3vw,28px);border-radius:28px;text-decoration:none;color:#151518;
   background:radial-gradient(90% 140% at 100% 0%,rgba(124,77,255,.16),transparent 60%),#F7F5F2;box-shadow:0 24px 50px -30px rgba(0,0,0,.9)}

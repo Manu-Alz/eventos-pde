@@ -1,5 +1,5 @@
 /* evento.css · página propia de cada evento (evento/<id>/index.html, la arma tools/paginas.js)
-   Estructura: .ev-back · main.ev > [.ev-poster, .ev-body > (.ev-eyebrow, h1, .ev-desc, .ev-facts, .ev-actions, .ev-trip)] · .ev-more
+   Estructura: .ev-back · main.ev > [.ev-poster, .ev-body > (.ev-eyebrow, h1, .ev-desc, .ev-facts, .ev-map, .ev-actions, .ev-trip)] · .ev-more
    Índice: 1 Diseño · 2 Datos · 3 Botones · 4 Traslado y alojamiento · 5 Más eventos */
 
 /* 1. Diseño: póster a la izquierda en PC (queda fijo al bajar), arriba en el celular */
@@ -39,7 +39,10 @@
 .ev-row .btn{background:var(--glass)}
 @media (hover:hover){.ev-row .btn:hover{background:var(--glass-hover)}}
 
-/* 4. Armar el viaje con este evento (lleva a Mi plan con el evento ya agregado) y, aparte, traslado o alojamiento suelto */
+/* 4. "Armá tu plan con este evento": lleva a Armar plan (plan.html?add=<id>) con el evento ya sumado. Es el único acceso al plan de la página */
+.ev-trip-i{flex:none;display:grid;place-items:center;width:52px;height:52px;border-radius:18px;background:#7C4DFF;color:#fff}
+.ev-trip-i .ico{width:24px;height:24px}
+@media (max-width:420px){.ev-trip-i{display:none}}
 .ev-trip{display:flex;align-items:center;gap:16px;padding:18px 18px 18px 20px;border-radius:24px;text-decoration:none;color:#151518;background:#F7F5F2;
   box-shadow:0 20px 40px -26px rgba(0,0,0,.9);transition:transform .35s var(--ease)}
 .ev-trip-t{display:grid;gap:3px;min-width:0;flex:1}
@@ -49,7 +52,7 @@
 .ev-trip-go{flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:#151518;color:#fff}
 .ev-trip-go .ico{width:20px;height:20px;transition:transform .35s var(--ease)}
 @media (hover:hover){.ev-trip:hover{transform:translateY(-2px)}.ev-trip:hover .ev-trip-go .ico{transform:rotate(45deg)}}
-/* Páginas de eventos armadas antes de "Armá tu viaje" (las que GitHub todavía no rehízo): mismo estilo de siempre */
+/* Páginas de eventos muy viejas (con traslado y alojamiento sueltos), hasta que GitHub las rehace */
 .ev-svc{display:grid;gap:10px;padding-top:18px;border-top:1px solid var(--line)}
 .ev-svc p{margin:0;font-size:14px;font-weight:700;color:var(--muted)}
 .ev-svc>div{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(140px,100%),1fr));gap:10px}
@@ -81,7 +84,7 @@
   text-decoration:none;font-weight:700;font-size:14px;color:#08080a;background:#F4F4F5;box-shadow:0 8px 20px rgba(0,0,0,.4)}
 .ev-go .ico{width:16px;height:16px}
 
-/* 7. Mi plan: el botón cambia a "En tu plan" con tilde */
+/* 7. Botón "Agregar a mi plan" de las páginas viejas (hasta que GitHub las rehace): cambia a "En tu plan" con tilde */
 .ev-plan .ico+.ico,.ev-plan[aria-pressed="true"] .ico:first-child{display:none}
 .ev-plan[aria-pressed="true"] .ico+.ico{display:block}
 .ev-plan[aria-pressed="true"]{background:rgba(70,217,160,.14);border-color:rgba(70,217,160,.55);color:#bff3dc}

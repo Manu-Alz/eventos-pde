@@ -1,0 +1,61 @@
+/* nosotros.css · página "Quiénes somos" (nosotros.html)
+   Estructura: .ab-glow · .ab-hero · .ab-sec (Qué hacemos: .ab-cards) · .ab-sec (Cómo trabajamos: .ab-list) · .ab-cta
+   Índice: 1 Fondo y encabezado · 2 Secciones · 3 Tarjetas · 4 Lista · 5 Contacto */
+
+/* 1. Fondo y encabezado: el mismo resplandor violeta y celeste del inicio, más suave */
+.ab-glow{position:absolute;top:0;left:0;right:0;height:640px;z-index:0;pointer-events:none;
+  background:radial-gradient(55% 60% at 15% 0%,rgba(124,77,255,.28),transparent 72%),radial-gradient(45% 50% at 88% 4%,rgba(76,195,219,.14),transparent 72%)}
+.ab-hero{padding:clamp(28px,7vw,80px) 0 0}
+.ab-eyebrow{margin:0 0 14px;font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#7C4DFF}
+.ab-hero h1{font-size:clamp(42px,10vw,96px);font-weight:600;letter-spacing:-.045em;line-height:.98;max-width:14ch;text-wrap:balance}
+.ab-lead{margin:clamp(18px,3vw,28px) 0 0;max-width:58ch;font-size:clamp(17px,4.4vw,20px);line-height:1.55;color:var(--muted)}
+
+/* 2. Secciones */
+.ab-sec{margin-top:clamp(56px,9vw,104px)}
+.ab-sec h2,.ab-cta h2{font-size:clamp(32px,5.4vw,52px);font-weight:600;letter-spacing:-.04em;line-height:1}
+.ab-sec h2{margin-bottom:clamp(20px,3vw,30px)}
+
+/* 3. Tarjetas de "Qué hacemos": cada una lleva a su parte del sitio; la del medio (Armar plan) en blanco */
+.ab-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(290px,100%),1fr));gap:14px}
+.ab-card{display:grid;grid-template-rows:auto auto 1fr auto;gap:12px;padding:clamp(22px,3vw,30px);border-radius:28px;text-decoration:none;color:var(--ink);
+  background:var(--surface);border:1px solid var(--line);transition:background .25s,border-color .25s,transform .4s var(--ease)}
+.ab-ic{display:grid;place-items:center;width:52px;height:52px;margin-bottom:6px;border-radius:18px;background:var(--glass-hover);color:var(--ink)}
+.ab-ic .ico{width:24px;height:24px}
+.ab-card h3{font-size:26px;font-weight:600;letter-spacing:-.025em}
+.ab-card p{margin:0;font-size:15px;line-height:1.55;color:var(--muted)}
+.ab-go{display:inline-flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px;font-weight:700;font-size:15px}
+.ab-go i{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.08);transition:transform .5s var(--ease),background .3s,color .3s}
+.ab-go .ico{width:18px;height:18px}
+.ab-card-main{color:#151518;border-color:transparent;background:radial-gradient(90% 120% at 100% 0%,rgba(124,77,255,.18),transparent 60%),#F7F5F2}
+.ab-card-main .ab-ic{background:#7C4DFF;color:#fff}
+.ab-card-main p{color:#55555c}
+.ab-card-main .ab-go i{background:#151518;color:#fff}
+@media (hover:hover){
+  .ab-card:hover{transform:translateY(-3px)}
+  .ab-card:not(.ab-card-main):hover{background:#202026;border-color:rgba(255,255,255,.22)}
+  .ab-card:hover .ab-go i{transform:rotate(45deg)}
+  .ab-card:not(.ab-card-main):hover .ab-go i{background:#F4F4F5;color:#08080a}
+}
+
+/* 4. Lista numerada de "Cómo trabajamos": dos columnas en PC, una en el celular */
+.ab-list{list-style:none;counter-reset:ab;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:14px}
+.ab-list li{counter-increment:ab;position:relative;display:grid;gap:6px;padding:22px 22px 22px 74px;border-radius:24px;background:var(--glass);border:1px solid var(--line)}
+.ab-list li::before{content:counter(ab);position:absolute;left:22px;top:20px;display:grid;place-items:center;width:36px;height:36px;border-radius:50%;
+  background:#F7F5F2;color:#151518;font:700 16px 'Bricolage Grotesque',sans-serif}
+.ab-list b{font:600 20px/1.2 'Bricolage Grotesque',sans-serif;letter-spacing:-.015em}
+.ab-list span{font-size:15px;line-height:1.55;color:var(--muted)}
+
+/* 5. Contacto: panel con el degradé de la marca (como "¿Organizás eventos en Punta?" del inicio) */
+.ab-cta{display:grid;gap:14px;justify-items:start;margin-top:clamp(56px,9vw,104px);padding:clamp(26px,5vw,52px);border-radius:32px;
+  background:radial-gradient(90% 80% at 100% 0%,rgba(76,195,219,.26),transparent 60%),radial-gradient(110% 90% at 0% 100%,rgba(124,77,255,.5),transparent 65%),#17131f;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),0 30px 60px -36px #000}
+.ab-cta .ab-eyebrow{margin:0;color:rgba(255,255,255,.7)}
+.ab-cta p:not(.ab-eyebrow){margin:0;max-width:48ch;color:rgba(255,255,255,.78)}
+.ab-acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.ab-acts .btn:not(.ghost){background:#F4F4F5;color:#08080a}
+.ab-acts .btn.ghost{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25)}
+@media (max-width:600px){
+  .ab-list li{padding:20px 20px 20px 66px}
+  .ab-list li::before{left:18px}
+  .ab-acts{display:grid;grid-template-columns:1fr 1fr;width:100%}
+}

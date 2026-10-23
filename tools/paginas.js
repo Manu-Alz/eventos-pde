@@ -9,7 +9,7 @@
 const SITE = "https://eventospde.com";
 const MORE_EVENTS = 6;                        // "Más eventos en Punta" al pie de cada página
 const STATIC_PAGES = [                        // páginas fijas del sitemap: [dirección, prioridad, frecuencia]
-  ["/", "1.0", "daily"], ["/plan.html", "0.8", "monthly"], ["/publicar.html", "0.6", "monthly"]
+  ["/", "1.0", "daily"], ["/plan.html", "0.8", "monthly"], ["/publicar.html", "0.6", "monthly"], ["/nosotros.html", "0.5", "monthly"]
 ];
 
 /* ============ 2. Piezas ============ */
@@ -133,7 +133,7 @@ function eventPage(e, live, v) {
 <div class="wrap">
   <header class="top">
     <a class="logo" href="/" aria-label="Eventos PDE, inicio">Eventos<span>PDE</span></a>
-    <div class="hact"><a class="btn ghost hide-sm" href="/plan.html">Mi plan</a><a class="btn" href="/publicar.html">Publicar evento</a></div>
+    <div class="hact"><a class="btn ghost hide-sm" href="/plan.html">Armar plan</a><a class="btn" href="/publicar.html">Publicar evento</a></div>
   </header>
 
   <a class="ev-back" href="/">‹ Todos los eventos de Punta del Este</a>
@@ -153,11 +153,11 @@ function eventPage(e, live, v) {
       ${mapEmbed(e, route)}
       <div class="ev-actions">
         ${main}
-        <button type="button" class="btn ghost ev-plan" data-plan="${esc(slugOf(e))}" aria-pressed="false">${ico("plus")}${ico("check")}<span class="plan-label">Agregar a mi plan</span></button>
         <div class="ev-row">${second}</div>
       </div>
       <a class="ev-trip" href="/plan.html?add=${esc(slugOf(e))}" data-ev="plan_evento" data-n="${esc(e.title)}">
-        <span class="ev-trip-t"><small>¿Venís de afuera?</small><b>Armá tu viaje con este evento</b><span>Entradas, traslado desde el aeropuerto, alojamiento cerca y chofer. Una sola cotización.</span></span>
+        <span class="ev-trip-i">${ico("car")}</span>
+        <span class="ev-trip-t"><small>Si venís de afuera</small><b>Armá tu plan con este evento</b><span>Te llevamos y te traemos con chofer, sumamos tus entradas y, si querés, dónde quedarte. Una sola cotización, sin compromiso.</span></span>
         <span class="ev-trip-go">${ico("arrow")}</span>
       </a>
     </div>

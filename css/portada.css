@@ -44,12 +44,15 @@
 .slide h2{font-size:var(--por-title);font-weight:600;line-height:1;letter-spacing:-.04em;text-wrap:balance;max-width:16ch;overflow-wrap:anywhere}
 .s-desc{margin:0;max-width:46ch;font-size:clamp(14px,3.8vw,16px);color:rgba(255,255,255,.74);
   display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;-webkit-line-clamp:2;line-clamp:2}
-/* Fecha, hora y lugar: tres píldoras de vidrio en una fila (bajan de línea si no entran) */
-.s-meta{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px;max-width:100%}
-.s-meta li{display:inline-flex;align-items:center;gap:8px;min-width:0;max-width:100%;min-height:38px;padding:0 14px 0 12px;border-radius:999px;font-size:14px;color:rgba(255,255,255,.92);
-  background:rgba(255,255,255,.09);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
-.s-meta .ico{flex:none;width:16px;height:16px;color:#fff}
+/* Fecha y hora, y el lugar: texto simple con ícono, sin cajas (como el lugar en las tarjetas de la grilla).
+   En PC van en una fila; en el celular, una línea cada uno. */
+.s-meta{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 22px;max-width:100%}
+.s-meta li{display:flex;align-items:center;gap:8px;min-width:0;max-width:100%;font-size:15px;color:rgba(255,255,255,.82)}
+.s-meta .ico{flex:none;width:16px;height:16px;color:rgba(255,255,255,.7)}
 .s-meta span{min-width:0;white-space:nowrap}
+.s-meta li:first-child>span{white-space:normal}   /* una fecha larga (varios días) baja de línea en vez de cortarse */
+.s-meta li:first-child .s-sep{white-space:nowrap}
+.s-sep{margin:0 7px;opacity:.5}
 .s-place{overflow:hidden;text-overflow:ellipsis}
 /* Botón principal: píldora blanca con círculo oscuro (como las referencias) */
 .s-cta{display:inline-flex;align-items:center;gap:14px;min-height:var(--tap);padding:0 6px 0 22px;border-radius:999px;font-size:15px;font-weight:700;white-space:nowrap;
@@ -89,6 +92,7 @@
   .slide .cover::before{background:linear-gradient(to top,rgba(5,5,8,.97) 0%,rgba(5,5,8,.9) 55%,rgba(5,5,8,.35) 80%,rgba(5,5,8,.3) 100%)}
   .s-main{justify-content:flex-end}
   .s-top{margin-bottom:auto}   /* etiquetas arriba, el resto abajo sobre la sombra */
+  .s-meta{flex-direction:column}
   .port-arrow{display:none}
 }
 @media (prefers-reduced-motion:reduce){.port-bar.on i{animation:none;transform:scaleX(1)}}

@@ -63,7 +63,7 @@ const VENUES = {
   "OAK":                    [-34.91545, -54.85244]
 };
 
-/* ============ 2c. Alojamientos con convenio (catálogo de "Mi plan") ============
+/* ============ 2c. Alojamientos con convenio (catálogo de "Armar plan") ============
    Cada hotel, apart o casa con el que haya acuerdo aparece en plan.html para elegirlo, con su pin en el mapa y los minutos
    hasta los eventos de la persona. Vacío = no se muestra el catálogo (se pide zona, tipo y presupuesto y se cotiza a medida).
    id: nombre corto sin espacios · zone: una de las zonas de planner.js (Península, Playa Brava o Mansa, La Barra, Manantiales,

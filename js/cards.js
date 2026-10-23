@@ -103,9 +103,9 @@ function eyebrowHtml(e) {
 const shortPlace = e => e.place.replace(/\s*\(.*?\)/g, "").split(", ")[0];
 
 /* ============ 5. Tarjeta de la grilla ============
-   Estructura: .cover + .k-top [.k-day, .k-acts (.k-tix?, button.k-plan)] + .k-bottom [.k-eyebrow, h3 > a.k-link, .k-row (.k-place, .k-go)]
+   Estructura: .cover + .k-top [.k-day, .k-acts (.k-tix?)] + .k-bottom [.k-eyebrow, h3 > a.k-link, .k-row (.k-place, .k-go)]
    Toda la tarjeta lleva a la página del evento (/evento/<id>/): el link del título se estira sobre la tarjeta (tarjetas.css).
-   El botón + agrega el evento a "Mi plan" (plan.js) sin abrir la página. */
+   La tarjeta no ofrece Armar plan: eso se pide una sola vez, adentro de la página del evento. */
 function cardEl(e) {
   const id = slugOf(e);
   const card = document.createElement("article");
@@ -116,7 +116,7 @@ function cardEl(e) {
     ${coverHtml(e)}
     <div class="k-top">
       <div class="k-day"><small>${monthLabel(e)}</small><b>${dayLabel(e)}</b></div>
-      <div class="k-acts">${tixHtml(e)}<button type="button" class="k-plan" data-plan="${id}" aria-pressed="false" aria-label="Agregar a mi plan" title="Agregar a mi plan">${ico("plus")}${ico("check")}</button></div>
+      <div class="k-acts">${tixHtml(e)}</div>
     </div>
     <div class="k-bottom">
       ${eyebrowHtml(e)}

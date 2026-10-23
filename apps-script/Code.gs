@@ -3,7 +3,7 @@
 
    QUÉ HACE
    - publicar.html  -> fila en "Solicitudes", mail para vos y link de pago de Mercado Pago por el monto exacto.
-   - plan.html (Mi plan) -> fila en "Servicios", mail de confirmación al cliente y mail para vos.
+   - plan.html (Armar plan) -> fila en "Servicios", mail de confirmación al cliente y mail para vos.
      Vos completás "Detalle para el cliente" y "Precio USD" en la planilla: al poner el precio, el cliente recibe
      solo un mail con la cotización y el link para pagar online (eventospde.com/pagar.html).
    - Mercado Pago avisa cuando entra un pago: se marca "Pagado" en la planilla y les llega un mail a vos y al cliente.
@@ -13,7 +13,8 @@
    2. Configuración del proyecto (engranaje) > Propiedades del script > agregá MP_TOKEN con el Access Token
       de producción de tu cuenta de Mercado Pago (Mercado Pago Developers > Tus integraciones > Credenciales).
       El token no va en el código: este archivo está en GitHub, que es público.
-   3. Arriba elegí "instalar" y tocá Ejecutar (acepta los permisos, incluido Gmail). Activa el aviso automático al poner un precio.
+   3. Arriba elegí "instalar" y tocá Ejecutar (acepta los permisos, incluido Gmail). Activa el aviso automático al poner un precio
+      y un reloj que cada 10 minutos manda las cotizaciones que hayan quedado pendientes.
       Después elegí "probarMail" y Ejecutar: te llega un mail de prueba y dice si salió desde contacto@eventospde.com.
    4. Implementar > Gestionar implementaciones > lápiz > Versión: Nueva versión > Implementar.
       La dirección /exec queda igual: no hay que tocar config.js. */
@@ -71,7 +72,7 @@ function guardarSolicitud(d) {
   const dias = d.days || d.weeks || "";
   const clave = nuevaClave();
   conCandado(() => obtenerHoja(HOJA, COLUMNAS).appendRow([new Date(), d.ref, d.title, d.plan, dias, d.total, d.cat, d.date, d.time, d.place,
-    d.contactMethod, d.contact, d.tickets, d.link, d.desc, "", "", "", clave, ""]));
+    d.contactMethod, d.contact, d.tickets, d.link, d.desc, "", "", "", clave, ""].map(celda_)));
   avisar(`Nueva solicitud ${d.ref}: ${d.title}`,
     `Plan: ${d.plan} · ${dias} días${d.until ? ` (del ${d.start || "hoy"} al ${d.until})` : ""} · US$ ${d.total}\n` +
     `Evento: ${d.title} (${d.cat})\nFecha: ${d.date} ${d.time}\nLugar: ${d.place}\n` +
@@ -81,14 +82,14 @@ function guardarSolicitud(d) {
   return { ok: true, ref: d.ref, pagina: linkPagina(d.ref, clave), pago };
 }
 
-/* ============ 3. Entradas, traslados y alojamiento (Mi plan, plan.html) ============ */
+/* ============ 3. Entradas, traslados y alojamiento (Armar plan, plan.html) ============ */
 
 function guardarServicio(d) {
   const clave = nuevaClave();
   conCandado(() => obtenerHoja(HOJA_SERVICIOS, COLUMNAS_SERVICIOS).appendRow([new Date(), d.ref, clave, d.need, d.event, d.people, d.name, d.email || "", d.phone,
     d.tDate || "", d.tGo || "", d.tFrom || "", d.tBack || "", d.tBackTime || "",
     d.aIn || "", d.aOut || "", d.aZone || "", d.aType || "", d.aBudget || "", d.notes || "",
-    "", "", "Nuevo", "", ""]));
+    "", "", "Nuevo", "", ""].map(celda_)));
   const resumen = resumenServicio(d);
   avisar(`Nuevo pedido ${d.ref}: ${d.need} · ${d.name}`,
     `${resumen}\n\nPara cotizar: completá "Detalle para el cliente" y "Precio USD" en la pestaña Servicios. Al poner el precio, ${d.email || "el cliente"} recibe la cotización con el link de pago.`);
@@ -124,24 +125,29 @@ function alEditar(e) {
   enviarCotizacionesPendientes();
 }
 
-function enviarCotizacionesPendientes() {
+/* La corren el aviso al editar y el reloj cada 10 minutos (los dos los activa instalar()). El candado evita que dos
+   corridas a la vez manden el mismo mail dos veces. */
+function enviarCotizacionesPendientes() { conCandado(cotizarPendientes_); }
+
+function cotizarPendientes_() {
   const hoja = obtenerHoja(HOJA_SERVICIOS, COLUMNAS_SERVICIOS);
   const filas = hoja.getDataRange().getValues();
   const c = nombre => COLUMNAS_SERVICIOS.indexOf(nombre);
   for (let i = 1; i < filas.length; i++) {
     const f = filas[i];
-    const precio = Number(f[c("Precio USD")]);
-    if (!precio || f[c("Estado")] !== "Nuevo" || !f[c("Email")]) continue;
+    const precio = usd_(f[c("Precio USD")]);
+    const email = String(f[c("Email")] || "").trim();
+    if (!precio || String(f[c("Estado")]).trim() !== "Nuevo" || !email) continue;
     const ref = f[c("Pedido")], clave = f[c("Clave")];
     const detalle = String(f[c("Detalle para el cliente")] || "").trim();
     const itinerario = itinerarioDe(f[c("Algo más")]);
     const para = itinerario.length ? "" : f[c("Evento")] ? ` para ${f[c("Evento")]}` : "";   // en un plan, los eventos van en la lista
-    mailCliente(f[c("Email")], `Tu cotización ${ref} · US$ ${precio}`,
+    const enviado = mailCliente(email, `Tu cotización ${ref} · US$ ${precio}`,
       `¡Hola, ${primerNombre(f[c("Nombre")])}!`,
       `Ya tenemos tu cotización de ${f[c("Necesita")]}${para}. El total es US$ ${precio} (${pesos(precio)}). Para confirmarlo, pagalo online desde el botón: es seguro y acepta tarjeta, débito o transferencia.`,
       [detalle ? `Incluye: ${detalle}` : "", ...itinerario, `Pedido: ${ref}`].filter(Boolean),
       { texto: `Pagar US$ ${precio}`, url: linkPagina(ref, clave) });
-    hoja.getRange(i + 1, c("Estado") + 1).setValue("Cotizado");
+    if (enviado) hoja.getRange(i + 1, c("Estado") + 1).setValue("Cotizado");   // si el mail falló, queda "Nuevo" y se reintenta solo
   }
 }
 
@@ -152,7 +158,7 @@ function leerPedido(ref, k) {
   const r = buscar(ref);
   if (!r || String(r.get("Clave")) !== String(k)) return { ok: false, error: "No encontramos el pedido. Revisá el link del mail." };
   if (r.tipo === "servicio") {
-    const precio = Number(r.get("Precio USD")) || 0;
+    const precio = usd_(r.get("Precio USD"));
     const itinerario = itinerarioDe(r.get("Algo más"));
     const esPlan = itinerario.length > 0;
     const eventos = itinerario.filter(l => !/^(Llegada|Regreso):/.test(l)).length;   // la llegada y el regreso no cuentan como eventos
@@ -294,8 +300,8 @@ function mailCliente(para, asunto, titulo, texto, lineas, boton) {
   /* Sale desde contacto@eventospde.com si está configurado como "Enviar como" en el Gmail de la cuenta; si no, desde el Gmail,
      pero igual se responde a contacto@ */
   const desde = remitente();
-  try { GmailApp.sendEmail(para, asunto, `${titulo}\n\n${texto}`, { htmlBody: html, name: NOMBRE, replyTo: CONTACTO, ...(desde ? { from: desde } : {}) }); }
-  catch (err) { console.error(err); }
+  try { GmailApp.sendEmail(para, asunto, `${titulo}\n\n${texto}`, { htmlBody: html, name: NOMBRE, replyTo: CONTACTO, ...(desde ? { from: desde } : {}) }); return true; }
+  catch (err) { console.error(err); return false; }
 }
 
 /* ============ 7. Utilidades ============ */
@@ -303,10 +309,22 @@ function mailCliente(para, asunto, titulo, texto, lineas, boton) {
 const json = obj => ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
 const pesos = usd => "$U " + Math.round(usd * COTIZACION).toLocaleString("es-UY");
 const linkPagina = (ref, clave) => `${SITIO}/pagar.html?ref=${encodeURIComponent(ref)}&k=${encodeURIComponent(clave)}`;
-/* Los pedidos de Mi plan traen el itinerario en "Algo más", una línea "• ..." por evento */
+/* Los pedidos de Armar plan traen el itinerario en "Algo más", una línea "• ..." por evento */
 const itinerarioDe = notas => String(notas || "").split("\n").filter(l => /^•\s/.test(l)).map(l => l.replace(/^•\s*/, ""));
 const primerNombre = n => String(n || "").trim().split(/\s+/)[0] || "";
 const esc_ = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+/* Lo que viene de la web se guarda como texto: un celular "+598 …" o algo que empiece con = - @ la planilla lo leería
+   como fórmula (#ERROR!). El apóstrofo de adelante no se ve en la celda. */
+const celda_ = v => (typeof v === "string" && /^[=+\-@]/.test(v) ? "'" + v : v);
+/* Precio escrito a mano: acepta 120, "120", "US$ 120", "120 USD" o "1.250,50" (devuelve 0 si no hay número) */
+function usd_(v) {
+  if (typeof v === "number") return v;
+  let s = String(v || "").replace(/[^\d.,]/g, "");
+  if (/,\d{1,2}$/.test(s)) s = s.replace(/\./g, "").replace(",", ".");   // coma decimal: 1.250,50
+  else if (/^\d{1,3}(\.\d{3})+$/.test(s)) s = s.replace(/\./g, "");      // punto de miles: 1.250
+  else s = s.replace(/,/g, "");
+  return Number(s) || 0;
+}
 const nuevaClave = () => Utilities.getUuid().replace(/-/g, "").slice(0, 12);
 const fechaTexto = v => !v ? "" : v instanceof Date ? Utilities.formatDate(v, "America/Montevideo", "dd/MM/yyyy") : String(v).split("-").reverse().join("/");
 const horaTexto = v => !v ? "" : v instanceof Date ? Utilities.formatDate(v, "America/Montevideo", "HH:mm") : String(v);
@@ -332,8 +350,10 @@ function probarMail() {
 }
 
 function instalar() {
-  ScriptApp.getProjectTriggers().filter(t => t.getHandlerFunction() === "alEditar").forEach(t => ScriptApp.deleteTrigger(t));
+  ScriptApp.getProjectTriggers().filter(t => ["alEditar", "enviarCotizacionesPendientes"].includes(t.getHandlerFunction())).forEach(t => ScriptApp.deleteTrigger(t));
   ScriptApp.newTrigger("alEditar").forSpreadsheet(ID_PLANILLA).onEdit().create();
+  /* Respaldo: cada 10 minutos manda las cotizaciones que hayan quedado sin mandar (por ejemplo, si el aviso al editar falló) */
+  ScriptApp.newTrigger("enviarCotizacionesPendientes").timeBased().everyMinutes(10).create();
   obtenerHoja(HOJA, COLUMNAS);
   obtenerHoja(HOJA_SERVICIOS, COLUMNAS_SERVICIOS);
   UrlFetchApp.fetch("https://api.mercadopago.com", { muteHttpExceptions: true });   // pide el permiso para conectarse a Mercado Pago

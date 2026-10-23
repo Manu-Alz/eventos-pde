@@ -1,6 +1,9 @@
-/* plan.js · "Mi plan": los eventos que la persona marca para ir. Se guardan en este navegador (sin cuenta).
-   - Cualquier botón con data-plan="<id del evento>" agrega o saca ese evento del plan (tarjetas y páginas de eventos).
-   - Cuando hay eventos en el plan aparece abajo la píldora "Mi plan" que lleva a /plan.html (el planificador).
+/* plan.js · "Armar plan": los eventos que la persona suma a su plan. Se guardan en este navegador (sin cuenta).
+   - Los eventos se suman en el planificador (plan.html) o con plan.html?add=<id>: botón "Traslado" de cada tarjeta
+     y "Armá tu plan con este evento" de cada página de evento.
+   - Cualquier botón con data-plan="<id del evento>" agrega o saca ese evento sin salir de la página (lo usan las
+     páginas de eventos viejas, hasta que GitHub las rehace).
+   - Cuando hay eventos en el plan aparece abajo la píldora "Tu plan · Continuar", que lleva a /plan.html.
    - Si el navegador no deja guardar (modo privado estricto), el plan funciona igual mientras la página esté abierta.
    Requiere: utils.js (ico), analytics.js (track) */
 
@@ -46,7 +49,7 @@ const Plan = (() => {
     a.href = "/plan.html";
     a.hidden = true;
     a.dataset.ev = "plan_abrir";
-    a.innerHTML = `<span class="plan-fab-n"><b>0</b></span><span class="plan-fab-t">Mi plan<small>eventos</small></span><span class="plan-fab-go">Armar viaje ${ico("arrow")}</span>`;
+    a.innerHTML = `<span class="plan-fab-n"><b>0</b></span><span class="plan-fab-t">Tu plan<small>eventos</small></span><span class="plan-fab-go">Continuar ${ico("arrow")}</span>`;
     document.body.appendChild(a);
   }
 

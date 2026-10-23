@@ -7,19 +7,23 @@ Agenda de eventos de Punta del Este. Sitio estático (HTML, CSS y JS puros): se 
 ```
 index.html          home: slider de portada, filtros, lista y calendario (botón de calendario antes de "Todos")
 publicar.html       planes, cómo funciona, formulario, pago y preguntas frecuentes
+plan.html           Armar plan: el planificador de viaje (entradas, traslados y alojamiento)
+nosotros.html       Quiénes somos (qué hacemos, cómo trabajamos y contacto; los textos se editan en el HTML)
 404.html            página para links rotos (GitHub Pages la muestra sola)
 css/
-  styles.css        base compartida (colores, botones, pie)
+  styles.css        base compartida (colores, botones, pie de página)
   eventos.css       hero, filtros y grilla de tarjetas
   calendario.css    calendario
   portada.css       slider de portada
+  plan.css          Armar plan y la píldora "Tu plan · Continuar"
+  nosotros.css      Quiénes somos
   publicar.css      planes y pago
 js/
   config.js         contacto, pagos, categorías, afiliados y planes  (se edita una vez)
   data.js           los eventos                                      (se edita seguido)
   utils.js          utilidades compartidas
   analytics.js      Google Analytics y conteo de clics
-  site.js           pie de página
+  site.js           pie de página (marca, columnas Agenda / Organizadores / Contacto); los links se cambian acá
   cards.js          piezas de una publicación y tarjeta
   portada.js        slider de portada
   calendar.js       calendario
@@ -54,7 +58,7 @@ js/
 
 ## Qué hace la web sola
 
-- **Entradas:** un evento con `tickets` muestra "Entradas a la venta" en la tarjeta, "Comprar entradas" en la portada y un botón fijo abajo del detalle.
+- **Entradas:** un evento con `tickets` muestra "Entradas" en la tarjeta y un botón fijo abajo del detalle. El botón de la portada siempre dice "Ver evento" (lleva a la página del evento, donde están las entradas).
 - **Agendar:** cada detalle tiene un botón que agrega el evento a Google Calendar (con hora: 3 horas; "A confirmar": día completo).
 - **Para organizadores:** en la grilla aparece una tarjeta que lleva a publicar.html, con el precio más bajo de `PLANS`.
 - **Google:** cada evento vigente se describe como schema.org/Event para que Google pueda mostrarlo en sus resultados de eventos.
@@ -68,15 +72,19 @@ js/
 - **Fotos de eventos vencidos:** el mismo robot borra de `img/eventos/` la foto de cada evento que terminó hace más de 3 días (solo si ningún evento vigente la usa; una foto que todavía no está en `data.js` no se toca). El evento puede quedar en `data.js`: la web ya no lo muestra.
 - Como el robot sube esos cambios a `main`, antes de subir algo desde tu compu hacé **`git pull`** (o "Fetch/Pull" en GitHub Desktop).
 
-## Mi plan (planificador de viaje): el único lugar para pedir entradas, traslados y alojamiento
+## Armar plan (planificador de viaje): el único lugar para pedir entradas, traslados y alojamiento
 
 Pensado sobre todo para quien viene de afuera y quiere resolver todo en un solo lugar. No hay formularios aparte: `servicios.html` quedó solo para los links viejos (lleva a `plan.html` y, con `?e=<id>`, suma ese evento).
 
-- Se llega desde: la tarjeta clara de la portada ("¿Necesitás traslado o alojamiento? Armá tu plan"), el botón "Mi plan" de la cabecera y el pie, el **+** de cada tarjeta, "Agregar a mi plan" y la tarjeta **"Armá tu viaje con este evento"** de la página de cada evento (`plan.html?add=<id>`). La lista queda guardada en el navegador de la persona; abajo aparece la píldora "Mi plan".
+- Se llama **"Armar plan"** en todo el sitio. Se llega desde un solo lugar por pantalla, para no repetirlo:
+  - Inicio: la tarjeta clara debajo de la portada ("¿Necesitás traslado o alojamiento?" → **Armar plan**). En PC también está en la cabecera.
+  - Página de cada evento: la tarjeta **"Armá tu plan con este evento"** (`plan.html?add=<id>`, suma ese evento). Es el único lugar donde se ofrece por evento: las tarjetas de la agenda no lo repiten.
+  - El pie de página de todas las páginas.
+- La lista queda guardada en el navegador de la persona. Si ya tiene eventos en su plan, abajo aparece la píldora **"Tu plan · Continuar"** (nunca tapa el pie: la página deja lugar debajo).
 - `plan.html` tiene cuatro pasos y un resumen fijo al costado (en el celular, una barra abajo):
-  1. **Elegí tus eventos:** la agenda adentro del plan (mini tarjetas que se deslizan, con filtro por categoría) para sumar o sacar eventos. Por cada evento elegido: entradas ("Incluilas" o "Ya las tengo") y chofer (**ida y vuelta, solo ida, solo vuelta o no**) con la hora a la que la buscamos.
+  1. **Elegí tus eventos:** la agenda adentro del plan, en su propio panel (buscador, categorías y mini tarjetas que se deslizan) para sumar o sacar eventos. Por cada evento elegido: entradas ("Incluilas" o "Ya las tengo") y chofer (**ida y vuelta, solo ida, solo vuelta o no**) con la hora a la que la buscamos.
   2. **Llegada y regreso:** avión a Montevideo o a Punta, barco a Montevideo o Colonia, ómnibus o por su cuenta; día, hora y vuelo, y el traslado con chofer (**ida y vuelta, solo llegada, solo regreso o no**).
-  3. **Dónde te quedás:** fechas, un mapa con las zonas y sus eventos, los minutos aproximados de cada zona a sus eventos (recomienda la más cercana), tipo y presupuesto. Si hay **alojamientos con convenio** en `STAYS` (`js/config.js`), aparecen para elegir, con pin en el mapa; fotos en `img/alojamientos/`.
+  3. **Dónde te quedás:** viene **apagado** ("Necesito alojamiento"); apagado, solo pide dónde se queda para buscarlo. Prendido: fechas, un mapa con las zonas y sus eventos, los minutos aproximados de cada zona a sus eventos (recomienda la más cercana), tipo y presupuesto. Si hay **alojamientos con convenio** en `STAYS` (`js/config.js`), aparecen para elegir, con pin en el mapa; fotos en `img/alojamientos/`.
   4. **Tus datos:** nombre, mail, WhatsApp, país e idioma.
 - Se puede pedir **sin eventos** (solo traslado o solo alojamiento).
 - Manda **una sola cotización**: entra a la pestaña "Servicios" (referencia `PLN-XXXXX`). En "Algo más" va el itinerario, una línea "•" por tramo (llegada, cada evento con entradas y chofer, regreso), más país e idioma. El mail de cotización y `pagar.html` muestran esas líneas completas, así que no hay que borrarlas de la planilla.
@@ -89,9 +97,10 @@ Pensado sobre todo para quien viene de afuera y quiere resolver todo en un solo 
 
 ## Cobros online (Mercado Pago, sin que el cliente tenga que escribirnos)
 
-- **Mi plan (entradas, traslados y alojamiento):** el cliente pide en `plan.html` (con su mail) → le llega un mail de confirmación → vos completás en la pestaña "Servicios" las columnas **"Detalle para el cliente"** y **"Precio USD"** → al poner el precio le llega solo la cotización con el botón de pago → paga en `pagar.html` con Mercado Pago (monto exacto) o transferencia → se marca **"Pagado"** y les llega un mail a los dos.
+- **Armar plan (entradas, traslados y alojamiento):** el cliente pide en `plan.html` (con su mail) → le llega un mail de confirmación → vos completás en la pestaña "Servicios" las columnas **"Detalle para el cliente"** y **"Precio USD"** → al poner el precio le llega solo la cotización con el botón de pago → paga en `pagar.html` con Mercado Pago (monto exacto) o transferencia → se marca **"Pagado"** y les llega un mail a los dos.
 - **Publicaciones:** al enviar el formulario, el botón de Mercado Pago ya trae el monto exacto (menos la Portada, que se confirma antes).
-- Configuración (una vez): token de Mercado Pago en Apps Script (Propiedades del script → `MP_TOKEN`), correr `instalar` y publicar una nueva versión. Detalle en el encabezado de `apps-script/Code.gs`.
+- Configuración (una vez): token de Mercado Pago en Apps Script (Propiedades del script → `MP_TOKEN`), correr `instalar` y publicar una nueva versión. `instalar` activa dos cosas: el aviso al poner un precio y un reloj que cada 10 minutos manda las cotizaciones que hayan quedado pendientes (si un mail falla, la fila queda en "Nuevo" y se reintenta sola). Detalle en el encabezado de `apps-script/Code.gs`.
+- El precio se puede escribir como `120`, `US$ 120` o `1.250,50`. Lo que llega de la web (por ejemplo un celular `+598 …`) se guarda como texto, así la planilla no lo confunde con una fórmula (`#ERROR!`).
 
 ## Precios (en `js/config.js`, `PLANS`)
 

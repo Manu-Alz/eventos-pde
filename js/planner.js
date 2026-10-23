@@ -1,10 +1,11 @@
-/* planner.js · planificador "Mi plan" (plan.html), pensado sobre todo para quien viene de afuera
+/* planner.js · planificador "Armar plan" (plan.html), pensado sobre todo para quien viene de afuera
    Es el lugar único para pedir entradas, traslados y alojamiento. Cuatro pasos y un resumen fijo al costado:
    1 Tus eventos: la agenda adentro (mini tarjetas con filtro por categoría) para sumar o sacar eventos, y por cada
      evento elegido: entradas (las incluimos o ya las tiene) y chofer (ida y vuelta, solo ida, solo vuelta o no).
    2 Llegada y regreso: cómo llega (avión, barco, ómnibus o por su cuenta) y el traslado desde y hacia el aeropuerto
      o puerto (los dos tramos, solo la llegada, solo el regreso o ninguno).
-   3 Dónde te quedás: fechas, zona en un mapa (con los minutos hasta sus eventos) y, si hay convenios, el catálogo STAYS (config.js).
+   3 Dónde te quedás: apagado por defecto ("Necesito alojamiento"); prendido, fechas, zona en un mapa (con los minutos
+     hasta sus eventos) y, si hay convenios, el catálogo STAYS (config.js).
    4 Tus datos: nombre, mail, WhatsApp, país e idioma.
    Se puede pedir sin eventos (solo traslado o alojamiento). Manda un solo pedido de cotización a la planilla
    (pestaña "Servicios", referencia PLN-XXXXX) y de ahí sale el mail con el pago online. El itinerario viaja en "Algo más",
@@ -19,7 +20,8 @@ const plLive = EV.filter(e => (e.endDate || e.date) >= TODAY && (!e.until || e.u
 const byId = id => plLive.find(e => slugOf(e) === id);
 const plQs = new URLSearchParams(location.search);
 const shared = plQs.get("e") ? plQs.get("e").split(",").filter(Boolean) : null;   // plan compartido por link
-/* plan.html?add=<id>: llega desde "Armá tu viaje con este evento" (página del evento); se suma al plan y la dirección queda limpia */
+/* plan.html?add=<id>: llega desde "Traslado" (tarjeta de la agenda) o "Armá tu plan con este evento" (página del evento);
+   se suma al plan y la dirección queda limpia */
 if (plQs.get("add") && byId(plQs.get("add"))) {
   if (!Plan.has(plQs.get("add"))) Plan.set([...Plan.get(), plQs.get("add")]);
   history.replaceState(null, "", "/plan.html");
@@ -75,7 +77,7 @@ const hasHour = e => /^\d{1,2}:\d{2}$/.test(e.time);
 const trOf = e => opts.tr[slugOf(e)] || "ida y vuelta";
 const goes = tr => tr === "ida y vuelta" || tr === "solo ida";      // ese tramo necesita hora de búsqueda
 const tixOf = e => opts.tix[slugOf(e)] || (e.tickets || e.price ? "si" : "no");
-const stayOn = () => opts.stay !== false;
+const stayOn = () => opts.stay === true;                            // alojamiento: apagado hasta que la persona lo prende
 const people = () => opts.people || 2;
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 /* Lo buscamos media hora antes, en hora o media hora */
@@ -198,7 +200,7 @@ function chosenHtml(list) {
   if (!list.length) return `<p class="pl-none">${ico("ticket")}<span><b>Todavía no elegiste eventos.</b> Tocá los que te interesan arriba. ¿Solo necesitás traslado o alojamiento? Seguí al paso 2.</span></p>`;
   const days = {};
   list.forEach(e => { (days[e.date] = days[e.date] || []).push(e); });
-  return `<p class="pl-q pl-chosen-h">En tu plan <small>· ${plural(list.length, "evento", "eventos")}</small></p>
+  return `<p class="pl-lbl">En tu plan <small>${plural(list.length, "evento", "eventos")}</small></p>
     <div class="pl-days">${Object.keys(days).sort().map(d => `<section class="pl-day" aria-label="${esc(longDate({ date: d }))}">
       <div class="pl-date"><small>${dow(d)}</small><b>${parseInt(d.slice(8), 10)}</b><small>${MES[+d.slice(5, 7) - 1]}</small></div>
       <div class="pl-evs">${days[d].map(eventCard).join("")}</div>
@@ -207,9 +209,10 @@ function chosenHtml(list) {
 
 function eventsStep(list) {
   return `<section class="pl-sec">
-    ${stepHead(1, "Elegí tus eventos", "Tocá los eventos a los que vas. Para cada uno, elegís entradas y chofer.")}
+    ${stepHead(1, "Elegí tus eventos", "Sumá los eventos a los que vas y, para cada uno, elegí entradas y chofer.")}
     <div class="pl-cat">
-      <label class="pl-find">${ico("search")}<input type="search" id="pl-q" placeholder="Buscar por nombre, artista o lugar" aria-label="Buscar evento" enterkeyhint="search" autocomplete="off" spellcheck="false"></label>
+      <p class="pl-lbl">Agenda <small>tocá un evento para sumarlo</small></p>
+      <label class="pl-find">${ico("search")}<input type="search" id="pl-q" placeholder="Buscar evento, artista o lugar" aria-label="Buscar evento" enterkeyhint="search" autocomplete="off" spellcheck="false"></label>
       <div class="pl-cchips" role="group" aria-label="Categorías">${catChips()}</div>
       <div class="pl-strip-wrap">
         <button type="button" class="pl-strip-nav prev" data-strip="-1" aria-label="Eventos anteriores">${ico("arrow")}</button>
