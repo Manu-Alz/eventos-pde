@@ -75,6 +75,7 @@ Pensado sobre todo para quien viene de afuera y quiere resolver todo en un solo 
 - Se puede pedir **sin eventos** (solo traslado o solo alojamiento).
 - Manda **una sola cotización**: entra a la pestaña "Servicios" (referencia `PLN-XXXXX`). En "Algo más" va el itinerario, una línea "•" por tramo (llegada, cada evento con entradas y chofer, regreso), más país e idioma. El mail de cotización y `pagar.html` muestran esas líneas completas, así que no hay que borrarlas de la planilla.
 - "Compartir mi plan" genera un link (`plan.html?e=...`) para mandarle a los amigos.
+- Abajo de todo, `plan.html` tiene **preguntas frecuentes** (costo, pago, solo traslado o alojamiento, entradas, cambios de fecha, aeropuerto), escritas en el HTML con sus datos para Google (FAQPage). Si cambia cómo trabajan, actualizá el texto y el bloque `ld+json` del encabezado.
 
 ## Mapa
 

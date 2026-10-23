@@ -64,7 +64,7 @@
 /* 5. Barras de progreso (el timer) y flechas */
 .port-nav{display:flex;align-items:center;gap:10px;margin-top:10px}
 .port-bars{flex:1;display:flex;gap:6px}
-.port-bar{flex:1;height:28px;padding:0;border:0;background:none;position:relative;cursor:pointer}
+.port-bar{flex:1;height:40px;padding:0;border:0;background:none;position:relative;cursor:pointer}
 .port-bar::before,.port-bar i{content:"";position:absolute;left:0;right:0;top:50%;height:4px;margin-top:-2px;border-radius:4px}
 .port-bar::before{background:rgba(255,255,255,.14)}
 .port-bar i{background:#F4F4F5;transform:scaleX(0);transform-origin:left}

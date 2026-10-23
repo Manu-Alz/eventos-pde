@@ -3,7 +3,7 @@
 
 /* 1. Sección */
 section.pub{margin:16px 0 0;padding:40px 0 56px;background:var(--surface);border-top:1px solid var(--line)}
-section.pub h2{font-size:clamp(32px,6vw,52px);letter-spacing:-.02em;max-width:16ch;text-wrap:balance}
+section.pub h1,section.pub h2{font-size:clamp(32px,6vw,52px);letter-spacing:-.02em;max-width:16ch;text-wrap:balance}
 section.pub .lead{max-width:52ch;color:var(--muted);margin:14px 0 30px}
 .lead a{color:var(--ink);font-weight:700;overflow-wrap:anywhere}
 .step{font-size:24px;margin-bottom:18px}
