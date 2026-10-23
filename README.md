@@ -64,7 +64,7 @@ js/
 ## Mi plan (planificador de viaje)
 
 - Con el **+** de cada tarjeta o "Agregar a mi plan" en la página del evento, la persona arma su lista (queda guardada en su navegador; aparece abajo la píldora "Mi plan").
-- En `plan.html` ve sus eventos por día, elige traslado para cada uno (ida y vuelta, solo ida o no) y la hora a la que la buscamos, y el alojamiento con fechas y zona sugeridas. Manda **una sola cotización** con todo: entra a la pestaña "Servicios" como cualquier pedido (referencia `PLN-XXXXX`, itinerario completo en "Algo más") y sigue el mismo camino de cotización y pago online.
+- En `plan.html` ve sus eventos por día, elige traslado para cada uno (ida y vuelta, solo ida o no) y la hora a la que la buscamos, y el alojamiento con fechas y zona sugeridas. Manda **una sola cotización** con todo: entra a la pestaña "Servicios" como cualquier pedido (referencia `PLN-XXXXX`, itinerario completo en "Algo más") y sigue el mismo camino de cotización y pago online. El mail de cotización y `pagar.html` muestran ese itinerario completo (las líneas que empiezan con "•"), así que no hay que borrarlas de la planilla.
 - "Compartir mi plan" genera un link (`plan.html?e=...`) para mandarle a los amigos.
 
 ## Mapa
@@ -79,7 +79,7 @@ js/
 
 ## Traslados y alojamiento (`servicios.html`)
 
-- La gente pide chofer, alojamiento o los dos. El pedido (`SRV-XXXXX`) te llega por WhatsApp con todos los datos; vos conseguís opciones y precio y le respondés.
+- La gente pide chofer, alojamiento o los dos. El pedido (`SRV-XXXXX`) entra a la pestaña "Servicios" y te llega por mail; se cotiza y cobra online (ver "Cobros online"). WhatsApp y mail quedan solo como respaldo si el sistema falla.
 - Se llega desde: los dos accesos debajo de la portada, el detalle de cada evento (abre la página con el evento y las fechas ya puestas), la cabecera en PC y el pie.
 - **Para que los pedidos también queden en la planilla:** pegá el `apps-script/Code.gs` nuevo en el script "Eventos PDE – Script de avisos" (es independiente, abre la planilla por su ID), **Implementar > Gestionar implementaciones > editar > Nueva versión**, y después poné `formServicios: true` en `config.js`. Se crea sola la pestaña "Servicios" (con columnas Estado, Precio pasado y Comisión para tu control).
 
@@ -87,12 +87,12 @@ js/
 
 Se cobra por día publicado y cada tramo sale más barato: `tiers: [[hastaElDía, precioPorDía], ...]`. Los tramos se suman (7 días nunca cuestan menos que 6). Hoy: Básico US$ 6 los días 1-2, US$ 3 del 3 al 7, US$ 2 del 8 al 30 y US$ 1 desde el 31; Portada US$ 30, 12, 8 y 5. `MAX_DAYS` es el tope de días por pedido. La página recalcula tarjetas, total y mensajes sola.
 
-## Cobro (manual)
+## Cobro de publicaciones
 
 1. La persona elige plan, completa el formulario y recibe una referencia (`PDE-XXXXX`).
-2. Paga con Mercado Pago, depósito bancario o PayPal indicando la referencia. Mercado Pago usa tu link de monto libre (`mercadopago.link` en `config.js`): la web le dice a la persona cuántos pesos escribir, con la cotización `mercadopago.uyuRate`. Actualizá la cotización cuando cambie el dólar.
-3. Manda el comprobante por WhatsApp o mail (`eventospde.uy@gmail.com`).
-4. Verificás el pago, cargás el evento en `data.js` y subís el cambio.
+2. Paga con el botón de Mercado Pago (monto exacto; se marca solo en la planilla) o por transferencia indicando la referencia. El link de monto libre (`mercadopago.link`) queda de respaldo.
+3. La cotización del dólar está en dos lugares que tienen que coincidir: `COTIZACION` en `apps-script/Code.gs` y `mercadopago.uyuRate` en `config.js`.
+4. Con el pago confirmado, cargás el evento en `data.js` (`from`/`until`) y subís el cambio (`git pull` antes).
 
 ## Aviso automático de solicitudes (opcional, gratis)
 

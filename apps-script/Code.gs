@@ -132,10 +132,12 @@ function enviarCotizacionesPendientes() {
     if (!precio || f[c("Estado")] !== "Nuevo" || !f[c("Email")]) continue;
     const ref = f[c("Pedido")], clave = f[c("Clave")];
     const detalle = String(f[c("Detalle para el cliente")] || "").trim();
+    const itinerario = itinerarioDe(f[c("Algo más")]);
+    const para = itinerario.length ? "" : f[c("Evento")] ? ` para ${f[c("Evento")]}` : "";   // en un plan, los eventos van en la lista
     mailCliente(f[c("Email")], `Tu cotización ${ref} · US$ ${precio}`,
       `¡Hola, ${primerNombre(f[c("Nombre")])}!`,
-      `Ya tenemos tu cotización de ${f[c("Necesita")]}${f[c("Evento")] ? ` para ${f[c("Evento")]}` : ""}. El total es US$ ${precio} (${pesos(precio)}). Para confirmarlo, pagalo online desde el botón: es seguro y acepta tarjeta, débito o transferencia.`,
-      [detalle ? `Incluye: ${detalle}` : "", `Pedido: ${ref}`].filter(Boolean),
+      `Ya tenemos tu cotización de ${f[c("Necesita")]}${para}. El total es US$ ${precio} (${pesos(precio)}). Para confirmarlo, pagalo online desde el botón: es seguro y acepta tarjeta, débito o transferencia.`,
+      [detalle ? `Incluye: ${detalle}` : "", ...itinerario, `Pedido: ${ref}`].filter(Boolean),
       { texto: `Pagar US$ ${precio}`, url: linkPagina(ref, clave) });
     hoja.getRange(i + 1, c("Estado") + 1).setValue("Cotizado");
   }
@@ -149,13 +151,17 @@ function leerPedido(ref, k) {
   if (!r || String(r.get("Clave")) !== String(k)) return { ok: false, error: "No encontramos el pedido. Revisá el link del mail." };
   if (r.tipo === "servicio") {
     const precio = Number(r.get("Precio USD")) || 0;
+    const itinerario = itinerarioDe(r.get("Algo más"));
+    const esPlan = itinerario.length > 0;
     return {
       ok: true, ref, tipo: "servicio",
       titulo: String(r.get("Necesita")).replace(/^./, c => c.toUpperCase()),
-      evento: r.get("Evento"), nombre: primerNombre(r.get("Nombre")),
+      evento: esPlan ? `${itinerario.length} ${itinerario.length === 1 ? "evento" : "eventos"} en Punta del Este` : r.get("Evento"),
+      nombre: primerNombre(r.get("Nombre")),
       detalle: r.get("Detalle para el cliente"),
-      lineas: [fechaTexto(r.get("Traslado: día")) && `Traslado: ${fechaTexto(r.get("Traslado: día"))}, ida ${horaTexto(r.get("Ida"))} hs desde ${r.get("Desde")}`,
-               fechaTexto(r.get("Llegada")) && `Alojamiento: del ${fechaTexto(r.get("Llegada"))} al ${fechaTexto(r.get("Salida"))}`,
+      lineas: [...(esPlan ? itinerario
+                 : [fechaTexto(r.get("Traslado: día")) && `Traslado: ${fechaTexto(r.get("Traslado: día"))}, ida ${horaTexto(r.get("Ida"))} hs desde ${r.get("Desde")}`]),
+               fechaTexto(r.get("Llegada")) && `Alojamiento: del ${fechaTexto(r.get("Llegada"))} al ${fechaTexto(r.get("Salida"))}${r.get("Zona") ? ` · ${r.get("Zona")}` : ""}`,
                `Personas: ${r.get("Personas")}`].filter(Boolean),
       usd: precio, pesos: precio ? pesos(precio) : "", estado: r.get("Estado") || "Nuevo"
     };
@@ -289,6 +295,8 @@ function mailCliente(para, asunto, titulo, texto, lineas, boton) {
 const json = obj => ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
 const pesos = usd => "$U " + Math.round(usd * COTIZACION).toLocaleString("es-UY");
 const linkPagina = (ref, clave) => `${SITIO}/pagar.html?ref=${encodeURIComponent(ref)}&k=${encodeURIComponent(clave)}`;
+/* Los pedidos de Mi plan traen el itinerario en "Algo más", una línea "• ..." por evento */
+const itinerarioDe = notas => String(notas || "").split("\n").filter(l => /^•\s/.test(l)).map(l => l.replace(/^•\s*/, ""));
 const primerNombre = n => String(n || "").trim().split(/\s+/)[0] || "";
 const esc_ = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const nuevaClave = () => Utilities.getUuid().replace(/-/g, "").slice(0, 12);
