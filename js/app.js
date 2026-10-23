@@ -181,8 +181,33 @@ $("q").addEventListener("input", () => {
 const heroLive = $("hero-live");
 if (heroLive) heroLive.textContent = `${LIVE.length} ${LIVE.length === 1 ? "evento" : "eventos"} en agenda`;
 
+/* Volver de un evento con "atrás": misma vista (lista, calendario o mapa), mismos filtros y misma altura.
+   Se guarda al tocar un evento o al salir de la página; se usa solo cuando se vuelve con "atrás". */
+const SPOT_KEY = "epde-vuelta";
+const saveSpot = () => {
+  try { sessionStorage.setItem(SPOT_KEY, JSON.stringify({ y: scrollY, cat: state.cat, view: state.view, q: $("q").value, month: state.month, day: state.day })); } catch (_) {}
+};
+document.addEventListener("click", ev => { if (ev.target.closest && ev.target.closest('a[href^="/evento/"]')) saveSpot(); }, true);
+addEventListener("pagehide", saveSpot);
+if ("scrollRestoration" in history) history.scrollRestoration = "manual";   // la altura la pone este código, no el navegador
+const nav = performance.getEntriesByType && performance.getEntriesByType("navigation")[0];
+let spot = null;
+try { if (nav && nav.type === "back_forward") spot = JSON.parse(sessionStorage.getItem(SPOT_KEY)); } catch (_) {}
+if (spot) {
+  if (CATS[spot.cat] || spot.cat === "Todos") state.cat = spot.cat;
+  if (["list", "cal", "map"].includes(spot.view)) state.view = spot.view;
+  if (spot.month) state.month = spot.month;
+  state.day = spot.day || null;
+  $("q").value = spot.q || "";
+}
+
 renderPortada(LIVE);
 render();
+if (spot) {
+  const goBack = () => scrollTo({ top: spot.y, behavior: "instant" });
+  goBack();
+  if (document.fonts) document.fonts.ready.then(goBack);              // por si las fuentes cambian un poco la altura
+}
 
 /* La píldora sigue al botón si cambia el ancho (fuentes que terminan de cargar, giro del celular, ventana) */
 const pillFix = () => slidePill($("chips"), activeChip($("chips")), true);

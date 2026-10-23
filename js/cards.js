@@ -116,7 +116,7 @@ function cardEl(e) {
     ${coverHtml(e)}
     <div class="k-top">
       <div class="k-day"><small>${monthLabel(e)}</small><b>${dayLabel(e)}</b></div>
-      <div class="k-acts">${tixHtml(e)}<button type="button" class="k-plan" data-plan="${id}" aria-pressed="false" aria-label="Agregar a mi plan">${ico("plus")}${ico("check")}</button></div>
+      <div class="k-acts">${tixHtml(e)}<button type="button" class="k-plan" data-plan="${id}" aria-pressed="false" aria-label="Agregar a mi plan" title="Agregar a mi plan">${ico("plus")}${ico("check")}</button></div>
     </div>
     <div class="k-bottom">
       ${eyebrowHtml(e)}
