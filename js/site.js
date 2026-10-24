@@ -26,7 +26,15 @@
         ${typeof I18N === "object" ? `<div class="nav-lang">${I18N.switcher()}</div>` : ""}
       </div>`);
     const burger = head.querySelector(".nav-burger"), menu = $("nav-menu");
-    const open = on => { menu.hidden = !on; burger.setAttribute("aria-expanded", on); burger.setAttribute("aria-label", on ? "Cerrar el menú" : "Abrir el menú"); head.classList.toggle("menu-open", on); };
+    /* Con el menú abierto, la página de atrás se oscurece y se desenfoca (y no se mueve); un toque afuera lo cierra */
+    const scrim = document.createElement("div");
+    scrim.className = "nav-scrim";
+    head.before(scrim);
+    scrim.addEventListener("click", () => open(false));
+    const open = on => {
+      menu.hidden = !on; burger.setAttribute("aria-expanded", on); burger.setAttribute("aria-label", on ? "Cerrar el menú" : "Abrir el menú");
+      head.classList.toggle("menu-open", on); scrim.classList.toggle("on", on); document.documentElement.classList.toggle("menu-lock", on);
+    };
     burger.addEventListener("click", () => open(menu.hidden));
     menu.addEventListener("click", ev => { if (ev.target.closest("a")) open(false); });
     document.addEventListener("click", ev => { if (!menu.hidden && !head.contains(ev.target)) open(false); });
