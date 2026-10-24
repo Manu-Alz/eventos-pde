@@ -40,6 +40,10 @@ const saveOpts = () => { try { localStorage.setItem(PL_KEY, JSON.stringify(opts)
 
 const planIds = () => shared || Plan.get();
 const planEvents = () => planIds().map(byId).filter(Boolean).sort(compareEvents);
+/* Las fechas que eligió para el alojamiento valen para esos eventos: si el plan cambió (o son de antes), vuelven a las de
+   por defecto, un día antes y uno después */
+const datesKey = () => planIds().slice().sort().join();
+if ((opts.aIn || opts.aOut) && opts.datesFor !== datesKey()) { opts.aIn = ""; opts.aOut = ""; }
 let plCat = "Todos";              // filtro de categoría de la agenda del paso 1
 
 /* Cómo se llega a Punta: lugar de llegada y tiempo aproximado de viaje hasta Punta del Este */
@@ -98,8 +102,14 @@ const tripStart = list => (list.length ? [addDays(list[0].date, -1), TODAY].sort
 const tripEnd = list => (list.length ? list.map(e => e.endDate || e.date).sort().pop() : "");
 const arrIn = list => opts.arr.inDate || opts.aIn || tripStart(list);
 const arrOut = list => opts.arr.outDate || opts.aOut || (list.length ? addDays(tripEnd(list), 1) : "");
-const stayIn = list => opts.aIn || arrIn(list);
-const stayOut = list => opts.aOut || arrOut(list);
+/* Alojamiento: siempre cubre los eventos del plan. La llegada es a más tardar el día del primer evento (y nunca antes de
+   hoy) y la salida, como mínimo, el día después del último. Por defecto, un día antes y uno después. */
+const minOut = list => (list.length ? addDays(tripEnd(list), 1) : "");
+const stayIn = list => {
+  const d = opts.aIn || arrIn(list), first = list.length ? list[0].date : "";
+  return first && d > first ? first : d && d < TODAY ? TODAY : d;
+};
+const stayOut = list => { const d = opts.aOut || arrOut(list), min = minOut(list); return min && (!d || d < min) ? min : d; };
 
 /* Minutos en auto entre dos puntos: kilómetros en ruta (roadKm, tarifas.js) a 40 km/h, redondeado a 5 */
 const driveMin = (a, b) => Math.max(5, Math.round(roadKm(a, b) / 40 * 60 / 5) * 5);
@@ -325,7 +335,7 @@ function stayStep(list) {
     ${stepHead(3, "Dónde te quedás", "Elegí la zona y reservá tu alojamiento en Booking. Si sumás traslados, te buscamos ahí.")}
     <div class="pl-card">
       <div class="pl-row"><p class="pl-q">Necesito alojamiento</p><label class="pl-switch" aria-label="Necesito alojamiento"><input type="checkbox" id="pl-stay"${on ? " checked" : ""}><span></span></label></div>
-      ${on ? `<p class="pl-q">¿Qué días te quedás? <small>Tocá el día que llegás y el día que te vas</small></p>
+      ${on ? `<p class="pl-q">¿Qué días te quedás? <small>${list.length ? "Tocá un día para cambiar la llegada o la salida" : "Tocá el día que llegás y el día que te vas"}</small></p>
         <div class="pl-cal" id="pl-cal">${calHtml(list)}</div>
         <input type="hidden" name="aIn" value="${esc(stayIn(list))}"><input type="hidden" name="aOut" value="${esc(stayOut(list))}">
         ${nightsHtml(list)}
@@ -346,8 +356,9 @@ function stayStep(list) {
 }
 
 /* Booking: un bloque claro con lo que se va a buscar y el botón; aviso de que es un link de referido */
-/* Mini calendario de la estadía: se toca el día que llega y después el día que se va; las noches del medio quedan pintadas.
-   Los días con eventos del plan llevan un aro alrededor del número. Los días pasados no se pueden tocar. */
+/* Mini calendario de la estadía: la llegada y la salida llenas y las noches del medio pintadas. Los días de los eventos del
+   plan van con el número en celeste. Con eventos, un toque cambia la llegada (hasta el día del primer evento) o la salida
+   (desde el día después del último); los días del medio son fijos. Sin eventos: primero la llegada, después la salida. */
 let calMonth = "", calFirst = "";                 // mes a la vista (AAAA-MM) y entrada ya tocada que espera la salida
 const SEMANA = ["L", "M", "M", "J", "V", "S", "D"];
 function calHtml(list) {
@@ -359,20 +370,24 @@ function calHtml(list) {
   const cells = Array.from({ length: lead }, () => "<span></span>");
   for (let i = 1; i <= days; i++) {
     const d = `${month}-${pad(i)}`, mid = Boolean(a && b && d > a && d < b);
+    const fixed = list.length && d > list[0].date && d < minOut(list);       // noches de los eventos: no se pueden sacar
     const cls = [d === a && "is-in", d === a && !b && "is-alone", d === b && "is-out", mid && "is-mid", evDay[d] && "has-ev"].filter(Boolean).join(" ");
-    cells.push(`<button type="button" class="pl-cal-d ${cls}" data-day="${d}"${d < TODAY ? " disabled" : ""} aria-pressed="${d === a || d === b || mid}" aria-label="${dateShort(d)}${evDay[d] ? ", día de evento" : ""}"><span>${i}</span></button>`);
+    cells.push(`<button type="button" class="pl-cal-d ${cls}" data-day="${d}"${d < TODAY || fixed ? " disabled" : ""} aria-pressed="${d === a || d === b || mid}" aria-label="${dateShort(d)}${evDay[d] ? ", día de evento" : ""}">${i}</button>`);
   }
-  return `<div class="pl-cal-h"><button type="button" class="pl-cal-nav" data-calnav="-1" aria-label="Mes anterior"${month > TODAY.slice(0, 7) ? "" : " disabled"}>${ico("arrow")}</button>
+  return `<div class="pl-cal-h"><button type="button" class="pl-cal-nav" data-calnav="-1" aria-label="Mes anterior"${month > TODAY.slice(0, 7) ? "" : " disabled"}><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
       <b>${MESES[m - 1].replace(/^./, c => c.toUpperCase())} ${y}</b>
-      <button type="button" class="pl-cal-nav" data-calnav="1" aria-label="Mes siguiente">${ico("arrow")}</button></div>
+      <button type="button" class="pl-cal-nav" data-calnav="1" aria-label="Mes siguiente"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></div>
     <div class="pl-cal-w" aria-hidden="true">${SEMANA.map(s => `<span>${s}</span>`).join("")}</div>
     <div class="pl-cal-g">${cells.join("")}</div>
-    ${Object.keys(evDay).length ? `<small class="pl-cal-key"><i></i>Días de tus eventos</small>` : ""}`;
+    ${Object.keys(evDay).length ? `<small class="pl-cal-key">En <b>celeste</b>, los días de tus eventos: siempre quedan dentro de tu estadía.</small>` : ""}`;
 }
 /* Un toque en un día: primero la entrada, después la salida (si toca un día anterior, ese pasa a ser la entrada) */
 function pickDay(d) {
   const list = planEvents();
-  if (calFirst && d > calFirst) { opts.aIn = calFirst; opts.aOut = d; calFirst = ""; saveOpts(); syncDates(list); }
+  if (list.length) {                                                   // con eventos: un toque, llegada o salida
+    if (d <= list[0].date) opts.aIn = d; else if (d >= minOut(list)) opts.aOut = d; else return;
+    opts.datesFor = datesKey(); saveOpts(); syncDates(list);
+  } else if (calFirst && d > calFirst) { opts.aIn = calFirst; opts.aOut = d; calFirst = ""; opts.datesFor = datesKey(); saveOpts(); syncDates(list); }
   else calFirst = d;
   refresh(list);
 }
@@ -498,7 +513,6 @@ function summaryHtml(list) {
     <div class="pl-total" id="pl-total" hidden><span>Total</span><b></b></div>
     <button class="btn pl-cta" id="pl-cta" type="submit">Pedir cotización</button>
     <p class="pl-fine" id="pl-fine"></p>
-    ${list.length ? `<button type="button" class="pl-share" id="pl-share">${ico("share")}Compartir mi plan</button>` : ""}
   </aside>`;
 }
 
@@ -598,15 +612,15 @@ function refresh(list = planEvents()) {
   if (ins) $("pl-total").querySelector("b").textContent = `US$ ${ins.usd}`;
   const us = needsUs(list);
   if ($("pl-contact")) $("pl-contact").hidden = !us;                   // "Tus datos" solo si hay algo que resolvemos nosotros
-  if ($("pl-share")) $("pl-share").hidden = !us;                        // sin pedido, compartir es el botón principal
-  $("pl-cta").textContent = ins ? `Pagar US$ ${ins.usd} con tarjeta` : us ? `Pedir precio ${usText(list)}` : list.length ? "Compartir mi plan" : "Elegí tus eventos";
+  $("pl-cta").textContent = ins ? `Pagar US$ ${ins.usd} con tarjeta` : us ? `Pedir precio ${usText(list)}` : viaBooking() ? "Ver alojamientos en Booking" : list.length ? "Buscar alojamiento" : "Elegí tus eventos";
   $("pl-fine").textContent = ins ? "Precio final, sin esperar cotización. Pagás con tarjeta y te confirmamos el chofer por WhatsApp."
     : needZone ? "Elegí la zona de tu alojamiento en el paso 2 y ves el precio de los traslados al instante."
     : us ? `Te mandamos el precio ${usText(list)} por mail. Sin costo ni compromiso: pagás online solo si te sirve.`
-    : list.length ? `Tu plan ya está listo y guardado en este celular: entradas en cada evento${viaBooking() ? ", alojamiento en Booking" : ""}${list.some(e => rideOK(e)) && !choferPropio() ? " y Uber para ir y volver" : ""}. Compartilo para tenerlo en WhatsApp. ¿Querés que te busquemos en el aeropuerto? Sumalo en el paso 2.`
+    : viaBooking() ? `Se abre Booking con tus fechas (${dmy2(stayIn(list))} al ${dmy2(stayOut(list))}), la zona y ${plural(people(), "persona", "personas")}. Las entradas las comprás en cada evento. ¿Te buscamos en el aeropuerto? Sumalo en el paso 2.`
+    : list.length ? "Las entradas las comprás en cada evento, con Comprar. ¿Te falta dónde dormir o el traslado del aeropuerto? Sumalos en los pasos 2 y 3."
     : "Sumá eventos en el paso 1, o pedí el traslado del aeropuerto (paso 2) o que te busquemos alojamiento (paso 3).";
-  $("pl-bar-s").textContent = ins ? `Total US$ ${ins.usd}` : us ? "Sin costo ni compromiso" : list.length ? "Tu plan, listo" : "Empezá por tus eventos";
-  $("pl-bar-go").textContent = ins ? "Pagar" : us ? "Pedir precio" : list.length ? "Compartir" : "Ver plan";
+  $("pl-bar-s").textContent = ins ? `Total US$ ${ins.usd}` : us ? "Sin costo ni compromiso" : viaBooking() ? "Alojamiento en Booking" : list.length ? "Entradas en cada evento" : "Empezá por tus eventos";
+  $("pl-bar-go").textContent = ins ? "Pagar" : us ? "Pedir precio" : viaBooking() ? "Ver en Booking" : list.length ? "Alojamiento" : "Ver plan";
   list.forEach(e => {
     const id = slugOf(e);
     const rn = box.querySelector(`[data-note="tr-${id}"]`); if (rn && !rn.contains(document.activeElement)) rn.innerHTML = pickHtml(e);
@@ -674,15 +688,17 @@ function toggleEvent(id) {
     b.setAttribute("aria-pressed", on);
     b.setAttribute("aria-label", `${e.title}, ${dateShort(e.date)}${on ? ", en tu plan" : ""}`);
   });
+  resetStayDates();
   const list = planEvents();
   $("pl-chosen").innerHTML = chosenHtml(list);
   $("pl-sub").textContent = subText(list);
   syncDates(list);
   pills();
   refreshStay(list);
-  const share = $("pl-share");
-  if (!list.length && share) share.remove();
 }
+
+/* Fechas del alojamiento de vuelta a las de por defecto (un día antes y uno después de los eventos) */
+function resetStayDates() { opts.aIn = ""; opts.aOut = ""; calMonth = ""; calFirst = ""; saveOpts(); }
 
 /* Zona y catálogo: se actualizan en el lugar (el mapa no se vuelve a armar) */
 function refreshStay(list = planEvents()) {
@@ -783,11 +799,7 @@ async function submitPlan(form) {
   const list = planEvents();
   const t = totals(list);
   /* Sin nada que resolvamos nosotros, el botón comparte el plan (o, sin eventos, lleva a elegirlos) */
-  if (!needsUs(list)) {
-    if (list.length) sharePlan($("pl-cta"));
-    else $("pl-s1").closest(".pl-sec").scrollIntoView({ behavior: "smooth", block: "start" });
-    return;
-  }
+  if (!needsUs(list)) { nextStep(list); return; }
   if (stayOn() && (calFirst || nightsOf(list) < 1)) {                // alojamiento sin fechas completas
     $("pl-cal").scrollIntoView({ behavior: "smooth", block: "center" });
     $("pl-nights-t").textContent = calFirst ? "Falta el día que te vas: tocalo en el calendario." : "Tocá en el calendario el día que llegás y el día que te vas.";
@@ -838,12 +850,15 @@ async function submitPlan(form) {
   scrollTo({ top: 0, behavior: "smooth" });
 }
 
-async function sharePlan(btn = $("pl-share")) {
-  const url = `${location.origin}/plan.html?e=${planIds().join(",")}`;
-  track("plan_compartir", { eventos: planIds().length });
-  if (navigator.share) { navigator.share({ title: "Mi plan en Punta", url }).catch(() => {}); return; }
-  try { await navigator.clipboard.writeText(url); btn.lastChild.textContent = "Link copiado"; }
-  catch (_) { prompt("Copiá el link de tu plan:", url); }
+/* Sin nada que resolvamos nosotros, el botón lleva a lo que le falta: Booking, sumar alojamiento o elegir eventos */
+function nextStep(list) {
+  if (viaBooking()) { track("booking", { desde: "resumen" }); window.open(bookingUrl(list), "_blank", "noopener"); return; }
+  if (list.length) {
+    opts.stay = true; resetStayDates(); swapStep(3, stayStep(list));
+    $("pl-s3").closest(".pl-sec").scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
+  }
+  $("pl-s1").closest(".pl-sec").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 /* ============ 8. Inicio ============ */
@@ -901,13 +916,12 @@ box.addEventListener("click", ev => {
   if (nt) {
     calFirst = "";                                                                // − / + noches: mueve la salida, mínimo una noche
     const list = planEvents(), a = stayIn(list) || TODAY;
-    if (!stayIn(list)) opts.aIn = a;
+    opts.aIn = a;
     opts.aOut = addDays(a, Math.min(60, Math.max(1, nightsOf(list) + Number(nt.dataset.nights))));
-    saveOpts(); syncDates(list); refresh(list);
+    opts.datesFor = datesKey(); saveOpts(); syncDates(list); refresh(list);
     return;
   }
-  if (t.closest("#pl-share")) { sharePlan(); return; }
-  if (t.closest("#pl-bar-go") && !needsUs(planEvents()) && planEvents().length) { ev.preventDefault(); sharePlan($("pl-cta")); return; }
+  if (t.closest("#pl-bar-go") && !needsUs(planEvents())) { ev.preventDefault(); nextStep(planEvents()); return; }
   if (t.closest("#pl-save")) {
     Plan.set([...new Set([...Plan.get(), ...shared])]);
     location.replace("/plan.html");
@@ -917,7 +931,7 @@ box.addEventListener("click", ev => {
 box.addEventListener("change", ev => {
   const t = ev.target;
   if (t.matches("[data-pick]")) { opts.pick[t.dataset.pick] = t.value; saveOpts(); return; }
-  if (t.id === "pl-stay") { opts.stay = t.checked; saveOpts(); swapStep(3, stayStep(planEvents())); return; }
+  if (t.id === "pl-stay") { opts.stay = t.checked; resetStayDates(); swapStep(3, stayStep(planEvents())); return; }
   if (ARR_FIELDS.includes(t.name)) { opts.arr[t.name] = t.value; saveOpts(); refresh(); return; }
   if (FIELDS.includes(t.name)) { opts[t.name] = t.value; saveOpts(); refresh(); }
 });

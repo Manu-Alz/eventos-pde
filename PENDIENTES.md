@@ -28,7 +28,8 @@ Cosas apagadas, de prueba o esperando algo tuyo. Cuando resuelvas una, borrala d
 - **Fotos genéricas (Unsplash):** reemplazalas por los afiches oficiales cuando los tengas. Son las de Jamie Jones, Artbat, el Festival de Jazz, el Rolex Circuito Atlántico Sur, el Festival de Cine, el Karting, 12 Violoncellos, Callas Trio y el IRONMAN.
 - **Eventos sin pin en el mapa:** Festival de Jazz, Festival de Cine, The 30 Limones, Volvé Mi Negra y Box NYE. Hace falta el lugar exacto.
 - **Para confirmar:** la fecha y el lugar del IRONMAN 70.3 (2027-03-07). La mayoría de las fiestas no tiene hora: sale "A confirmar".
-- **Eventos de Entraste sin cargar:** El Templo NYE, Arde By JW, Navidad en el Yacht y Palito Bombón.
+- **Fiestas sin cargar (tienen entradas):** El Templo NYE (31/12, El Bosque), Arde By JW (3/1, Open Park), Palito Bombón (29/12, Ruta 104 km 3,5) y Lovers (2/1, Ruta 104 km 3,5) en Entraste; Franky Rizardo en Polo Medellín (3/1) en Venti; Hugel (2/1) en Mi Entrada.
+- **Sin entradas encontradas (24/10):** Jamie Jones en MACA (31/12) y FOMO Fest (todavía no está en Ticketplus).
 
 ## 4. Limpieza de la planilla
 

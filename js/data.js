@@ -51,6 +51,7 @@ const EV = [
     title: "Black Coffee: Noche de Año Nuevo",
     cat: "Fiestas", date: "2026-12-31", time: "23:00",
     place: "Cipriani, Punta del Este",
+    tickets: "https://get-in.com/en/ciprianinye31",
     desc: "El sudafricano Black Coffee, ganador de un Grammy y referente del afro house, recibe el 2027 en Cipriani para la noche más larga del año, en una de las sedes más exclusivas de la costa.",
     photo: "black-coffee-cipriani.webp",
     portada: true
@@ -67,6 +68,7 @@ const EV = [
     title: "Hot Since 82: NYE 2027",
     cat: "Fiestas", date: "2026-12-31", time: "23:55",
     place: "Medellín Polo Club, Ruta 10 km 176 (Punta del Este)",
+    tickets: "https://venti.live/evento/hot-since-82-NYE-la-finca-%26-fragment",
     desc: "Hot Since 82, el productor británico detrás de Knee Deep In Sound, encabeza el Año Nuevo en La Pista del Medellín Polo Club junto a Manu Desrets y Báez & Saint.",
     photo: "hot-since-82-polo-medellin.webp",
     portada: true
@@ -102,6 +104,7 @@ const EV = [
     title: "Nick Warren + Sébastien Léger",
     cat: "Fiestas", date: "2026-12-27", time: "19:00",
     place: "Narbona Wine Lodge, Punta del Este",
+    tickets: "https://venti.live/evento/MY-TRIBE-Opening-You-Are-My-Tribe",
     desc: "My Tribe en Narbona Wine Lodge, desde las 19:00: Nick Warren, leyenda del progressive house británico (Way Out West), junto al francés Sébastien Léger, ffiña y Jero Rosella. Música para el atardecer y para seguir de largo.",
     photo: "nick-warren-narbona.webp"
   },
@@ -117,6 +120,7 @@ const EV = [
     title: "ANOTR en Cipriani",
     cat: "Fiestas", date: "2026-12-28", time: "23:00",
     place: "Cipriani, Punta del Este",
+    tickets: "https://get-in.com/en/ciprianinye28",
     desc: "ANOTR, el dúo de house y techno melódico que llena pistas en todo el mundo, pasa por Cipriani en una de las sedes más exclusivas de Punta del Este.",
     photo: "anotr-cipriani.webp"
   },
@@ -132,6 +136,7 @@ const EV = [
     title: "Artbat · Mind Against · Mellino",
     cat: "Fiestas", date: "2027-01-03", time: "A confirmar",
     place: "Narbona Wine Lodge, Punta del Este",
+    tickets: "https://venti.live/evento/artbat-mind-against-mariano-mellino-x-endless-sound",
     desc: "Tres nombres del melodic techno en una sola noche en Narbona Wine Lodge: Artbat, el dúo ucraniano que llena festivales en todo el mundo, Mind Against y Mellino. Hora a confirmar.",
     photo: "artbat-mind-against-mellino.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
   },
@@ -139,6 +144,7 @@ const EV = [
     title: "Adriatique en Arcana",
     cat: "Fiestas", date: "2027-01-03", time: "16:00",
     place: "Arcana, Museo Atchugarry, Ruta 104 km 4,5 (Manantiales)",
+    tickets: "https://venti.live/evento/arcana-experience-3-de-enero-en-punta-del-este",
     desc: "Arcana Punta del Este en el Museo Atchugarry, con Adriatique, el dúo suizo de melodic house y techno detrás del sello Siamese, más NIM y Peter Guzman. Una tarde de música electrónica entre arte y escultura en Manantiales.",
     photo: "adriatique-arcana.webp"
   },
@@ -146,6 +152,7 @@ const EV = [
     title: "Miss Monique y Juan Hansen en Open Park",
     cat: "Fiestas", date: "2027-01-04", time: "23:00",
     place: "Open Park, El Placer",
+    tickets: "https://app.entraste.com/events/miss-monique-pde-2027", price: "Desde USD 50",
     desc: "Miss Monique, la DJ ucraniana referente del progressive house y el melodic techno, comparte noche con Juan Hansen en la carpa de Open Park.",
     photo: "miss-monique-open-park.webp"
   },
@@ -153,6 +160,7 @@ const EV = [
     title: "Blavicio en Open Park (2.ª fecha)",
     cat: "Fiestas", date: "2027-01-05", time: "23:59",
     place: "Open Park, El Placer",
+    tickets: "https://app.entraste.com/events/blavicio-5-de-enero", price: "Desde USD 60",
     desc: "Segunda fecha de Blavicio en Open Park esta temporada, bajo la carpa de El Placer, junto al puente de La Barra. Entradas en Entraste.",
     photo: "blavicio-open-park.webp"
   },
@@ -160,6 +168,7 @@ const EV = [
     title: "Chris Stussy en Open Park",
     cat: "Fiestas", date: "2027-01-09", time: "23:00",
     place: "Open Park, El Placer",
+    tickets: "https://app.entraste.com/events/key-presenta-chris-stassy", price: "Desde USD 30",
     desc: "Chris Stussy, el productor holandés del sello Up The Stuss, trae su house cálido y de groove a Open Park. Una noche de enero para bailar.",
     photo: "chris-stussy-open-park.webp"
   },
@@ -167,6 +176,7 @@ const EV = [
     title: "Colyn en Playa Brava",
     cat: "Fiestas", date: "2026-12-27", time: "21:00",
     place: "Roll & Rock Beach House, Parada 8, Playa Brava",
+    tickets: "https://venti.live/evento/colyn-27-de-diciembre-en-pde",
     desc: "Colyn, uno de los nombres que más suena en el melodic techno actual, toca frente al mar en Roll & Rock Beach House (Parada 8, Playa Brava) junto a Belu Clavero y BIØY. Música al aire libre desde las 21:00.",
     photo: "colyn-playa-brava.webp"
   },
@@ -174,6 +184,7 @@ const EV = [
     title: "Summer Tale: Pico Bussoli + BNN",
     cat: "Fiestas", date: "2026-12-28", time: "23:50",
     place: "El Bosque, Balneario Buenos Aires",
+    tickets: "https://www.passline.com/eventos/bnn-pde-2812-uruguay",
     desc: "Summer Tale en El Bosque de Balneario Buenos Aires, con Pico Bussoli y BNN: una fiesta entre árboles, a pocos minutos de La Barra, con house y techno melódico.",
     photo: "pico-bussoli-el-bosque.webp"
   },
@@ -181,6 +192,7 @@ const EV = [
     title: "Pasan Cosas en Narbona",
     cat: "Fiestas", date: "2026-12-29", time: "19:00",
     place: "Narbona Wine Lodge, Punta del Este",
+    tickets: "https://venti.live/evento/MY-TRIBE-Pasan-Cosas",
     desc: "My Tribe presenta Pasan Cosas en Narbona Wine Lodge: una tarde-noche de música electrónica entre viñedos, desde las 19:00.",
     photo: "pasan-cosas-narbona.webp"
   },
@@ -196,6 +208,7 @@ const EV = [
     title: "Michael Bibi en Narbona",
     cat: "Fiestas", date: "2027-01-02", time: "18:00",
     place: "Narbona Wine Lodge, Punta del Este",
+    tickets: "https://www.passline.com/eventos/sabado-201-michael-bibi",
     desc: "Michael Bibi, productor británico del sello Solid Grooves, trae su tech house de pista a Narbona Wine Lodge. Desde las 18:00, con la luz de la tarde de enero.",
     photo: "michael-bibi-narbona.webp"
   },
@@ -203,6 +216,7 @@ const EV = [
     title: "You Are My Tribe",
     cat: "Fiestas", date: "2027-01-08", time: "19:00",
     place: "Narbona Wine Lodge, Punta del Este",
+    tickets: "https://venti.live/evento/MY-TRIBE-Closing-you-are-my-tribe-closing",
     desc: "My Tribe vuelve a Narbona Wine Lodge con una nueva fecha de la serie: música electrónica y tarde al aire libre desde las 19:00. Line-up a confirmar.",
     photo: "you-are-my-tribe-narbona.webp"
   },
@@ -312,8 +326,9 @@ const EV = [
   {
     title: "Volvé Mi Negra",
     cat: "Fiestas", date: "2027-01-02", time: "23:59",
-    place: "Punta del Este (a confirmar)",
-    desc: "Volvé Mi Negra, sábado 2 de enero: noche de fiesta en Punta del Este. Lugar y hora a confirmar con la organización; seguí su Instagram.",
+    place: "El Bosque, Ruta 10 km 169",
+    tickets: "https://app.entraste.com/events/volve-mi-negra-pde-0201", price: "Desde USD 25",
+    desc: "Volvé Mi Negra, sábado 2 de enero en El Bosque (Ruta 10 km 169): noche de fiesta de verano en Punta del Este. Entradas en Entraste.",
     contact: "https://instagram.com/volveminegra",
     photo: "volve-mi-negra-pde.webp"
   },
@@ -321,6 +336,7 @@ const EV = [
     title: "Argy",
     cat: "Fiestas", date: "2027-01-15", time: "23:00",
     place: "Open Park, El Placer",
+    tickets: "https://app.entraste.com/events/key-presenta-argy", price: "Desde USD 35",
     desc: "Argy en Open Park: una noche de música electrónica bajo la carpa de El Placer, junto al puente de La Barra.",
     contact: "https://instagram.com/argy",
     photo: "argy-open-park.webp"
