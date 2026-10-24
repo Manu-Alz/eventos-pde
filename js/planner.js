@@ -92,8 +92,9 @@ function defaultPick(e) {
 }
 const pickOf = e => opts.pick[slugOf(e)] || defaultPick(e);
 
-/* Fechas del viaje: sin datos, llegada el día del primer evento y salida el día después del último (sin eventos, vacías) */
-const tripStart = list => (list.length ? list[0].date : "");
+/* Fechas del viaje: sin datos, llegada un día antes del primer evento (nunca antes de hoy) y salida el día después del
+   último (sin eventos, vacías). Así la persona llega con tiempo y el alojamiento cubre la noche del evento. */
+const tripStart = list => (list.length ? [addDays(list[0].date, -1), TODAY].sort().pop() : "");
 const tripEnd = list => (list.length ? list.map(e => e.endDate || e.date).sort().pop() : "");
 const arrIn = list => opts.arr.inDate || opts.aIn || tripStart(list);
 const arrOut = list => opts.arr.outDate || opts.aOut || (list.length ? addDays(tripEnd(list), 1) : "");
@@ -317,6 +318,7 @@ function stayStep(list) {
           <label>Entrada<input type="date" name="aIn" value="${esc(stayIn(list))}" min="${TODAY}" required></label>
           <label>Salida<input type="date" name="aOut" value="${esc(stayOut(list))}" min="${TODAY}" required></label>
         </div>
+        ${nightsHtml(list)}
         <div class="mapa pl-map-wrap"><div class="mapa-box pl-map" id="pl-map"><p class="mapa-wait">Cargando el mapa…</p></div></div>
         <p class="pl-q">Zona <small>(tocala en el mapa o elegí abajo)</small></p>
         <div class="pl-zones" id="pl-zones">${zonesHtml(list)}</div>
@@ -334,6 +336,22 @@ function stayStep(list) {
 }
 
 /* Booking: un bloque claro con lo que se va a buscar y el botón; aviso de que es un link de referido */
+/* Noches: se cambian con − y + (mueve la salida) o con las fechas. Por defecto, un día antes y uno después de los eventos. */
+const nightsOf = list => (stayIn(list) && stayOut(list) ? daysBetween(stayIn(list), stayOut(list)) : 0);
+function nightsText(list) {
+  const n = nightsOf(list);
+  if (!stayIn(list) || !stayOut(list)) return "Elegí la entrada y la salida.";
+  if (n < 1) return "La salida tiene que ser después de la entrada.";
+  const byDefault = list.length && stayIn(list) === tripStart(list) && tripStart(list) < list[0].date && stayOut(list) === addDays(tripEnd(list), 1);
+  return `Del ${dmy2(stayIn(list))} al ${dmy2(stayOut(list))}${byDefault ? ": un día antes y uno después de tus eventos" : ""}.`;
+}
+function nightsHtml(list) {
+  const n = nightsOf(list);
+  return `<div class="pl-row pl-nights"><b>Noches</b>
+      <div class="pl-stepper"><button type="button" data-nights="-1" aria-label="Una noche menos">−</button><output id="pl-nights">${Math.max(n, 0)}</output><button type="button" data-nights="1" aria-label="Una noche más">+</button></div></div>
+    <small class="pl-hint${n < 1 && stayIn(list) && stayOut(list) ? " is-bad" : ""}" id="pl-nights-t">${nightsText(list)}</small>`;
+}
+
 function bookingHtml(list) {
   if (opts.stayMode === "aliados") return `<div class="pl-booking-t"><b>Te lo buscamos nosotros</b><span>Le pasamos tu pedido a inmobiliarias y hoteles aliados de Punta y te mandamos por mail las mejores opciones para <b>${bookingText(list)}</b>, con precio final. Pagás online solo si te sirve.</span></div>
     <label>Presupuesto por noche<select name="aBudget">${optionTags(BUDGETS, opts.aBudget || "A conversar")}</select></label>`;
@@ -522,6 +540,12 @@ function refresh(list = planEvents()) {
   if ($("pl-booking")) {                                                   // el link a Booking y el texto siguen a fechas, zona, personas y tipo
     if ($("pl-booking-go")) $("pl-booking-go").href = bookingUrl(list);
     const bt = $("pl-booking").querySelector(".pl-booking-t span b"); if (bt) bt.innerHTML = bookingText(list);
+  }
+  if ($("pl-nights")) {                                                   // noches: siguen a las fechas
+    const n = nightsOf(list);
+    $("pl-nights").textContent = Math.max(n, 0);
+    $("pl-nights-t").textContent = nightsText(list);
+    $("pl-nights-t").classList.toggle("is-bad", n < 1 && Boolean(stayIn(list) && stayOut(list)));
   }
   $("pl-total").hidden = !ins;
   if (ins) $("pl-total").querySelector("b").textContent = `US$ ${ins.usd}`;
@@ -808,6 +832,14 @@ box.addEventListener("click", ev => {
     opts.people = Math.min(30, Math.max(1, people() + Number(step.dataset.people))); saveOpts();
     $("pl-people").textContent = opts.people;
     refresh();
+    return;
+  }
+  const nt = t.closest("[data-nights]");
+  if (nt) {                                                                // − / + noches: mueve la salida, mínimo una noche
+    const list = planEvents(), a = stayIn(list) || TODAY;
+    if (!stayIn(list)) opts.aIn = a;
+    opts.aOut = addDays(a, Math.min(60, Math.max(1, nightsOf(list) + Number(nt.dataset.nights))));
+    saveOpts(); syncDates(list); refresh(list);
     return;
   }
   if (t.closest("#pl-share")) { sharePlan(); return; }

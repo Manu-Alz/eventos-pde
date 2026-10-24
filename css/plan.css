@@ -232,6 +232,8 @@
 .pl-people{padding:10px 12px 10px 16px;border-radius:18px;background:var(--glass);border:1px solid var(--line)}
 .pl-stepper{display:flex;align-items:center;gap:6px}
 .pl-stepper button{width:38px;height:38px;border:0;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:var(--ink);background:var(--glass-hover);font:700 18px 'DM Sans',sans-serif}
+.pl-nights{margin-top:6px}
+.pl-hint.is-bad{color:#ff8a8a}
 .pl-stepper output{min-width:28px;text-align:center;font:700 18px 'Bricolage Grotesque',sans-serif}
 .pl-inc{list-style:none;margin:0;padding:0;display:grid;gap:12px}
 .pl-inc li{display:flex;align-items:flex-start;gap:12px}
