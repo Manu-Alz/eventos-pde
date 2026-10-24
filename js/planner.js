@@ -314,10 +314,9 @@ function stayStep(list) {
     ${stepHead(3, "Dónde te quedás", "Elegí la zona y reservá tu alojamiento en Booking. Si sumás traslados, te buscamos ahí.")}
     <div class="pl-card">
       <div class="pl-row"><p class="pl-q">Necesito alojamiento</p><label class="pl-switch" aria-label="Necesito alojamiento"><input type="checkbox" id="pl-stay"${on ? " checked" : ""}><span></span></label></div>
-      ${on ? `<div class="pl-two">
-          <label>Entrada<input type="date" name="aIn" value="${esc(stayIn(list))}" min="${TODAY}" required></label>
-          <label>Salida<input type="date" name="aOut" value="${esc(stayOut(list))}" min="${TODAY}" required></label>
-        </div>
+      ${on ? `<p class="pl-q">¿Qué días te quedás? <small>Tocá el día que llegás y el día que te vas</small></p>
+        <div class="pl-cal" id="pl-cal">${calHtml(list)}</div>
+        <input type="hidden" name="aIn" value="${esc(stayIn(list))}"><input type="hidden" name="aOut" value="${esc(stayOut(list))}">
         ${nightsHtml(list)}
         <div class="mapa pl-map-wrap"><div class="mapa-box pl-map" id="pl-map"><p class="mapa-wait">Cargando el mapa…</p></div></div>
         <p class="pl-q">Zona <small>(tocala en el mapa o elegí abajo)</small></p>
@@ -336,7 +335,38 @@ function stayStep(list) {
 }
 
 /* Booking: un bloque claro con lo que se va a buscar y el botón; aviso de que es un link de referido */
-/* Noches: se cambian con − y + (mueve la salida) o con las fechas. Por defecto, un día antes y uno después de los eventos. */
+/* Mini calendario de la estadía: se toca el día que llega y después el día que se va; las noches del medio quedan pintadas.
+   Los días con eventos del plan llevan un punto del color de su categoría. Los días pasados no se pueden tocar. */
+let calMonth = "", calFirst = "";                 // mes a la vista (AAAA-MM) y entrada ya tocada que espera la salida
+const SEMANA = ["L", "M", "M", "J", "V", "S", "D"];
+function calHtml(list) {
+  const a = calFirst || stayIn(list), b = calFirst ? "" : stayOut(list);
+  const month = calMonth || (a || TODAY).slice(0, 7), [y, m] = month.split("-").map(Number);
+  const lead = (new Date(`${month}-01T12:00:00Z`).getUTCDay() + 6) % 7, days = new Date(Date.UTC(y, m, 0)).getUTCDate();
+  const evDay = {};
+  list.forEach(e => { for (let d = e.date; d <= (e.endDate || e.date); d = addDays(d, 1)) evDay[d] = evDay[d] || CATS[e.cat]; });
+  const cells = Array.from({ length: lead }, () => "<span></span>");
+  for (let i = 1; i <= days; i++) {
+    const d = `${month}-${pad(i)}`, mid = Boolean(a && b && d > a && d < b);
+    const cls = [d === a && "is-in", d === a && !b && "is-alone", d === b && "is-out", mid && "is-mid", d === TODAY && "is-today"].filter(Boolean).join(" ");
+    cells.push(`<button type="button" class="pl-cal-d ${cls}" data-day="${d}"${d < TODAY ? " disabled" : ""} aria-pressed="${d === a || d === b || mid}" aria-label="${dateShort(d)}${evDay[d] ? ", día de evento" : ""}">${i}${evDay[d] ? `<i style="--c:${evDay[d]}"></i>` : ""}</button>`);
+  }
+  return `<div class="pl-cal-h"><button type="button" class="pl-cal-nav" data-calnav="-1" aria-label="Mes anterior"${month > TODAY.slice(0, 7) ? "" : " disabled"}>${ico("arrow")}</button>
+      <b>${MESES[m - 1].replace(/^./, c => c.toUpperCase())} ${y}</b>
+      <button type="button" class="pl-cal-nav" data-calnav="1" aria-label="Mes siguiente">${ico("arrow")}</button></div>
+    <div class="pl-cal-w" aria-hidden="true">${SEMANA.map(s => `<span>${s}</span>`).join("")}</div>
+    <div class="pl-cal-g">${cells.join("")}</div>
+    ${Object.keys(evDay).length ? `<small class="pl-cal-key"><i style="background:${Object.values(evDay)[0]}"></i>Días de tus eventos</small>` : ""}`;
+}
+/* Un toque en un día: primero la entrada, después la salida (si toca un día anterior, ese pasa a ser la entrada) */
+function pickDay(d) {
+  const list = planEvents();
+  if (calFirst && d > calFirst) { opts.aIn = calFirst; opts.aOut = d; calFirst = ""; saveOpts(); syncDates(list); }
+  else calFirst = d;
+  refresh(list);
+}
+
+/* Noches: se cambian con − y + (mueve la salida) o en el calendario. Por defecto, un día antes y uno después de los eventos. */
 const nightsOf = list => (stayIn(list) && stayOut(list) ? daysBetween(stayIn(list), stayOut(list)) : 0);
 function nightsText(list) {
   const n = nightsOf(list);
@@ -437,7 +467,7 @@ function summaryLines(list) {
 }
 function summaryTitle(list) {
   if (!list.length) return "Tu viaje";
-  const start = tripStart(list), end = tripEnd(list);
+  const start = list[0].date, end = tripEnd(list);
   return `${plural(list.length, "evento", "eventos")} · ${dmy2(start)}${start !== end ? ` al ${dmy2(end)}` : ""}`;
 }
 
@@ -500,9 +530,9 @@ function drawMap(list) {
 const SUB_DEFAULT = $("pl-sub").textContent;
 function subText(list) {
   if (!list.length) return SUB_DEFAULT;
-  const start = tripStart(list), end = tripEnd(list);
+  const start = list[0].date, end = tripEnd(list);
   const when = start === end ? `el ${dow(start).toLowerCase()} ${dmy2(start)}` : `del ${dow(start).toLowerCase()} ${dmy2(start)} al ${dow(end).toLowerCase()} ${dmy2(end)}`;
-  return `${plural(list.length, "evento", "eventos")}, ${when}. Elegí qué querés que resolvamos: chofer, traslado del aeropuerto, entradas y dónde quedarte.`;
+  return `${plural(list.length, "evento", "eventos")}, ${when}. Elegí qué querés que resolvamos: ${choferPropio() ? "chofer, " : ""}traslado del aeropuerto, entradas y dónde quedarte.`;
 }
 
 function render() {
@@ -544,15 +574,16 @@ function refresh(list = planEvents()) {
   if ($("pl-nights")) {                                                   // noches: siguen a las fechas
     const n = nightsOf(list);
     $("pl-nights").textContent = Math.max(n, 0);
-    $("pl-nights-t").textContent = nightsText(list);
-    $("pl-nights-t").classList.toggle("is-bad", n < 1 && Boolean(stayIn(list) && stayOut(list)));
+    $("pl-nights-t").textContent = calFirst ? `Llegás el ${dmy2(calFirst)}. Ahora tocá el día que te vas.` : nightsText(list);
+    $("pl-nights-t").classList.toggle("is-bad", !calFirst && n < 1 && Boolean(stayIn(list) && stayOut(list)));
   }
+  if ($("pl-cal")) $("pl-cal").innerHTML = calHtml(list);
   $("pl-total").hidden = !ins;
   if (ins) $("pl-total").querySelector("b").textContent = `US$ ${ins.usd}`;
   $("pl-cta").textContent = ins ? `Pagar US$ ${ins.usd} con tarjeta` : "Pedir cotización";
   $("pl-fine").textContent = ins ? "Precio final, sin esperar cotización. Pagás con tarjeta y te confirmamos el chofer por WhatsApp."
     : needZone ? "Elegí la zona de tu alojamiento en el paso 2 y ves el precio de los traslados al instante."
-    : nothingToDo(list) ? (viaBooking() ? "El alojamiento lo reservás en Booking (paso 3). Sumá chofer o traslado del aeropuerto si querés que te llevemos." : "Sumá chofer, traslado del aeropuerto o alojamiento para pedir tu plan.")
+    : nothingToDo(list) ? (viaBooking() ? `El alojamiento lo reservás en Booking (paso 3). Si querés que te busquemos en el aeropuerto o el puerto, sumá el traslado en el paso 2${choferPropio() ? " o un chofer a tus fiestas" : ""}.` : `Sumá ${choferPropio() ? "chofer, " : ""}traslado del aeropuerto, alojamiento o entradas para pedir tu plan.`)
     : t.tix.length || quoteStay() ? "Con entradas o alojamiento de nuestros aliados te mandamos el total por mail, sin costo ni compromiso, y pagás online con tarjeta."
     : "Sin costo ni compromiso. Te mandamos el total por mail y pagás online con tarjeta solo si te sirve.";
   $("pl-bar-s").textContent = ins ? `Total US$ ${ins.usd}` : "Sin costo ni compromiso";
@@ -737,7 +768,7 @@ async function submitPlan(form) {
   if (nothingToDo(list)) {
     $("pl-s1").closest(".pl-sec").scrollIntoView({ behavior: "smooth", block: "start" });
     $("pl-warn")?.remove();
-    $("pl-chosen").insertAdjacentHTML("afterbegin", `<p class="pl-none pl-warn" id="pl-warn">${ico("car")}<span><b>Elegí qué querés que resolvamos:</b> chofer a una fiesta, traslado del aeropuerto (paso 2), alojamiento (paso 3) o entradas incluidas.</span></p>`);
+    $("pl-chosen").insertAdjacentHTML("afterbegin", `<p class="pl-none pl-warn" id="pl-warn">${ico("car")}<span><b>Elegí qué querés que resolvamos:</b> ${choferPropio() ? "chofer a una fiesta, " : ""}traslado del aeropuerto (paso 2), alojamiento (paso 3) o entradas incluidas.</span></p>`);
     return;
   }
   /* Los datos obligatorios se piden al final; si falta alguno, se marca y se lleva la vista ahí */
@@ -745,6 +776,12 @@ async function submitPlan(form) {
   if (bad) {
     bad.closest(".pl-sec")?.scrollIntoView({ behavior: "smooth", block: "start" });
     setTimeout(() => { bad.focus({ preventScroll: true }); bad.reportValidity(); }, 450);
+    return;
+  }
+  if (stayOn() && (calFirst || nightsOf(list) < 1)) {                // alojamiento sin fechas completas
+    $("pl-cal").scrollIntoView({ behavior: "smooth", block: "center" });
+    $("pl-nights-t").textContent = calFirst ? "Falta el día que te vas: tocalo en el calendario." : "Tocá en el calendario el día que llegás y el día que te vas.";
+    $("pl-nights-t").classList.add("is-bad");
     return;
   }
   const f = keepFields(form);
@@ -834,8 +871,18 @@ box.addEventListener("click", ev => {
     refresh();
     return;
   }
+  const day = t.closest("[data-day]");
+  if (day) { pickDay(day.dataset.day); return; }
+  const cn = t.closest("[data-calnav]");
+  if (cn) {
+    const [y, m] = (calMonth || (calFirst || stayIn(planEvents()) || TODAY).slice(0, 7)).split("-").map(Number);
+    calMonth = new Date(Date.UTC(y, m - 1 + Number(cn.dataset.calnav), 1)).toISOString().slice(0, 7);
+    refresh();
+    return;
+  }
   const nt = t.closest("[data-nights]");
-  if (nt) {                                                                // − / + noches: mueve la salida, mínimo una noche
+  if (nt) {
+    calFirst = "";                                                                // − / + noches: mueve la salida, mínimo una noche
     const list = planEvents(), a = stayIn(list) || TODAY;
     if (!stayIn(list)) opts.aIn = a;
     opts.aOut = addDays(a, Math.min(60, Math.max(1, nightsOf(list) + Number(nt.dataset.nights))));

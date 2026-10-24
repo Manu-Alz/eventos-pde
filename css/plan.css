@@ -232,6 +232,28 @@
 .pl-people{padding:10px 12px 10px 16px;border-radius:18px;background:var(--glass);border:1px solid var(--line)}
 .pl-stepper{display:flex;align-items:center;gap:6px}
 .pl-stepper button{width:38px;height:38px;border:0;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:var(--ink);background:var(--glass-hover);font:700 18px 'DM Sans',sans-serif}
+/* Mini calendario de la estadía: entrada y salida llenas, las noches del medio en una franja */
+.pl-cal{margin:8px 0 4px;padding:14px 12px 12px;border:1px solid var(--line);border-radius:18px;background:var(--glass)}
+.pl-cal-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.pl-cal-h b{font:700 18px 'Bricolage Grotesque',sans-serif}
+.pl-cal-nav{width:44px;height:44px;border:0;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:var(--ink);background:var(--glass-hover)}
+.pl-cal-nav .ico{width:18px;height:18px;transform:rotate(45deg)}
+.pl-cal-nav:first-child .ico{transform:rotate(-135deg)}
+.pl-cal-nav:disabled{opacity:.3;cursor:default}
+.pl-cal-w,.pl-cal-g{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+.pl-cal-w span{text-align:center;font:700 12px 'DM Sans',sans-serif;color:var(--muted);padding:4px 0}
+.pl-cal-g{row-gap:4px}
+.pl-cal-d{position:relative;height:44px;border:0;padding:0;background:none;color:var(--ink);font:600 17px 'DM Sans',sans-serif;cursor:pointer}
+.pl-cal-d:disabled{color:var(--muted);opacity:.4;cursor:default}
+.pl-cal-d.is-today{text-decoration:underline;text-underline-offset:4px}
+.pl-cal-d.is-mid{background:rgba(124,77,255,.28)}
+.pl-cal-d.is-in,.pl-cal-d.is-out{background:var(--sun);color:var(--on-sun);font-weight:800}
+.pl-cal-d.is-in{border-radius:14px 0 0 14px}
+.pl-cal-d.is-out{border-radius:0 14px 14px 0}
+.pl-cal-d.is-in.is-alone{border-radius:14px}
+.pl-cal-d i{position:absolute;left:50%;bottom:4px;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:var(--c,var(--sea));box-shadow:0 0 0 1.5px var(--bg)}
+.pl-cal-key{display:flex;align-items:center;gap:8px;margin-top:10px;color:var(--muted);font-size:14px}
+.pl-cal-key i{width:8px;height:8px;border-radius:50%;background:var(--sea)}
 .pl-nights{margin-top:6px}
 .pl-hint.is-bad{color:#ff8a8a}
 .pl-stepper output{min-width:28px;text-align:center;font:700 18px 'Bricolage Grotesque',sans-serif}
