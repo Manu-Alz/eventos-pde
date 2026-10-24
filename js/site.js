@@ -41,8 +41,8 @@
       <nav class="foot-cols" aria-label="Pie de página">
         <div class="foot-col"><p class="foot-h">Agenda</p>
           ${link("/", "Todos los eventos")}${link("/plan.html", "Armar plan", "plan_pie")}${link("/nosotros.html", "Quiénes somos", "nosotros_pie")}</div>
-        <div class="foot-col"><p class="foot-h">Organizadores</p>
-          ${link("/publicar.html", "Publicar evento", "promo_publicar")}<a href="/publicar.html#plans">Planes y precios</a><a href="mailto:${esc(CONFIG.email)}?subject=${encodeURIComponent("Quiero trabajar con Eventos PDE")}" data-ev="contacto_organizador">Hablemos</a></div>
+        <div class="foot-col"><p class="foot-h">Trabajá con nosotros</p>
+          ${link("/publicar.html", "Publicar evento", "promo_publicar")}<a href="/publicar.html#plans">Planes y precios</a><a href="/nosotros.html#aliados" data-ev="aliados_pie">Hoteles e inmobiliarias</a><a href="mailto:${esc(CONFIG.email)}?subject=${encodeURIComponent("Quiero trabajar con Eventos PDE")}" data-ev="contacto_organizador">Hablemos</a></div>
         <div class="foot-col foot-contact"><p class="foot-h">Contacto</p>
           <a href="mailto:${esc(CONFIG.email)}" data-ev="email_sitio">${esc(CONFIG.email)}</a><a href="https://instagram.com/${esc(CONFIG.instagram)}" target="_blank" rel="noopener" data-ev="instagram_sitio">@${esc(CONFIG.instagram)}</a></div>
       </nav>

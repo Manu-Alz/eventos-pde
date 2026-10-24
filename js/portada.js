@@ -124,8 +124,17 @@ function portadaMotion(box, track, n) {
   box.addEventListener("pointerdown", () => hold("touch", true));
   addEventListener("pointerup", () => hold("touch", false));
   addEventListener("pointercancel", () => hold("touch", false));
-  box.addEventListener("focusin", () => hold("focus", true));
+  /* Foco: solo pausa si se navega con el teclado (al tocar una diapositiva el link también queda con foco) */
+  box.addEventListener("focusin", () => hold("focus", Boolean(box.querySelector(":focus-visible"))));
   box.addEventListener("focusout", () => hold("focus", false));
+  /* Al volver de un evento con "atrás" el navegador restaura la página tal cual: el toque y el foco del link que se tocó
+     quedaban registrados (nunca llega el "soltó el dedo") y la portada no avanzaba más. Se limpian y sigue sola. */
+  addEventListener("pageshow", ev => {
+    if (!ev.persisted) return;
+    ["touch", "hover", "focus"].forEach(why => hold(why, false));
+    if (box.contains(document.activeElement)) document.activeElement.blur();
+    restart();
+  });
   document.addEventListener("visibilitychange", () => hold("tab", document.hidden));
   new IntersectionObserver(([en]) => hold("offscreen", !en.isIntersecting), { threshold: .25 }).observe(box);
   addEventListener("resize", () => { track.scrollTo({ left: idx * track.clientWidth }); });

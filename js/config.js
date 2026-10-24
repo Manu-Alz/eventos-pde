@@ -72,23 +72,27 @@ const VENUES = {
    id: nombre corto sin espacios · zone: una de las zonas de planner.js (Península, Playa Brava o Mansa, La Barra, Manantiales,
    José Ignacio, Maldonado) · type: Hotel, Apartamento o Casa · geo: [lat, lng] · photo: archivo en img/alojamientos/
    from: precio por noche desde (US$) · sleeps: hasta cuántas personas · perks: hasta 3 cosas cortas.
+   partner: la inmobiliaria u hotel aliado que la ofrece (opcional; sale en la tarjeta: "de Inmobiliaria X").
+   Solo con permiso del aliado y datos reales: nada de ejemplos inventados en la web.
    Ejemplo:
    { id: "hotel-del-mar", name: "Hotel del Mar", zone: "La Barra", type: "Hotel", geo: [-34.9131, -54.8655],
      photo: "hotel-del-mar.webp", from: 180, sleeps: 4, perks: ["Desayuno", "Frente al mar", "Piscina"] } */
 const STAYS = [];
 
 /* ============ 2c-bis. Alojamiento en Booking (afiliado) ============
-   En Armar plan, "Ver alojamientos en Booking" abre Booking con las fechas, la zona, las personas y el tipo ya puestos.
+   En Armar plan, "Lo reservo yo en Booking" abre Booking con las fechas, la zona, las personas y el tipo ya puestos.
    La persona elige, reserva y paga ahí; Eventos PDE cobra comisión por cada reserva que salga de ese link.
-   Cómo se cobra la comisión: Booking lo maneja por la red CJ (Commission Junction).
-     1. Anotate en partnerships.booking.com (Affiliate Partners) y completá el registro en CJ.
-     2. En CJ, generá un link de Booking.com y copiá la parte de adelante, sin el "?url=...":
-        algo como "https://www.dpbolvw.net/click-1234567-12345678". Pegala en cj.
-     3. Si en vez de CJ te dan un número de afiliado de Booking ("aid"), pegalo en aid.
+   Cómo se cobra la comisión (desde Uruguay): por Travelpayouts (travelpayouts.com), que acepta cualquier país y paga
+   por PayPal o transferencia.
+     1. Creá la cuenta en Travelpayouts, agregá eventospde.com como sitio y sumate al programa de Booking.com.
+     2. En "Herramientas > Links" generá un link a booking.com y copiá todo lo que va ANTES de la dirección de Booking:
+        termina en "u=" (Travelpayouts), "url=" (CJ) o "ued=" (Awin). Ej.: "https://tp.media/r?marker=12345&p=84&u=".
+        Pegalo en link: la web le agrega al final la búsqueda armada.
+     3. Si en algún momento te dan un número de afiliado de Booking ("aid"), va en aid.
    Vacío: los links funcionan igual, pero sin comisión. */
 const BOOKING = {
-  cj:  "",                                  // link base de CJ para Booking.com (sin ?url=)
-  aid: ""                                   // número de afiliado de Booking, si te dan uno
+  link: "",                                 // link de afiliado SIN el destino (termina en "u=", "url=" o "ued=")
+  aid:  ""                                  // número de afiliado de Booking, si te dan uno
 };
 
 /* ============ 2d. Traslados con chofer: precios para reservar y pagar al instante ============

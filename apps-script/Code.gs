@@ -17,6 +17,8 @@
       de producción de tu cuenta de Mercado Pago (Mercado Pago Developers > Tus integraciones > Credenciales).
       El token no va en el código: este archivo está en GitHub, que es público.
       Opcional: AVISO_TRASLADOS con el mail de la empresa de traslados (recibe cada viaje pagado).
+      Opcional: AVISO_ALOJAMIENTO con los mails de inmobiliarias y hoteles aliados, separados por coma (reciben cada
+      pedido de alojamiento, sin los datos del cliente).
    3. Arriba elegí "instalar" y tocá Ejecutar (acepta los permisos, incluido Gmail). Activa el aviso automático al poner un precio
       y un reloj que cada 10 minutos manda las cotizaciones que hayan quedado pendientes.
       Después elegí "probarMail" y Ejecutar: te llega un mail de prueba y dice si salió desde contacto@eventospde.com.
@@ -99,6 +101,7 @@ function guardarServicio(d) {
   const resumen = resumenServicio(d);
   avisar(`Nuevo pedido ${d.ref}: ${d.need} · ${d.name}`,
     `${resumen}\n\nPara cotizar: completá "Detalle para el cliente" y "Precio USD" en la pestaña Servicios. Al poner el precio, ${d.email || "el cliente"} recibe la cotización con el link de pago.`);
+  avisarAliados_(d);
   if (d.email) {
     mailCliente(d.email, `Recibimos tu pedido ${d.ref}`,
       `¡Hola, ${primerNombre(d.name)}!`,
@@ -106,6 +109,26 @@ function guardarServicio(d) {
       resumen.split("\n"), null);
   }
   return { ok: true, ref: d.ref };
+}
+
+/* Pedido de alojamiento ("Que me lo busquen ustedes"): se reenvía solo a las inmobiliarias y hoteles aliados de la propiedad
+   del script AVISO_ALOJAMIENTO (mails separados por coma), en copia oculta para que no se vean entre ellos y SIN los datos
+   del cliente: responden a contacto@ con opciones y precio, y la reserva (con la comisión) pasa por Eventos PDE.
+   No se reenvía si eligió un alojamiento puntual del catálogo (ese ya tiene dueño). */
+function avisarAliados_(d) {
+  const aliados = PropertiesService.getScriptProperties().getProperty("AVISO_ALOJAMIENTO");
+  if (!aliados || !d.aIn || /\(convenio\)/.test(d.aType || "")) return;
+  const noches = Math.max(Math.round((new Date(d.aOut) - new Date(d.aIn)) / 864e5), 0);
+  const cuerpo = [
+    "¡Hola! Tenemos un pedido de alojamiento en Punta del Este:", "",
+    `Fechas: del ${fechaTexto(d.aIn)} al ${fechaTexto(d.aOut)}${noches ? ` (${noches} ${noches === 1 ? "noche" : "noches"})` : ""}`,
+    `Zona: ${d.aZone || "a definir"}`, `Personas: ${d.people}`, `Tipo: ${d.aType || "me da igual"}`, `Presupuesto por noche: ${d.aBudget || "a conversar"}`,
+    `Pedido: ${d.ref}`, "",
+    "Si tenés algo disponible, respondé este mail con fotos o link, ubicación, precio por noche y total (con la comisión que acordamos incluida).",
+    "Nosotros le pasamos las opciones al cliente y coordinamos la reserva.", "", "Gracias,", NOMBRE, CONTACTO
+  ].join("\n");
+  try { MailApp.sendEmail(AVISAR_A, `Pedido de alojamiento ${d.ref} · ${d.aZone || "Punta del Este"} · ${fechaTexto(d.aIn)} al ${fechaTexto(d.aOut)}`, cuerpo, { name: NOMBRE, replyTo: CONTACTO, bcc: aliados }); }
+  catch (err) { console.error(err); }
 }
 
 function resumenServicio(d) {

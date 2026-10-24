@@ -59,3 +59,9 @@
   .ab-list li::before{left:18px}
   .ab-acts{display:grid;grid-template-columns:1fr 1fr;width:100%}
 }
+
+/* 6. Para hoteles e inmobiliarias (#aliados): mismo estilo que el resto, con un texto de entrada y el botón para escribirnos */
+.ab-lead-sm{margin:-6px 0 22px;font-size:17px}
+.ab-acts-left{margin-top:18px}
+.ab-acts-left .btn{background:#F4F4F5;color:#08080a}
+@media (max-width:600px){.ab-acts-left{display:flex}.ab-acts-left .btn{width:100%}}

@@ -126,9 +126,12 @@ function renderCalendar(box, list, { state, bounds, onChange }) {
   }, { passive: true });
 }
 
-/* En celulares, si la lista del día quedó muy abajo, se acerca para que se vea sin buscarla */
+/* Al tocar un día con eventos, la página baja sola a la lista de ese día (celular y PC) */
 function nudgeToDay(box, state) {
-  if (!matchMedia("(max-width:700px)").matches || !state.day) return;
+  if (!state.day) return;                                         // al soltar el día (ver todo el mes) no se mueve
   const below = box.querySelector("#calbelow");
-  if (below && below.getBoundingClientRect().top > innerHeight * 0.55) below.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (!below || !below.querySelector(".card")) return;            // sin eventos ese día, nada que mostrar
+  const head = document.querySelector("header.top");
+  const top = below.getBoundingClientRect().top + scrollY - (head ? head.offsetHeight : 0) - 12;   // el título queda debajo de la cabecera
+  scrollTo({ top, behavior: matchMedia("(prefers-reduced-motion:reduce)").matches ? "auto" : "smooth" });
 }

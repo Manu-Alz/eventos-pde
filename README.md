@@ -100,13 +100,17 @@ Pensado sobre todo para quien viene de afuera y quiere resolver todo en un solo 
 - "Compartir mi plan" genera un link (`plan.html?e=...`) para mandarle a los amigos.
 - Abajo de todo, `plan.html` tiene **preguntas frecuentes** (costo, pago, solo traslado o alojamiento, entradas, cambios de fecha, aeropuerto), escritas en el HTML con sus datos para Google (FAQPage). Si cambia cómo trabajan, actualizá el texto y el bloque `ld+json` del encabezado.
 
-## Alojamiento en Booking (afiliado): la persona elige y paga ahí, nosotros cobramos comisión
+## Alojamiento: Booking (afiliado) o aliados (inmobiliarias y hoteles)
 
-- En el paso 3 de Armar plan, **"Ver alojamientos en Booking"** abre la búsqueda de Booking con las fechas, la zona elegida en el mapa, la cantidad de personas y el tipo (hotel, apartamento o casa). Elige, reserva y paga directo en Booking, con sus condiciones de cancelación. No pasa por la planilla ni por nosotros.
-- **La comisión:** Booking la paga por cada reserva que sale de ese link. El programa de afiliados funciona por la red **CJ (Commission Junction)**: anotate en [partnerships.booking.com](https://partnerships.booking.com/), completá el registro en CJ y, en CJ, generá un link de Booking.com. Copiá la parte de adelante, sin el `?url=...` (algo como `https://www.dpbolvw.net/click-1234567-12345678`), y pegala en `BOOKING.cj` (`js/config.js`). Si te dan un número de afiliado de Booking, va en `BOOKING.aid`. **Vacío, los links funcionan igual pero sin comisión.** Cada link lleva `label=eventospde-plan` para ver en el panel qué reservas vinieron de Armar plan.
-- Debajo del botón dice "Enlace de referido: Eventos PDE puede recibir una comisión de Booking, sin costo extra para vos".
-- El alojamiento de Booking **no se cotiza**: si el plan tiene traslados, se pagan al instante igual. En el pedido de traslado queda anotado "Alojamiento: lo reserva en Booking (zona, fechas)"; si todavía no tiene hotel, la dirección dice "Hotel a confirmar" y se la pedís por WhatsApp.
-- Solo se cotiza el alojamiento si elige uno **con convenio** del catálogo `STAYS` (para cuando cierren acuerdos propios).
+En el paso 3 de Armar plan, con fechas, zona y tipo elegidos, la persona elige **cómo reservar**:
+
+- **"Lo reservo yo en Booking"** (el valor por defecto): el botón abre Booking con fechas, zona, personas y tipo ya puestos. Elige, reserva y paga ahí; no pasa por la planilla. Si el plan tiene traslados, se pagan al instante igual (en el pedido queda "Alojamiento: lo reserva en Booking"; sin hotel todavía, la dirección dice "Hotel a confirmar").
+- **"Que me lo busquen ustedes"**: pedido a inmobiliarias y hoteles aliados, con presupuesto por noche. Se cotiza como siempre (pestaña Servicios, `PLN-`). **El script le reenvía el pedido solo a los aliados** de la propiedad `AVISO_ALOJAMIENTO` (mails separados por coma, en copia oculta), **sin los datos del cliente**: responden a contacto@ con opciones y precio, vos armás la cotización con tu margen o la comisión acordada, y la reserva pasa por Eventos PDE.
+- **Catálogo con convenio** (`STAYS` en `js/config.js`): propiedades de aliados con foto, pin en el mapa, precio desde y `partner` (de qué inmobiliaria u hotel es). Se cotizan. Solo con datos reales y permiso del aliado.
+
+**Comisión de Booking desde Uruguay:** el programa propio de Booking (por CJ) es para Europa y algunos países; desde acá se usa **Travelpayouts** ([travelpayouts.com](https://www.travelpayouts.com/)), que acepta cualquier país, tiene a Booking.com entre sus programas y paga por PayPal o transferencia. Creá la cuenta, agregá eventospde.com, sumate al programa de Booking.com y, en "Links", generá un link a booking.com. Copiá todo lo que va **antes** de la dirección de Booking (termina en `u=`) y pegalo en `BOOKING.link` (`js/config.js`); la web le agrega la búsqueda. Sirve igual para CJ (`url=`) o Awin (`ued=`). **Vacío, los links funcionan pero sin comisión.** Cada link lleva `label=eventospde-plan`. Debajo del botón se avisa que es un enlace de referido.
+
+**Hoteles e inmobiliarias que quieran sumarse:** la sección "Para hoteles e inmobiliarias" de `nosotros.html` (link en el pie, "Hoteles e inmobiliarias") explica cómo trabajamos y tiene el botón "Quiero sumarme" (mail a contacto@).
 
 ## Traslados con chofer: reservar y pagar al instante
 
