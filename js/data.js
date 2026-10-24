@@ -60,7 +60,8 @@ const EV = [
     title: "Jamie Jones + Franky Rizardo",
     cat: "Fiestas", date: "2026-12-31", time: "A confirmar",
     place: "MACA, Punta del Este",
-    desc: "Jamie Jones, del sello Hot Creations y las fiestas Paradise de Ibiza, junto al holandés Franky Rizardo: house y tech house de pista para despedir 2026 en MACA. Hora a confirmar con la organización.",
+    desc: "Jamie Jones, del sello Hot Creations y las fiestas Paradise de Ibiza, junto al holandés Franky Rizardo: house y tech house de pista para despedir 2026 en MACA, dentro de Reveillon Punta del Este. Hora a confirmar con la organización.",
+    tickets: "https://www.ingresse.com/reveillon-punta-del-este-2627/",
     portada: true,
     photo: "jamie-jones-franky-rizardo-maca.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
   },
@@ -298,9 +299,10 @@ const EV = [
   },
   {
     title: "The 30 Limones Experience",
-    cat: "Fiestas", date: "2026-10-24", time: "A confirmar",
-    place: "Mía Bistró, Punta del Este",
-    desc: "30 Limones en Mía Bistró, frente al mar: sabores mediterráneos, arte, instrumentos en vivo y percusión, con el house de Tommy de los Santos y Primitivo. Mesas con reserva por Instagram.",
+    cat: "Fiestas", date: "2026-10-24", time: "23:59",
+    place: "Mía Bistró, Parada 20, Playa Brava",
+    desc: "The 30 Limones Experience llega a Mía Bistró, frente al mar, de 23:59 a 7:00. Hay DJ sets, guitarra y saxo en vivo, ritual de percusión de Cabo Polonio, arte en vivo y cocktail experience. Tocan Gregorio Funes, DGiovanni, 01 Primitivo y Tomás de los Santos. Barra libre de 00:00 a 1:30 e ingreso hasta las 2:00.",
+    tickets: "https://kicket.club/events/30-limones", price: "Desde $ 1.600",
     contact: "https://instagram.com/30limones",
     photo: "30-limones-mia-bistro.webp"
   },

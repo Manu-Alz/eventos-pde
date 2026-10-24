@@ -31,7 +31,7 @@
 .card{position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;
   aspect-ratio:var(--card-ratio);padding:var(--card-pad);border-radius:var(--card-radius);
   background:var(--card);box-shadow:0 22px 44px -26px rgba(0,0,0,.9);color:var(--ink);cursor:pointer;
-  transition:transform .5s var(--ease)}
+  transition:transform .5s var(--ease);will-change:transform}
 .card:active{transform:scale(.985)}
 .card:focus-visible{outline:2px solid #fff;outline-offset:3px}
 @media (hover:hover){
@@ -41,7 +41,7 @@
 }
 
 /* 3. Portada: foto o degradé generado, con sombra abajo y grano arriba de todo */
-.cover{position:absolute;inset:0;z-index:-1;overflow:hidden;background:var(--card)}
+.cover{position:absolute;inset:0;z-index:-1;overflow:hidden;clip-path:inset(0 round var(--card-radius));background:var(--card)}
 .cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.02);transition:transform .9s var(--ease)}
 .cover.gen{background:     /* el color cubre toda la tarjeta: base teñida + dos manchas grandes (subí/bajá los % para cubrir más o menos) */
   radial-gradient(120% 95% at var(--gx) var(--gy),color-mix(in srgb,var(--c) 92%,#000) 0%,color-mix(in srgb,var(--c) 38%,#000) 55%,transparent 100%) center/100% 100% no-repeat,
@@ -51,7 +51,7 @@
 .cover::before{content:"";position:absolute;inset:0;z-index:1;   /* sombra: más oscura abajo para que el texto se lea */
   background:linear-gradient(to top,rgba(5,5,8,var(--scrim)) 0%,rgba(5,5,8,calc(var(--scrim)*.86)) 26%,rgba(5,5,8,calc(var(--scrim)*.5)) 48%,rgba(5,5,8,.1) 74%,rgba(5,5,8,.32) 100%)}
 /* Tarjetas: además de la sombra, un desenfoque suave detrás del texto (solo en la parte de abajo) para que se lea sobre pósters claros */
-.card .cover::before{-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+.card .cover::before{inset:-24px;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);   /* inset negativo: el borde del desenfoque queda afuera (sin franja al apretar la tarjeta) */
   -webkit-mask-image:linear-gradient(to top,#000 0%,#000 38%,transparent 64%);mask-image:linear-gradient(to top,#000 0%,#000 38%,transparent 64%)}
 .cover::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;   /* grano */
   background:var(--grain);background-size:var(--grain-sizes);mix-blend-mode:overlay;opacity:var(--grain-opacity)}

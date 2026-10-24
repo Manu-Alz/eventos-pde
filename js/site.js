@@ -3,9 +3,33 @@
    Requiere: config.js, utils.js */
 
 (() => {
-  /* Cabecera: transparente arriba, vidrio oscuro apenas se baja la página */
+  /* Barra de navegación (igual en todas las páginas): una cápsula de vidrio con el logo, las secciones y un botón principal,
+     "Armar mi plan" (en Armar plan, "Ver eventos"). En el celular quedan el logo, ese botón y un menú (☰) con todo lo demás.
+     La sección en la que se está queda marcada (aria-current). */
   const head = document.querySelector("header.top");
-  if (head) {
+  if (head && !head.dataset.plain) {
+    const path = location.pathname.replace(/index\.html$/, "");
+    const onPlan = path === "/plan.html";
+    const NAV = [["/#agenda", "Agenda"], ["/#calendario", "Calendario"], ["/#mapa", "Mapa"], ["/publicar.html", "Publicar evento"], ["/nosotros.html", "Quiénes somos"]];
+    const cur = href => (href === path ? ' aria-current="page"' : "");
+    const cta = onPlan ? `<a class="btn nav-cta" href="/">Ver eventos</a>`
+      : `<a class="btn nav-cta" href="/plan.html" data-ev="plan_cabecera">Armar mi plan</a>`;
+    const logo = head.querySelector(".logo");
+    head.innerHTML = "";
+    head.append(logo);
+    head.insertAdjacentHTML("beforeend", `
+      <nav class="nav-links" aria-label="Secciones">${NAV.map(([h, t]) => `<a href="${h}"${cur(h)}>${t}</a>`).join("")}</nav>
+      <div class="hact">${cta}<button type="button" class="nav-burger" aria-expanded="false" aria-controls="nav-menu" aria-label="Abrir el menú"><span></span><span></span><span></span></button></div>
+      <div class="nav-menu" id="nav-menu" hidden>
+        ${NAV.map(([h, t]) => `<a href="${h}"${cur(h)}>${t}</a>`).join("")}
+        <a href="mailto:${esc(CONFIG.email)}" data-ev="email_sitio">Escribinos</a>
+      </div>`);
+    const burger = head.querySelector(".nav-burger"), menu = $("nav-menu");
+    const open = on => { menu.hidden = !on; burger.setAttribute("aria-expanded", on); burger.setAttribute("aria-label", on ? "Cerrar el menú" : "Abrir el menú"); head.classList.toggle("menu-open", on); };
+    burger.addEventListener("click", () => open(menu.hidden));
+    menu.addEventListener("click", ev => { if (ev.target.closest("a")) open(false); });
+    document.addEventListener("click", ev => { if (!menu.hidden && !head.contains(ev.target)) open(false); });
+    addEventListener("keydown", ev => { if (ev.key === "Escape" && !menu.hidden) { open(false); burger.focus(); } });
     const mark = () => head.classList.toggle("stuck", scrollY > 8);
     addEventListener("scroll", mark, { passive: true });
     mark();

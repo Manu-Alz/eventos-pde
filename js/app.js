@@ -206,8 +206,25 @@ if (spot) {
   $("q").value = spot.q || "";
 }
 
+/* La barra de arriba lleva a /#agenda, /#calendario o /#mapa: abre esa vista y baja hasta los filtros */
+const HASH_VIEW = { "#agenda": "list", "#calendario": "cal", "#mapa": "map" };
+const toChips = smooth => scrollTo({ top: $("chips").getBoundingClientRect().top + scrollY - 96, behavior: smooth ? "smooth" : "instant" });
+function viewFromHash(scroll) {
+  const v = HASH_VIEW[location.hash];
+  if (!v) return false;
+  state.view = v;
+  render();
+  if (scroll) requestAnimationFrame(() => toChips(true));
+  return true;
+}
+addEventListener("hashchange", () => viewFromHash(true));
+if (!spot && HASH_VIEW[location.hash]) state.view = HASH_VIEW[location.hash];
+
 renderPortada(LIVE);
 render();
+if (!spot && HASH_VIEW[location.hash]) {                    // al terminar de cargar (fotos y fuentes cambian la altura)
+  addEventListener("load", () => setTimeout(toChips, 60), { once: true });
+}
 if (spot) {
   const goBack = () => scrollTo({ top: spot.y, behavior: "instant" });
   goBack();

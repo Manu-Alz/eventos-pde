@@ -30,15 +30,39 @@ button{touch-action:manipulation}
 
 /* 2. Layout y cabecera */
 .wrap{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:0 max(var(--gutter),env(safe-area-inset-right)) 0 max(var(--gutter),env(safe-area-inset-left))}
-header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;display:flex;justify-content:space-between;align-items:center;gap:12px;
-  margin:0 calc(-1 * var(--gutter));padding:12px var(--gutter)}
+/* Barra: una cápsula de vidrio pegada arriba (js/site.js arma los links, el botón y el menú del celular) */
+header.top{position:sticky;top:calc(env(safe-area-inset-top,0px) + 10px);z-index:30;display:flex;align-items:center;gap:12px;
+  margin:10px 0 16px;padding:7px 7px 7px 18px;border:1px solid var(--line);border-radius:22px;
+  background:rgba(21,21,24,.72);-webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4);
+  box-shadow:0 18px 40px -24px rgba(0,0,0,.9)}
+header.top .logo{margin-right:auto}
+.nav-links{display:flex;align-items:center;gap:2px}
+.nav-links a{padding:9px 13px;border-radius:999px;color:rgba(244,244,245,.78);text-decoration:none;font-size:15px;font-weight:600;white-space:nowrap;transition:background .2s,color .2s}
+.nav-links a:hover,.nav-links a[aria-current]{color:var(--ink);background:var(--glass-hover)}
+header.top .hact{margin-left:6px}
+.nav-cta{background:#F4F4F5!important;color:#08080a!important;padding:10px 20px!important;white-space:nowrap}
+.nav-burger{display:none;width:44px;height:44px;border:1px solid var(--line);border-radius:14px;background:var(--glass);cursor:pointer;place-content:center;gap:5px;padding:0}
+.nav-burger span{display:block;width:18px;height:2px;border-radius:2px;background:var(--ink);transition:transform .25s var(--ease),opacity .2s}
+.menu-open .nav-burger span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.menu-open .nav-burger span:nth-child(2){opacity:0}
+.menu-open .nav-burger span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.nav-menu{position:absolute;top:calc(100% + 8px);left:0;right:0;display:grid;padding:8px;border:1px solid var(--line);border-radius:22px;
+  background:rgba(21,21,24,.96);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 30px 60px -30px #000}
+.nav-menu a{padding:15px 16px;border-radius:14px;color:var(--ink);text-decoration:none;font-size:18px;font-weight:600}
+.nav-menu a:hover,.nav-menu a[aria-current]{background:var(--glass-hover)}
+@media (min-width:961px){.nav-menu{display:none!important}}
+@media (max-width:960px){
+  .nav-links{display:none}
+  .nav-burger{display:grid}
+}
+@media (max-width:380px){header.top .logo{font-size:20px}.nav-cta{padding:10px 14px!important;font-size:14px!important}}
 /* Al bajar (js/site.js agrega .stuck) aparece un velo de vidrio de borde a borde que se desvanece hacia abajo (sin cajas) */
 header.top::before{content:"";position:fixed;top:0;left:0;right:0;z-index:-1;pointer-events:none;opacity:0;transition:opacity .3s;
   height:calc(var(--head-h) + env(safe-area-inset-top,0px) + 12px);
   background:linear-gradient(rgba(21,21,24,.92),rgba(21,21,24,.62));
   -webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);
   -webkit-mask-image:linear-gradient(#000 72%,transparent);mask-image:linear-gradient(#000 72%,transparent)}
-header.top.stuck::before{opacity:1}
+header.top::before{display:none}   /* el velo de antes: la cápsula ya tiene su vidrio */
 /* Teléfonos con isla o notch (la página usa toda la pantalla): una franja fija del color del sitio detrás de la hora y la isla,
    para que el contenido no se vea pasar por ahí. La cabecera queda pegada justo debajo. Sin isla mide 0. */
 body::after{content:"";position:fixed;top:0;left:0;right:0;z-index:95;height:env(safe-area-inset-top,0px);background:var(--bg);pointer-events:none}
