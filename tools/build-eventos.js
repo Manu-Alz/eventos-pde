@@ -30,6 +30,13 @@ for (const [rel, content] of Object.entries(files)) {
 const pages = Object.keys(files).filter(f => f.startsWith("evento/")).length;
 console.log(`Listo: ${pages} páginas de eventos y sitemap.xml (hoy ${vm.runInContext("TODAY", ctx)}, v=${v}).`);
 
+/* Traslado con chofer: cuántos eventos lo ofrecen, y aviso si uno debería tenerlo pero le falta el lugar para el precio */
+const rides = vm.runInContext(`(() => { const live = EV.filter(isLiveEvent);
+  return { ok: live.filter(rideOK).length,
+           sinLugar: live.filter(e => e.traslado !== false && e.tickets && RIDE_CATS.includes(e.cat) && !rideGeo(e)).map(e => e.title) }; })()`, ctx);
+console.log(`Traslado con chofer en ${rides.ok} eventos.` + (rides.sinLugar.length
+  ? ` Sin traslado por falta de ubicación (agregá el lugar a VENUES o geo al evento): ${rides.sinLugar.join(", ")}` : ""));
+
 /* Fotos de eventos vencidos: se borran de img/eventos cuando el evento terminó hace más de GRACIA días.
    Solo se borra una foto que usan únicamente eventos vencidos; una foto que no figura en data.js (subida para un
    evento que todavía no se cargó) no se toca. El evento puede quedar en data.js: la web ya no lo muestra. */

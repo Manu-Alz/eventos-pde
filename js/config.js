@@ -18,6 +18,7 @@ const CONFIG = {
     link:    "https://link.mercadopago.com.uy/eventospde",
     uyuRate: 42                             // cotización del dólar para Mercado Pago (actualizala cuando cambie)
   },
+  /* Cuenta bancaria: ya no se ofrece en la web (los pagos son con tarjeta). Queda anotada para pagos manuales. */
   bank: {
     titular: "EventosPDE",                  // nombre que se muestra en la tabla de depósito (vacío = no se muestra)
     banco:   "Itaú",
@@ -60,6 +61,8 @@ const VENUES = {
   "Artigas 652":            [-34.96518, -54.95040],
   "Centro de Convenciones": [-34.91949, -54.92151],
   "Playa Montoya":          [-34.91540, -54.84836],
+  "The Grand Hotel":        [-34.94481, -54.92010],
+  "Hotel del Lago":         [-34.85969, -55.05609],
   "OAK":                    [-34.91545, -54.85244]
 };
 
@@ -73,6 +76,22 @@ const VENUES = {
    { id: "hotel-del-mar", name: "Hotel del Mar", zone: "La Barra", type: "Hotel", geo: [-34.9131, -54.8655],
      photo: "hotel-del-mar.webp", from: 180, sleeps: 4, perks: ["Desayuno", "Frente al mar", "Piscina"] } */
 const STAYS = [];
+
+/* ============ 2d. Traslados con chofer: precios para reservar y pagar al instante ============
+   Los usan la página de cada evento ("Traslado con chofer") y Armar plan (cuando el pedido es solo de traslados).
+   Precios en US$, con tu margen incluido, por tramo (un viaje en un sentido) y por auto de hasta 4 personas.
+   ⚠ TIENEN QUE SER IGUALES a TARIFAS en apps-script/Code.gs: la web muestra el precio, pero el script es el que cobra.
+   - tramos: [[hastaKm, precio], ...] según la distancia en auto desde la zona de la persona hasta el evento.
+   - llegadas: aeropuerto, puerto o terminal ↔ alojamiento, por tramo (ids de ARRIVALS en planner.js).
+   - grupo: de 5 a 8 personas va una camioneta, que cuesta el precio × grupo. Más de 8: una camioneta cada 8. */
+/* En qué eventos se ofrece el traslado: solo los que tienen entradas a la venta (tickets) y son de estas categorías,
+   donde la gente sale tarde y conviene no manejar. Un evento puntual se fuerza con traslado: true o se apaga con traslado: false. */
+const RIDE_CATS = ["Fiestas", "Música en vivo"];
+const TARIFAS = {
+  tramos:   [[6, 20], [15, 30], [30, 45], [Infinity, 65]],
+  llegadas: { pde: 50, mvd: 170, bqmvd: 180, bqcol: 320, bus: 20 },
+  grupo:    1.5
+};
 
 /* ============ 3. Afiliados ============
    Para cobrar comisión por entradas: agregá la ticketera una sola vez acá y todos los eventos

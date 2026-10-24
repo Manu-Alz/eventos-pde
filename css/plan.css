@@ -212,6 +212,10 @@
 .pl-inc span{display:grid;gap:1px;min-width:0}
 .pl-inc b{font-size:15px}
 .pl-inc small{font-size:13px;color:var(--muted)}
+/* Total (solo cuando el pedido es de traslados con precio y se paga al instante) */
+.pl-total{display:flex;align-items:baseline;justify-content:space-between;padding-top:14px;border-top:1px dashed var(--line)}
+.pl-total span{font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.pl-total b{font:700 32px/1 "Bricolage Grotesque",sans-serif;letter-spacing:-.02em}
 .pl-cta{width:100%;min-height:56px;font-size:17px;background:#F4F4F5;color:#08080a}
 .pl-fine{margin:-6px 0 0;font-size:13px;color:var(--muted);text-align:center}
 .pl-share{justify-self:center;display:inline-flex;align-items:center;gap:8px;background:none;border:0;padding:8px;color:var(--ink);font:600 14px 'DM Sans',sans-serif;cursor:pointer;text-decoration:underline;text-underline-offset:4px}

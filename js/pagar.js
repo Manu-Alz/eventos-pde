@@ -1,7 +1,7 @@
 /* pagar.js · página de pago de un pedido: el link que le llega al cliente por mail (pagar.html?ref=SRV-XXXXX&k=clave).
    Lee el pedido del script de Google (apps-script/Code.gs, doGet), muestra el resumen tipo comprobante y cobra con
-   Mercado Pago por el monto exacto. Al volver de Mercado Pago confirma el pago y muestra "Pagado".
-   Si Mercado Pago no está disponible, queda la transferencia bancaria (datos de config.js).
+   Mercado Pago por el monto exacto, solo con tarjeta (crédito o débito) o saldo de Mercado Pago. Al volver confirma el pago y muestra "Pagado".
+   Si Mercado Pago no está disponible, ofrece escribirnos por WhatsApp (no se ofrece transferencia).
    Requiere: config.js, utils.js, analytics.js, site.js, css/pagar.css */
 
 const qs = new URLSearchParams(location.search);
@@ -23,16 +23,15 @@ function message(title, text, withContact = true) {
   payBox.replaceChildren(card);
 }
 
-/* Datos de la transferencia (se muestran al tocar "Pagar por transferencia") */
-function bankBox(p) {
-  const b = CONFIG.bank, dl = node("dl", "pay-bank");
-  [["Monto", `US$ ${p.usd}`], ["Titular", b.titular], ["Banco", b.banco], ["Tipo de cuenta", b.tipo], ["N° de cuenta", b.cuenta], ["Referencia", p.ref]]
-    .filter(([, v]) => v)
-    .forEach(([k, v]) => dl.append(node("dt", "", k), node("dd", "", v)));
-  const wrap = node("div", "pay-bank-wrap");
-  wrap.hidden = true;
-  wrap.append(dl, node("p", "pay-fine", "Poné la referencia en el concepto y respondé el mail de la cotización con el comprobante."));
-  return wrap;
+/* Si Mercado Pago no abre: aviso con un link de WhatsApp que ya trae la referencia */
+function payHelp(card, p, text) {
+  card.querySelector(".pay-help")?.remove();
+  const help = node("p", "pay-note pay-help", text + " ");
+  const a = node("a", "", "Escribinos por WhatsApp");
+  a.href = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(`Hola! No pude pagar el pedido ${p.ref} con tarjeta.`)}`;
+  a.target = "_blank"; a.rel = "noopener";
+  help.append(a, " y te mandamos otro link.");
+  card.append(help);
 }
 
 function render(p) {
@@ -63,24 +62,22 @@ function render(p) {
     card.append(node("p", "pay-text", "Estamos armando tu cotización. Te llega por mail con el botón para pagar."));
   } else {
     if (p.portada) card.append(node("p", "pay-note", "La portada tiene lugares limitados: si todavía no te confirmamos la fecha, esperá nuestro mail antes de pagar."));
-    const mp = node("button", "btn pay-mp", "Pagar con Mercado Pago");
+    const label = `Pagar US$ ${p.usd} con tarjeta`;
+    const mp = node("button", "btn pay-mp", label);
     mp.type = "button";
-    const bank = bankBox(p);
-    const other = node("button", "pay-alt", "Prefiero pagar por transferencia");
-    other.type = "button";
-    other.onclick = () => { bank.hidden = !bank.hidden; track("pago_transferencia", { ref: p.ref }); };
     mp.onclick = async () => {
-      mp.disabled = true; mp.textContent = "Abriendo Mercado Pago…";
+      mp.disabled = true; mp.textContent = "Abriendo el pago…";
       track("pago_mercadopago", { ref: p.ref, usd: p.usd });
       try {
         const r = await api({ accion: "pagar", ref: p.ref, k: KEY });
         if (r.ok && r.url) { location.href = r.url; return; }
-        alert(r.error || "No pudimos abrir Mercado Pago. Probá por transferencia.");
-      } catch (_) { alert("No pudimos abrir Mercado Pago. Revisá la conexión o probá por transferencia."); }
-      mp.disabled = false; mp.textContent = "Pagar con Mercado Pago";
+        payHelp(card, p, r.error || "No pudimos abrir el pago.");
+      } catch (_) { payHelp(card, p, "No pudimos abrir el pago. Revisá la conexión y probá de nuevo, o"); }
+      mp.disabled = false; mp.textContent = label;
     };
-    const trust = node("p", "pay-fine", "Pago seguro con Mercado Pago: tarjeta de crédito, débito o efectivo en redes de cobranza. Eventos PDE no ve ni guarda los datos de tu tarjeta.");
-    card.append(mp, trust, other, bank);
+    const trust = node("p", "pay-fine pay-trust");
+    trust.innerHTML = `${ico("check")}<span>Pago seguro con tarjeta de crédito o débito, a través de Mercado Pago. Eventos PDE no ve ni guarda los datos de tu tarjeta.</span>`;
+    card.append(mp, trust);
   }
   payBox.replaceChildren(card);
 }
@@ -98,7 +95,7 @@ async function start() {
     if (status && status !== "approved" && p.estado !== "Pagado") {
       payBox.querySelector(".pay-card").prepend(node("p", "pay-note", status === "pending" || status === "in_process"
         ? "Tu pago quedó pendiente en Mercado Pago. Cuando se acredite, te llega la confirmación por mail."
-        : "El pago no se completó. Podés intentarlo de nuevo o elegir otro medio."));
+        : "El pago no se completó. Podés intentarlo de nuevo con la misma u otra tarjeta."));
     }
   } catch (_) {
     message("No pudimos cargar el pedido", "Revisá tu conexión y recargá la página.");

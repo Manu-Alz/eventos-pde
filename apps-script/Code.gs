@@ -6,13 +6,17 @@
    - plan.html (Armar plan) -> fila en "Servicios", mail de confirmación al cliente y mail para vos.
      Vos completás "Detalle para el cliente" y "Precio USD" en la planilla: al poner el precio, el cliente recibe
      solo un mail con la cotización y el link para pagar online (eventospde.com/pagar.html).
-   - Mercado Pago avisa cuando entra un pago: se marca "Pagado" en la planilla y les llega un mail a vos y al cliente.
+   - Traslados (página de cada evento, o Armar plan solo de traslados) -> precio al instante con TARIFAS, fila "Por pagar"
+     y pago con tarjeta en Mercado Pago, sin cotizar.
+   - Mercado Pago avisa cuando entra un pago: se marca "Pagado" en la planilla y les llega un mail a vos y al cliente
+     (y, si es un traslado, a la empresa de traslados de AVISO_TRASLADOS).
 
    PUESTA EN MARCHA (una sola vez)
    1. Pegá este archivo entero y guardá.
    2. Configuración del proyecto (engranaje) > Propiedades del script > agregá MP_TOKEN con el Access Token
       de producción de tu cuenta de Mercado Pago (Mercado Pago Developers > Tus integraciones > Credenciales).
       El token no va en el código: este archivo está en GitHub, que es público.
+      Opcional: AVISO_TRASLADOS con el mail de la empresa de traslados (recibe cada viaje pagado).
    3. Arriba elegí "instalar" y tocá Ejecutar (acepta los permisos, incluido Gmail). Activa el aviso automático al poner un precio
       y un reloj que cada 10 minutos manda las cotizaciones que hayan quedado pendientes.
       Después elegí "probarMail" y Ejecutar: te llega un mail de prueba y dice si salió desde contacto@eventospde.com.
@@ -49,6 +53,7 @@ function doPost(e) {
     if (id && (p.type || p.topic || d.type || "payment") === "payment") verificarPago(id);
     return json({ ok: true });
   }
+  if (d.kind === "traslado") return json(guardarTraslado(d));
   if (d.kind === "servicio") return json(guardarServicio(d));
   return json(guardarSolicitud(d));
 }
@@ -96,7 +101,7 @@ function guardarServicio(d) {
   if (d.email) {
     mailCliente(d.email, `Recibimos tu pedido ${d.ref}`,
       `¡Hola, ${primerNombre(d.name)}!`,
-      `Recibimos tu pedido de ${d.need}. Estamos armando las opciones y te mandamos la cotización a este mail. Vas a poder pagar online, con tarjeta, débito o transferencia.`,
+      `Recibimos tu pedido de ${d.need}. Estamos armando las opciones y te mandamos la cotización a este mail. Vas a poder pagar online con tarjeta de crédito o débito.`,
       resumen.split("\n"), null);
   }
   return { ok: true, ref: d.ref };
@@ -144,11 +149,97 @@ function cotizarPendientes_() {
     const para = itinerario.length ? "" : f[c("Evento")] ? ` para ${f[c("Evento")]}` : "";   // en un plan, los eventos van en la lista
     const enviado = mailCliente(email, `Tu cotización ${ref} · US$ ${precio}`,
       `¡Hola, ${primerNombre(f[c("Nombre")])}!`,
-      `Ya tenemos tu cotización de ${f[c("Necesita")]}${para}. El total es US$ ${precio} (${pesos(precio)}). Para confirmarlo, pagalo online desde el botón: es seguro y acepta tarjeta, débito o transferencia.`,
+      `Ya tenemos tu cotización de ${f[c("Necesita")]}${para}. El total es US$ ${precio} (${pesos(precio)}). Para confirmarlo, pagalo online desde el botón con tarjeta de crédito o débito: es seguro y se confirma al instante.`,
       [detalle ? `Incluye: ${detalle}` : "", ...itinerario, `Pedido: ${ref}`].filter(Boolean),
       { texto: `Pagar US$ ${precio}`, url: linkPagina(ref, clave) });
     if (enviado) hoja.getRange(i + 1, c("Estado") + 1).setValue("Cotizado");   // si el mail falló, queda "Nuevo" y se reintenta solo
   }
+}
+
+/* ============ 3b. Traslados con chofer: precio al instante y pago con tarjeta ============
+   Los piden la página de cada evento y Armar plan (cuando el pedido es solo de traslados). El precio se vuelve a calcular
+   acá con TARIFAS (la web solo lo muestra): la fila entra a "Servicios" con el precio puesto y Estado "Por pagar", y el
+   cliente va directo a Mercado Pago. Al aprobarse el pago: Estado "Pagado", mail al cliente, a vos y a la empresa de
+   traslados (propiedad del script AVISO_TRASLADOS: uno o varios mails separados por coma; vacío = solo a vos). */
+
+/* Copia de tarifas.js y de TARIFAS (config.js): tienen que coincidir */
+const ZONAS = {
+  "Península": [-34.9615, -54.9480], "Playa Brava o Mansa": [-34.9360, -54.9330], "La Barra": [-34.9130, -54.8660],
+  "Manantiales": [-34.8990, -54.8290], "José Ignacio": [-34.8445, -54.6340], "Maldonado": [-34.9080, -54.9560]
+};
+const TARIFAS = {
+  tramos:   [[6, 20], [15, 30], [30, 45], [Infinity, 65]],
+  llegadas: { pde: 50, mvd: 170, bqmvd: 180, bqcol: 320, bus: 20 },
+  grupo:    1.5
+};
+const LLEGADAS = { pde: "Aeropuerto de Laguna del Sauce", mvd: "Aeropuerto de Carrasco", bqmvd: "Puerto de Montevideo", bqcol: "Puerto de Colonia", bus: "Terminal de Punta del Este" };
+
+function kmRuta_(a, b) {
+  const R = 6371, rad = d => d * Math.PI / 180;
+  const dLat = rad(b[0] - a[0]), dLng = rad(b[1] - a[1]);
+  return 2 * R * Math.asin(Math.sqrt(Math.sin(dLat / 2) ** 2 + Math.cos(rad(a[0])) * Math.cos(rad(b[0])) * Math.sin(dLng / 2) ** 2)) * 1.35;
+}
+const factorGrupo_ = p => (p <= 4 ? 1 : Math.ceil(p / 8) * TARIFAS.grupo);
+const vehiculo_ = p => (p <= 4 ? "auto hasta 4 personas" : p <= 8 ? "camioneta hasta 8 personas" : `${Math.ceil(p / 8)} camionetas`);
+/* Un punto del departamento de Maldonado (para no cobrar un viaje a cualquier lado) */
+const enMaldonado_ = g => Array.isArray(g) && g.length === 2 && g[0] > -35.2 && g[0] < -34.4 && g[1] > -55.5 && g[1] < -54.2;
+
+/* Precio de cada tramo pedido. Devuelve null si algo no se puede cotizar solo (entonces la web pide cotización) */
+function precioTraslado_(d) {
+  const p = Math.round(Number(d.people));
+  const desde = ZONAS[d.zone];
+  if (!(p >= 1 && p <= 30) || !desde || !Array.isArray(d.items) || !d.items.length || d.items.length > 20) return null;
+  let total = 0;
+  d.address = String(d.address || "").slice(0, 160);
+  d.notes = String(d.notes || "").slice(0, 600);
+  for (const it of d.items) {
+    ["titulo", "fecha", "lugar", "sentido", "busca", "vuelta", "inFecha", "inHora", "inRef", "outFecha", "outHora", "outRef"]
+      .forEach(k => { it[k] = String(it[k] || "").slice(0, 140); });                     // textos cortos: nada raro en la planilla
+    const legs = Number(it.legs);
+    if (legs !== 1 && legs !== 2) return null;
+    let base;
+    if (it.tipo === "evento") {
+      if (!enMaldonado_(it.geo)) return null;
+      const km = kmRuta_(desde, it.geo.map(Number));
+      base = TARIFAS.tramos.find(([hasta]) => km <= hasta)[1];
+    } else if (it.tipo === "llegada") {
+      base = TARIFAS.llegadas[it.via];
+      if (!base) return null;
+    } else return null;
+    it.usd = Math.round(base * legs * factorGrupo_(p));
+    total += it.usd;
+  }
+  return total;
+}
+
+function guardarTraslado(d) {
+  if (!d.name || !/^\S+@\S+\.\S+$/.test(d.email || "") || !d.phone) return { ok: false, error: "Faltan tu nombre, mail o WhatsApp." };
+  const usd = precioTraslado_(d);
+  if (!usd) return { ok: false, error: "No pudimos calcular el precio de este traslado. Pedí una cotización y te respondemos enseguida." };
+  const ref = "TRS-" + nuevaClave().slice(0, 5).toUpperCase();
+  const clave = nuevaClave();
+  const p = Math.round(Number(d.people));
+  const desde = `${d.zone}${d.address ? ` · ${d.address}` : ""}`;
+  const RIDE = { "ida y vuelta": "ida y vuelta", "solo ida": "solo ida", "solo vuelta": "solo vuelta" };
+  const lineas = d.items.map(it => it.tipo === "evento"
+    ? `• ${it.fecha || ""} · ${it.titulo} · ${it.lugar || ""} · chofer ${RIDE[it.sentido] || "ida y vuelta"}` +
+      (it.busca ? `, te buscamos ${it.busca}` : "") + (it.sentido !== "solo ida" ? `, vuelta ${it.vuelta || "a la hora que nos avises"}` : "") + ` · US$ ${it.usd}`
+    : `• ${it.sentido === "regreso" ? "Regreso" : "Llegada"}${it.sentido === "ambos" ? " y regreso" : ""}: ${LLEGADAS[it.via]} ↔ alojamiento` +
+      (it.inFecha ? ` · llega ${it.inFecha}${it.inHora ? " " + it.inHora : ""}${it.inRef ? " (" + it.inRef + ")" : ""}` : "") +
+      (it.outFecha ? ` · se va ${it.outFecha}${it.outHora ? " " + it.outHora : ""}${it.outRef ? " (" + it.outRef + ")" : ""}` : "") + ` · US$ ${it.usd}`);
+  const eventos = d.items.filter(it => it.tipo === "evento");
+  const primero = eventos[0] || {};
+  const detalle = `Chofer privado, ${vehiculo_(p)}, desde ${desde}`;
+  const notas = `Itinerario:\n${lineas.join("\n")}${d.notes ? `\n\nAlgo más: ${d.notes}` : ""}`;
+  conCandado(() => obtenerHoja(HOJA_SERVICIOS, COLUMNAS_SERVICIOS).appendRow([new Date(), ref, clave,
+    d.items.length > 1 ? "traslados" : "traslado", eventos.map(it => `${it.titulo} (${it.fecha})`).join(" + ") || LLEGADAS[(d.items[0] || {}).via] || "",
+    p, d.name, d.email, d.phone, primero.fecha || "", primero.busca || "", desde, primero.vuelta || (eventos.length ? "a la hora que avise" : ""), "",
+    "", "", "", "", "", notas, detalle, usd, "Por pagar", "", ""].map(celda_)));
+  avisar(`Nuevo traslado ${ref} · US$ ${usd} (esperando el pago)`,
+    `${d.name} · ${d.email} · ${d.phone}\n${p} personas · ${detalle}\n\n${lineas.join("\n")}${d.notes ? `\n\nAlgo más: ${d.notes}` : ""}\n\n` +
+    `El precio ya está puesto: cuando pague con tarjeta te llega otro mail y la fila pasa a "Pagado".`);
+  const url = preferencia(ref, clave, `Traslado con chofer · ${eventos.length ? eventos.map(it => it.titulo).join(" + ") : LLEGADAS[(d.items[0] || {}).via]} (${ref})`, usd, d.email);
+  return { ok: true, ref, usd, url, pagina: linkPagina(ref, clave) };
 }
 
 /* ============ 4. Pagos con Mercado Pago ============ */
@@ -166,7 +257,7 @@ function leerPedido(ref, k) {
     return {
       ok: true, ref, tipo: "servicio",
       titulo: String(r.get("Necesita")).replace(/^./, c => c.toUpperCase()),
-      evento: !esPlan ? r.get("Evento") : eventos ? `${eventos} ${eventos === 1 ? "evento" : "eventos"} en Punta del Este` : "Tu viaje a Punta del Este",
+      evento: !esPlan || /^TRS-/.test(ref) ? r.get("Evento") : eventos ? `${eventos} ${eventos === 1 ? "evento" : "eventos"} en Punta del Este` : "Tu viaje a Punta del Este",
       nombre: primerNombre(r.get("Nombre")),
       detalle: r.get("Detalle para el cliente"),
       lineas: [...(esPlan ? itinerario
@@ -191,7 +282,7 @@ function linkDePago(ref, k) {
   if (p.estado === "Pagado") return { ok: false, error: "Este pedido ya está pagado." };
   if (!p.usd) return { ok: false, error: "Todavía no tiene precio: te avisamos por mail cuando esté la cotización." };
   const url = preferencia(ref, k, `${p.titulo}${p.evento ? ` · ${p.evento}` : ""} (${ref})`, p.usd, "");
-  return url ? { ok: true, url } : { ok: false, error: "El pago online no está disponible en este momento. Probá por transferencia." };
+  return url ? { ok: true, url } : { ok: false, error: "El pago online no está disponible en este momento." };
 }
 
 function preferencia(ref, clave, titulo, usd, email) {
@@ -207,6 +298,8 @@ function preferencia(ref, clave, titulo, usd, email) {
       ...(email ? { payer: { email } } : {}),
       back_urls: { success: vuelta, pending: vuelta, failure: vuelta },
       auto_return: "approved",
+      binary_mode: true,                                                    // con tarjeta: aprobado o rechazado al instante, sin "pendiente"
+      payment_methods: { excluded_payment_types: [{ id: "ticket" }, { id: "atm" }] },   // solo tarjeta y saldo de Mercado Pago (sin efectivo)
       notification_url: ScriptApp.getService().getUrl() + "?origen=mp",
       statement_descriptor: "EVENTOSPDE"
     })
@@ -233,11 +326,25 @@ function verificarPago(id) {
     if (r.tipo === "servicio") r.set("Estado", "Pagado"); else r.set("Pagó", "Sí (Mercado Pago)");
     avisar(`Pago recibido ${ref} · $U ${pago.transaction_amount}`, `Mercado Pago aprobó el pago ${pago.id} del pedido ${ref}.\n${texto}`);
     const email = (r.tipo === "servicio" && r.get("Email")) || (pago.payer && pago.payer.email);
-    if (email) mailCliente(email, `Pago confirmado · ${ref}`, "¡Listo, pago confirmado!",
-      r.tipo === "servicio"
+    const esTraslado = /^TRS-/.test(ref);
+    const itinerario = r.tipo === "servicio" ? itinerarioDe(r.get("Algo más")) : [];
+    if (email) mailCliente(email, `${esTraslado ? "Traslado confirmado" : "Pago confirmado"} · ${ref}`, esTraslado ? "¡Listo, tu traslado está confirmado!" : "¡Listo, pago confirmado!",
+      esTraslado
+        ? "Recibimos tu pago. Antes del viaje te escribimos por WhatsApp con el nombre del chofer y el auto. Para la vuelta, avisanos por WhatsApp cuando quieras que te busquemos."
+        : r.tipo === "servicio"
         ? "Recibimos tu pago. En breve te escribimos con los datos para coordinar (chofer, horarios o reserva)."
         : "Recibimos tu pago. Revisamos los datos y publicamos tu evento; te avisamos cuando esté online.",
-      [`Pedido: ${ref}`, `Monto: $U ${pago.transaction_amount}`, `Comprobante de Mercado Pago: ${pago.id}`], null);
+      [...itinerario, `Pedido: ${ref}`, `Monto: $U ${pago.transaction_amount}`, `Comprobante de Mercado Pago: ${pago.id}`], null);
+    /* La empresa de traslados recibe el viaje ya pagado, con todo lo que necesita para asignar el chofer */
+    const empresa = PropertiesService.getScriptProperties().getProperty("AVISO_TRASLADOS");
+    if (esTraslado && empresa) {
+      try {
+        MailApp.sendEmail(empresa, `Viaje pagado ${ref} · ${r.get("Personas")} personas`,
+          `Pedido ${ref} (pagado con tarjeta)\n${r.get("Detalle para el cliente")}\n\n${itinerario.join("\n")}\n\n` +
+          `Pasajero: ${r.get("Nombre")} · WhatsApp ${r.get("Celular")}\nPersonas: ${r.get("Personas")}\nBuscar en: ${r.get("Desde")}\n\nEventos PDE · ${CONTACTO}`,
+          { name: NOMBRE, replyTo: CONTACTO });
+      } catch (err) { console.error(err); }
+    }
   });
   return { ok: true, ref, estado: "approved" };
 }

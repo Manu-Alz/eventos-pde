@@ -12,7 +12,7 @@
    una línea "• ..." por tramo: el script la muestra completa en el mail de cotización y en pagar.html.
    "Compartir plan": link plan.html?e=id1,id2 para los amigos. Las elecciones se recuerdan en este navegador.
    Índice: 1 Datos · 2 Cálculos · 3 Pasos · 4 Resumen · 5 Mapa · 6 Dibujo · 7 Pedido · 8 Inicio
-   Requiere: config.js, data.js, utils.js, analytics.js, site.js, cards.js, plan.js, mapa.js (Leaflet y pósters del mapa) */
+   Requiere: config.js, data.js, utils.js, analytics.js, site.js, cards.js, plan.js, tarifas.js (ZONES y precios), mapa.js (Leaflet y pósters del mapa) */
 
 /* ============ 1. Datos ============ */
 const PL_KEY = "epde-plan-opts";
@@ -52,15 +52,6 @@ const arrOf = () => ARRIVALS.find(a => a.id === opts.arr.via) || null;
 const TRANSFERS = [["ambos", "Ida y vuelta"], ["llegada", "Solo llegada"], ["regreso", "Solo regreso"], ["no", "No"]];
 const RIDES = [["ida y vuelta", "Ida y vuelta"], ["solo ida", "Solo ida"], ["solo vuelta", "Solo vuelta"], ["no", "No"]];
 
-/* Zonas para alojarse: centro aproximado (para el mapa y los minutos) y una línea para elegir */
-const ZONES = [
-  { name: "Península",           geo: [-34.9615, -54.9480], r: 1100, blurb: "El centro: puerto, restaurantes y noche. Todo a pie." },
-  { name: "Playa Brava o Mansa", geo: [-34.9360, -54.9330], r: 1500, blurb: "Torres y hoteles frente al mar, en el medio de todo." },
-  { name: "La Barra",            geo: [-34.9130, -54.8660], r: 1200, blurb: "Playas, movida y las fiestas grandes a minutos." },
-  { name: "Manantiales",         geo: [-34.8990, -54.8290], r: 1300, blurb: "Más tranquilo y de playa, cerca de La Barra." },
-  { name: "José Ignacio",        geo: [-34.8445, -54.6340], r: 1500, blurb: "Exclusivo y relajado, lejos del ruido." },
-  { name: "Maldonado",           geo: [-34.9080, -54.9560], r: 1400, blurb: "La ciudad, a 10 minutos. La opción más económica." }
-];
 const ANY_ZONE = "Me da igual";
 const TYPES = ["Me da igual", "Hotel", "Apartamento", "Casa"];
 const BUDGETS = ["A conversar", "Hasta US$ 100", "US$ 100 a 250", "US$ 250 a 500", "Más de US$ 500"];
@@ -74,9 +65,13 @@ const dow = iso => DOW[new Date(iso + "T12:00:00Z").getUTCDay()];
 const dmy2 = iso => (iso ? iso.split("-").reverse().slice(0, 2).join("/") : "");
 const daysBetween = (a, b) => Math.round((Date.parse(b) - Date.parse(a)) / 864e5);
 const hasHour = e => /^\d{1,2}:\d{2}$/.test(e.time);
-const trOf = e => opts.tr[slugOf(e)] || "ida y vuelta";
+/* Chofer: solo en los eventos con traslado (rideOK, cards.js: fiestas y música en vivo con entradas); en los demás, "no" */
+const trOf = e => (rideOK(e) ? opts.tr[slugOf(e)] || "ida y vuelta" : "no");
 const goes = tr => tr === "ida y vuelta" || tr === "solo ida";      // ese tramo necesita hora de búsqueda
-const tixOf = e => opts.tix[slugOf(e)] || (e.tickets || e.price ? "si" : "no");
+/* Entradas: con link de compra, por defecto "Las compro yo" (las paga al instante en la ticketera, con nuestro código de
+   afiliado si hay); sin link pero con precio, "Incluilas" (se cotizan); sin ninguno de los dos (gratis o sin datos), nada */
+const hasTix = e => Boolean(e.tickets || e.price);
+const tixOf = e => (!hasTix(e) ? "no" : opts.tix[slugOf(e)] || (e.tickets ? "no" : "si"));
 const stayOn = () => opts.stay === true;                            // alojamiento: apagado hasta que la persona lo prende
 const people = () => opts.people || 2;
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
@@ -97,13 +92,8 @@ const arrOut = list => opts.arr.outDate || opts.aOut || (list.length ? addDays(t
 const stayIn = list => opts.aIn || arrIn(list);
 const stayOut = list => opts.aOut || arrOut(list);
 
-/* Minutos en auto entre dos puntos: distancia en línea recta × 1,35 (rutas) a 40 km/h, redondeado a 5 */
-function driveMin(a, b) {
-  const R = 6371, rad = d => d * Math.PI / 180;
-  const dLat = rad(b[0] - a[0]), dLng = rad(b[1] - a[1]);
-  const km = 2 * R * Math.asin(Math.sqrt(Math.sin(dLat / 2) ** 2 + Math.cos(rad(a[0])) * Math.cos(rad(b[0])) * Math.sin(dLng / 2) ** 2));
-  return Math.max(5, Math.round(km * 1.35 / 40 * 60 / 5) * 5);
-}
+/* Minutos en auto entre dos puntos: kilómetros en ruta (roadKm, tarifas.js) a 40 km/h, redondeado a 5 */
+const driveMin = (a, b) => Math.max(5, Math.round(roadKm(a, b) / 40 * 60 / 5) * 5);
 /* Promedio de minutos desde un punto a los eventos del plan que tienen ubicación (null si ninguno la tiene) */
 function avgMin(geo, list) {
   const mins = list.map(geoOf).filter(Boolean).map(g => driveMin(geo, g));
@@ -171,7 +161,7 @@ function pickHtml(e) {
 }
 function tixNoteHtml(e) {
   const t = ticketLink(e);
-  if (tixOf(e) === "si") return `<span>${plural(people(), "entrada", "entradas")}${e.price ? ` · ${esc(e.price)}` : ""}</span>`;
+  if (tixOf(e) === "si") return `<span>${plural(people(), "entrada", "entradas")}${e.price ? ` · ${esc(e.price)}` : ""} · van en la cotización</span>`;
   return t ? `<a href="${esc(t.url)}" target="_blank" rel="noopener${t.affiliate ? " sponsored" : ""}" data-ev="entradas" data-n="${esc(e.title)}">Comprar ${ico("arrow")}</a>` : "";
 }
 
@@ -183,14 +173,14 @@ function eventCard(e) {
       <p class="pl-eb"><i></i>${esc(e.cat)} · ${esc(timeLabel(e))}</p>
       <h3><a href="/evento/${id}/">${esc(e.title)}</a></h3>
       <p class="pl-place">${ico("pin")}<span>${esc(e.place)}</span></p>
-      <div class="pl-opt">
+      ${hasTix(e) ? `<div class="pl-opt">
         <div class="pl-opt-h"><b>${ico("ticket")}Entradas</b><span class="pl-opt-x" data-note="tix-${id}">${tixNoteHtml(e)}</span></div>
-        ${seg("tix", id, [["si", "Incluilas"], ["no", "Ya las tengo"]], tixOf(e), `Entradas para ${e.title}`)}
-      </div>
-      <div class="pl-opt">
+        ${seg("tix", id, e.tickets ? [["no", "Las compro yo"], ["si", "Incluilas en el plan"]] : [["si", "Incluilas en el plan"], ["no", "Ya las tengo"]], tixOf(e), `Entradas para ${e.title}`)}
+      </div>` : ""}
+      ${rideOK(e) ? `<div class="pl-opt">
         <div class="pl-opt-h"><b>${ico("car")}Chofer</b><span class="pl-opt-x" data-note="tr-${id}">${pickHtml(e)}</span></div>
         ${seg("tr", id, RIDES, trOf(e), `Chofer para ${e.title}`)}
-      </div>
+      </div>` : ""}
     </div>
     <button type="button" class="pl-x" data-add="${id}" aria-label="Sacar ${esc(e.title)} de mi plan">${ico("close")}</button>
   </article>`;
@@ -209,7 +199,7 @@ function chosenHtml(list) {
 
 function eventsStep(list) {
   return `<section class="pl-sec">
-    ${stepHead(1, "Elegí tus eventos", "Sumá los eventos a los que vas y, para cada uno, elegí entradas y chofer.")}
+    ${stepHead(1, "Elegí tus eventos", "Sumá los eventos a los que vas. En fiestas y shows con entrada también podés pedir chofer.")}
     <div class="pl-cat">
       <p class="pl-lbl">Agenda <small>tocá un evento para sumarlo</small></p>
       <label class="pl-find">${ico("search")}<input type="search" id="pl-q" placeholder="Buscar evento, artista o lugar" aria-label="Buscar evento" enterkeyhint="search" autocomplete="off" spellcheck="false"></label>
@@ -308,7 +298,11 @@ function stayStep(list) {
           <label>Tipo<select name="aType">${optionTags(TYPES, opts.aType || "Me da igual")}</select></label>
           <label>Presupuesto por noche<select name="aBudget">${optionTags(BUDGETS, opts.aBudget || "A conversar")}</select></label>
         </div>`
-      : `<label><span>¿Dónde te quedás? <small>(para buscarte)</small></span><input name="from" value="${esc(opts.from || "")}" placeholder="Hotel o dirección" autocomplete="off"></label>`}
+      : `<p class="pl-q">¿Dónde te buscamos? <small>(con la zona ves el precio de los traslados al instante)</small></p>
+        <div class="pl-two">
+          <label>Zona<select name="rideZone"><option value="">Elegí tu zona</option>${ZONES.map(z => `<option${z.name === opts.rideZone ? " selected" : ""}>${esc(z.name)}</option>`).join("")}</select></label>
+          <label>Dirección u hotel<input name="from" value="${esc(opts.from || "")}" placeholder="Calle y número, o el hotel" autocomplete="off"></label>
+        </div>`}
     </div>
   </section>`;
 }
@@ -329,6 +323,32 @@ function contactStep() {
       <label><span>Algo más <small>(opcional)</small></span><input name="notes" value="${esc(opts.notes || "")}" placeholder="Ej.: vamos 2 parejas, uno es vegetariano…" autocomplete="off"></label>
     </div>
   </section>`;
+}
+
+/* Pago al instante: si el pedido es solo de traslados con precio (sin alojamiento ni entradas para conseguir) se cobra
+   al reservar, con TARIFAS (tarifas.js). Devuelve { usd, items } o null (entonces se pide cotización). */
+/* Nada para pedir: ni chofer, ni aeropuerto, ni alojamiento, ni entradas incluidas */
+const nothingToDo = list => { const t = totals(list); return !t.rides && !t.airport && !stayOn() && !t.tix.length; };
+
+function instant(list) {
+  const t = totals(list), zone = opts.rideZone, p = people(), a = opts.arr, items = [];
+  if (stayOn() || t.tix.length || (!t.rides && !t.airport) || !zoneByName(zone)) return null;
+  for (const e of t.withRide) {
+    const tr = trOf(e), legs = tr === "ida y vuelta" ? 2 : 1, g = geoOf(e);
+    const usd = rideUSD(zone, g, legs, p);
+    if (!usd) return null;                                             // un evento sin ubicación: se cotiza a mano
+    items.push({ tipo: "evento", titulo: e.title, fecha: legDay(e.date), lugar: shortPlace(e), geo: g, legs, sentido: tr,
+      busca: goes(tr) ? pickOf(e) : "", vuelta: tr !== "solo ida" ? "a la hora que nos avises por WhatsApp" : "", usd });
+  }
+  if (t.airport) {
+    const legs = t.tf === "ambos" ? 2 : 1, usd = arrivalUSD(t.arr.id, legs, p);
+    if (!usd) return null;
+    const inn = t.tf !== "regreso", out = t.tf !== "llegada";
+    items.unshift({ tipo: "llegada", via: t.arr.id, legs, sentido: t.tf,
+      inFecha: inn ? legDay(arrIn(list)) : "", inHora: inn ? a.inTime || "" : "", inRef: inn ? a.inRef || "" : "",
+      outFecha: out ? legDay(arrOut(list)) : "", outHora: out ? a.outTime || "" : "", outRef: out ? a.outRef || "" : "", usd });
+  }
+  return { usd: items.reduce((s, i) => s + i.usd, 0), items };
 }
 
 /* ============ 4. Resumen (columna fija en PC, al final en el celular) ============ */
@@ -360,8 +380,9 @@ function summaryHtml(list) {
       <div class="pl-stepper"><button type="button" data-people="-1" aria-label="Una persona menos">−</button><output id="pl-people">${people()}</output><button type="button" data-people="1" aria-label="Una persona más">+</button></div>
     </div>
     <ul class="pl-inc" id="pl-inc">${summaryLines(list)}</ul>
-    <button class="btn pl-cta" type="submit">Pedir cotización</button>
-    <p class="pl-fine">Sin costo ni compromiso. Te mandamos el total por mail y pagás online con tarjeta solo si te sirve.</p>
+    <div class="pl-total" id="pl-total" hidden><span>Total</span><b></b></div>
+    <button class="btn pl-cta" id="pl-cta" type="submit">Pedir cotización</button>
+    <p class="pl-fine" id="pl-fine"></p>
     ${list.length ? `<button type="button" class="pl-share" id="pl-share">${ico("share")}Compartir mi plan</button>` : ""}
   </aside>`;
 }
@@ -424,7 +445,7 @@ function render() {
       <div class="pl-steps">${eventsStep(list)}${arrivalStep(list)}${stayStep(list)}${contactStep()}</div>
       ${summaryHtml(list)}
     </form>
-    <div class="pl-bar" id="pl-bar"><span><b id="pl-bar-n"></b><small>Sin costo ni compromiso</small></span><a class="btn" href="#pl-sum">Pedir cotización</a></div>`;
+    <div class="pl-bar" id="pl-bar"><span><b id="pl-bar-n"></b><small id="pl-bar-s">Sin costo ni compromiso</small></span><a class="btn" id="pl-bar-go" href="#pl-sum">Pedir cotización</a></div>`;
   pills();
   refresh(list);
   drawMap(list);
@@ -442,6 +463,20 @@ function refresh(list = planEvents()) {
   const t = totals(list);
   const parts = [t.tix.length && "entradas", (t.airport || t.rides) && "traslados", stayOn() && "alojamiento"].filter(Boolean);
   $("pl-bar-n").textContent = list.length ? summaryTitle(list) : parts.length ? parts.join(", ").replace(/^./, c => c.toUpperCase()) : "Tu viaje";
+  if (!nothingToDo(list)) $("pl-warn")?.remove();                   // el aviso "elegí qué resolvemos" se va solo
+  /* Solo traslados con precio: total a la vista y pago con tarjeta; si no, cotización */
+  const ins = instant(list);
+  const needZone = !stayOn() && !t.tix.length && (t.rides || t.airport) && !zoneByName(opts.rideZone);
+  $("pl-total").hidden = !ins;
+  if (ins) $("pl-total").querySelector("b").textContent = `US$ ${ins.usd}`;
+  $("pl-cta").textContent = ins ? `Pagar US$ ${ins.usd} con tarjeta` : "Pedir cotización";
+  $("pl-fine").textContent = ins ? "Precio final, sin esperar cotización. Pagás con tarjeta y te confirmamos el chofer por WhatsApp."
+    : needZone ? "Elegí tu zona en el paso 3 y ves el precio de los traslados al instante."
+    : nothingToDo(list) ? "Sumá chofer, traslado del aeropuerto o alojamiento para pedir tu plan."
+    : t.tix.length || stayOn() ? "Con entradas o alojamiento te mandamos el total por mail, sin costo ni compromiso, y pagás online con tarjeta."
+    : "Sin costo ni compromiso. Te mandamos el total por mail y pagás online con tarjeta solo si te sirve.";
+  $("pl-bar-s").textContent = ins ? `Total US$ ${ins.usd}` : "Sin costo ni compromiso";
+  $("pl-bar-go").textContent = ins ? "Pagar" : "Pedir cotización";
   list.forEach(e => {
     const id = slugOf(e);
     const tn = box.querySelector(`[data-note="tix-${id}"]`); if (tn) tn.innerHTML = tixNoteHtml(e);
@@ -471,7 +506,7 @@ function stripNav() {
   upd();
 }
 
-const FIELDS = ["name", "email", "phone", "from", "notes", "aIn", "aOut", "aType", "aBudget", "country", "lang"];
+const FIELDS = ["name", "email", "phone", "from", "rideZone", "notes", "aIn", "aOut", "aType", "aBudget", "country", "lang"];
 const ARR_FIELDS = ["inDate", "inTime", "inRef", "outDate", "outTime", "outRef"];
 /* Las fechas no se guardan acá: solo cuando la persona las cambia (evento "change"). Así, mientras no las toque,
    siguen a los eventos que suma o saca (ver syncDates). */
@@ -561,8 +596,8 @@ function itinerary(list) {
   list.forEach(e => {
     const tr = trOf(e);
     lines.push(`• ${legDay(e.date)} ${hasHour(e) ? e.time + " " : ""}· ${e.title} · ${shortPlace(e)}`
-      + (tixOf(e) === "si" ? ` · ${plural(p, "entrada", "entradas")}` : " · entradas por su cuenta")
-      + ` · ${RIDE_TEXT[tr]}${goes(tr) && pickOf(e) ? `, te buscamos ${pickOf(e)}` : ""}`);
+      + (tixOf(e) === "si" ? ` · ${plural(p, "entrada", "entradas")}` : hasTix(e) ? " · entradas por su cuenta" : "")
+      + (rideOK(e) ? ` · ${RIDE_TEXT[tr]}${goes(tr) && pickOf(e) ? `, te buscamos ${pickOf(e)}` : ""}` : ""));
   });
   if (t.real) {
     lines.push(`• Regreso: ${legDay(arrOut(list))}${a.outTime ? ` ${a.outTime}` : ""} · ${t.arr.place}${a.outRef ? ` · ${t.arr.ref.toLowerCase()} ${a.outRef}` : ""}`
@@ -615,10 +650,11 @@ function doneHtml(ref, f, ok, msg) {
 async function submitPlan(form) {
   const list = planEvents();
   const t = totals(list);
-  /* Tiene que pedir algo: eventos, un traslado o alojamiento */
-  if (!list.length && !t.airport && !stayOn()) {
+  /* Tiene que pedir algo para resolver: chofer, traslado del aeropuerto, alojamiento o entradas */
+  if (nothingToDo(list)) {
     $("pl-s1").closest(".pl-sec").scrollIntoView({ behavior: "smooth", block: "start" });
-    $("pl-chosen").innerHTML = `<p class="pl-none pl-warn">${ico("ticket")}<span><b>Elegí al menos un evento, un traslado o alojamiento</b> para poder cotizarte.</span></p>`;
+    $("pl-warn")?.remove();
+    $("pl-chosen").insertAdjacentHTML("afterbegin", `<p class="pl-none pl-warn" id="pl-warn">${ico("car")}<span><b>Elegí qué querés que resolvamos:</b> chofer a una fiesta, traslado del aeropuerto (paso 2), alojamiento (paso 3) o entradas incluidas.</span></p>`);
     return;
   }
   /* Los datos obligatorios se piden al final; si falta alguno, se marca y se lleva la vista ahí */
@@ -629,9 +665,27 @@ async function submitPlan(form) {
     return;
   }
   const f = keepFields(form);
+  const btn = form.querySelector('[type="submit"]');
+  /* Solo traslados con precio: se reserva y se paga ya (el script vuelve a calcular el precio y abre Mercado Pago) */
+  const ins = instant(list);
+  if (ins) {
+    const from = form.querySelector('[name="from"]');
+    if (from && !from.value.trim()) { from.closest(".pl-sec").scrollIntoView({ behavior: "smooth", block: "start" }); setTimeout(() => { from.focus({ preventScroll: true }); }, 450); return; }
+    btn.disabled = true; btn.textContent = "Abriendo el pago…";
+    track("plan_pagar", { eventos: list.length, usd: ins.usd, llegada: opts.arr.via || "" });
+    try {
+      const res = await fetch(CONFIG.formUrl, { method: "POST", headers: { "Content-Type": "text/plain" }, body: JSON.stringify({
+        kind: "traslado", zone: opts.rideZone, address: f.from || "", people: people(), name: f.name, email: f.email, phone: f.phone,
+        notes: `País: ${f.country} · Idioma: ${f.lang}${f.notes ? ` · ${f.notes}` : ""}`, items: ins.items.map(({ usd, ...it }) => it) }) });
+      const r = await res.json();
+      if (r.ok && (r.url || r.pagina)) { location.href = r.url || r.pagina; return; }
+      alert(r.error || "No pudimos abrir el pago. Probá de nuevo en un momento.");
+    } catch (_) { alert("No pudimos abrir el pago. Revisá la conexión y probá de nuevo."); }
+    btn.disabled = false; refresh(list);
+    return;
+  }
   const ref = plRef();
   const data = planPayload(ref, f, list);
-  const btn = form.querySelector('[type="submit"]');
   btn.disabled = true; btn.textContent = "Enviando…";
   let ok = false;
   if (CONFIG.formUrl && CONFIG.formServicios) {

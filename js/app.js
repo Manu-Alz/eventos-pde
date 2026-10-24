@@ -213,6 +213,15 @@ if (spot) {
   goBack();
   if (document.fonts) document.fonts.ready.then(goBack);              // por si las fuentes cambian un poco la altura
 }
+/* Volver con "atrás" cuando el navegador guardó la página entera (iPhone, navegador de Instagram): los filtros siguen
+   como estaban, pero con scrollRestoration "manual" Safari la muestra arriba de todo. Se vuelve a la altura guardada. */
+addEventListener("pageshow", ev => {
+  if (!ev.persisted) return;
+  try {
+    const s = JSON.parse(sessionStorage.getItem(SPOT_KEY));
+    if (s && Date.now() - s.t < 36e5) scrollTo({ top: s.y, behavior: "instant" });
+  } catch (_) {}
+});
 
 /* La píldora sigue al botón si cambia el ancho (fuentes que terminan de cargar, giro del celular, ventana) */
 const pillFix = () => slidePill($("chips"), activeChip($("chips")), true);

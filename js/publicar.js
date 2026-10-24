@@ -1,6 +1,6 @@
 /* publicar.js · página de publicación: 1) elegir plan  2) datos del evento  3) pago
-   Cobro: la persona recibe una referencia y paga con Mercado Pago (monto exacto) o por depósito; si paga por depósito manda el
-   comprobante por WhatsApp o mail. Vos verificás el pago y cargás el evento en data.js.
+   Cobro: la persona recibe una referencia y paga con tarjeta en Mercado Pago (monto exacto: se confirma solo). Sin transferencia.
+   Si el script no responde queda el link de monto libre y manda el comprobante. Vos cargás el evento en data.js.
    Requiere: config.js, utils.js, analytics.js, site.js */
 
 const plansBox = $("plans");
@@ -157,7 +157,6 @@ const newRef = () => {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   return "PDE-" + Array.from({ length: 5 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
 };
-const bankAmount = total => (CONFIG.bank.moneda === "UYU" && CONFIG.bank.uyuRate > 0 ? `$U ${Math.round(total * CONFIG.bank.uyuRate)}` : `US$ ${total}`);
 
 const h = (tag, className, text) => {
   const n = document.createElement(tag);
@@ -165,15 +164,6 @@ const h = (tag, className, text) => {
   if (text != null) n.textContent = text;
   return n;
 };
-
-function bankPanel(total, ref) {
-  const b = CONFIG.bank;
-  const dl = h("dl", "dl");
-  [["Monto", bankAmount(total)], ["Titular", b.titular], ["Banco", b.banco], ["Tipo de cuenta", b.tipo], ["N° de cuenta", b.cuenta], ["Referencia", ref]]
-    .filter(([label, value]) => label === "Monto" || label === "Referencia" || isSet(value))
-    .forEach(([label, value]) => { dl.append(h("dt", "", label), h("dd", "", value)); });
-  return [dl, h("p", "note", "Depositá o transferí el monto exacto y poné la referencia en el concepto.")];
-}
 
 function paypalPanel(plan, total, ref) {
   const a = h("a", "btn", `Pagar US$ ${total} con PayPal`);
@@ -191,15 +181,15 @@ const mpOn = Boolean(safeUrl(MP.link)) && MP.uyuRate > 0;
 const pesos = usd => "$U " + Math.round(usd * MP.uyuRate).toLocaleString("es-UY");
 /* Con el script nuevo, Mercado Pago cobra el monto exacto (payUrl); si no, queda el link de monto libre */
 function mpPanel(plan, total, ref, payUrl) {
-  const a = h("a", "btn", `Pagar ${pesos(total)}`);
+  const a = h("a", "btn", `Pagar US$ ${total} con tarjeta`);
   a.target = "_blank";
   a.rel = "noopener";
   a.href = safeUrl(payUrl) || safeUrl(MP.link);
   a.dataset.ev = "pago_mercadopago";
   a.dataset.c = plan.name;
   return [a, h("p", "note", payUrl
-    ? `Se abre Mercado Pago con el monto exacto (US$ ${total} = ${pesos(total)}): pagá con tarjeta, débito o efectivo. Se confirma solo.`
-    : `Se abre Mercado Pago: escribí ${pesos(total)} (US$ ${total} a $U ${MP.uyuRate}) y pagá con tarjeta, débito o efectivo.`)];
+    ? `Se abre Mercado Pago con el monto exacto (US$ ${total} = ${pesos(total)}): pagá con tarjeta de crédito o débito. Se confirma al instante.`
+    : `Se abre Mercado Pago: escribí ${pesos(total)} (US$ ${total} a $U ${MP.uyuRate}) y pagá con tarjeta de crédito o débito.`)];
 }
 
 /* ============ 5. Aviso automático ============
@@ -232,7 +222,7 @@ form.addEventListener("submit", async ev => {
   const answer = await notifyRequest(plan, data, ref, total);
   const payUrl = answer && answer.pago;
   sendBtn.disabled = false; sendBtn.textContent = "Enviar evento";
-  const methods = [mpOn && "Mercado Pago", isSet(CONFIG.bank.cuenta) && "Depósito bancario", isSet(CONFIG.paypal) && "PayPal"].filter(Boolean);
+  const methods = [mpOn && "Mercado Pago", isSet(CONFIG.paypal) && "PayPal"].filter(Boolean);   // sin transferencia: se paga con tarjeta
 
   /* Cuadro de pago: encabezado · resumen (total, días, referencia) · paso 1 pagar · paso 2 comprobante */
   const tabs  = h("div", "seg has-pill");
@@ -245,7 +235,7 @@ form.addEventListener("submit", async ev => {
   wa.target = "_blank"; wa.rel = "noopener";
 
   function showMethod(method) {
-    panel.replaceChildren(...(method === "Depósito bancario" ? bankPanel(total, ref) : method === "PayPal" ? paypalPanel(plan, total, ref)
+    panel.replaceChildren(...(method === "PayPal" ? paypalPanel(plan, total, ref)
       : method === "Mercado Pago" ? mpPanel(plan, total, ref, payUrl) : [h("p", "note", "Te pasamos los datos de pago por WhatsApp o mail.")]));
     tabs.querySelectorAll("button").forEach(t => t.setAttribute("aria-pressed", t.textContent === method));
     slidePill(tabs, tabs.querySelector('[aria-pressed="true"]'));
@@ -288,7 +278,7 @@ form.addEventListener("submit", async ev => {
     s.append(t, ...body);
     return s;
   };
-  const payTitle = methods.length === 1 ? `Pagá con ${methods[0] === "Depósito bancario" ? "depósito bancario" : methods[0]}` : "Elegí cómo pagar";
+  const payTitle = methods.length > 1 ? "Elegí cómo pagar" : "Pagá con tarjeta";
   const sendrow = h("div", "sendrow");
   sendrow.append(wa, mail);
 
@@ -297,7 +287,10 @@ form.addEventListener("submit", async ev => {
     sum,
     ...(plan.name === "Portada" ? [h("p", "ok-callout", "La portada tiene lugares limitados: antes de cobrarte confirmamos por WhatsApp o mail que tu fecha esté libre.")] : []),
     step("1", payTitle, ...(methods.length > 1 ? [tabs] : []), panel),
-    step("2", "Mandanos el comprobante", h("p", "note", `Con tu referencia ${ref}: lo verificamos y publicamos tu evento.`), sendrow)
+    /* Con el monto exacto (payUrl) el pago se confirma solo; con el link de monto libre hay que mandar el comprobante */
+    payUrl && plan.name !== "Portada"
+      ? step("2", "Listo, se confirma solo", h("p", "note", `Cuando se aprueba el pago te llega un mail y publicamos tu evento. ¿Dudas? Escribinos con tu referencia ${ref}.`), sendrow)
+      : step("2", "Mandanos el comprobante", h("p", "note", `Con tu referencia ${ref}: lo verificamos y publicamos tu evento.`), sendrow)
   );
   done.style.display = "block";
   showMethod(methods[0] || null);

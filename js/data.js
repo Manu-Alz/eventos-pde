@@ -22,6 +22,8 @@
    │ photo      nombre del archivo en img/eventos/, ej. "solomun-open-park.webp"         │
    │            (fondo de la tarjeta y póster de la portada; sin foto: degradé de color)  │
    │ portada    true -> aparece en el slider de la portada (máx. 6, los más cercanos)   │
+   │ traslado   true/false: fuerza o apaga el "Traslado con chofer". Sin este campo sale   │
+   │            solo en Fiestas y Música en vivo con tickets (RIDE_CATS, config.js)     │
    │ from       primer día visible, "AAAA-MM-DD" (opcional; si no, se ve ya)             │
    │ until      último día visible = fin de los días pagados (opcional)                │
    └─────────────────────────────────────────────────────────────────────────────────────┘
@@ -58,7 +60,8 @@ const EV = [
     cat: "Fiestas", date: "2026-12-31", time: "A confirmar",
     place: "MACA, Punta del Este",
     desc: "Jamie Jones, del sello Hot Creations y las fiestas Paradise de Ibiza, junto al holandés Franky Rizardo: house y tech house de pista para despedir 2026 en MACA. Hora a confirmar con la organización.",
-    portada: true
+    portada: true,
+    photo: "jamie-jones-franky-rizardo-maca.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
   },
   {
     title: "Hot Since 82: NYE 2027",
@@ -128,7 +131,8 @@ const EV = [
     title: "Artbat · Mind Against · Mellino",
     cat: "Fiestas", date: "2027-01-03", time: "A confirmar",
     place: "Narbona Wine Lodge, Punta del Este",
-    desc: "Tres nombres del melodic techno en una sola noche en Narbona Wine Lodge: Artbat, el dúo ucraniano que llena festivales en todo el mundo, Mind Against y Mellino. Hora a confirmar."
+    desc: "Tres nombres del melodic techno en una sola noche en Narbona Wine Lodge: Artbat, el dúo ucraniano que llena festivales en todo el mundo, Mind Against y Mellino. Hora a confirmar.",
+    photo: "artbat-mind-against-mellino.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
   },
   {
     title: "Adriatique en Arcana",
@@ -206,7 +210,8 @@ const EV = [
     cat: "Música en vivo", date: "2027-01-04", time: "A confirmar",
     place: "Punta del Este",
     desc: "31.ª edición del Festival Internacional de Jazz de Punta del Este, declarada de interés nacional: una semana de conciertos en la ciudad. Programación y horarios a confirmar.",
-    endDate: "2027-01-11"
+    endDate: "2027-01-11",
+    photo: "festival-jazz-punta-del-este.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
   },
   {
     title: "Rolex Circuito Atlántico Sur",
@@ -214,14 +219,54 @@ const EV = [
     place: "Yacht Club Punta del Este",
     desc: "El clásico de la vela rioplatense: la flota llega desde Buenos Aires al Yacht Club Punta del Este y compite en regatas hasta la Vuelta Gorriti del 29 de enero.",
     link: "https://rcas.org.ar/", linkLabel: "Ver calendario",
-    endDate: "2027-01-29"
+    endDate: "2027-01-29",
+    photo: "rolex-circuito-atlantico-sur.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
   },
   {
     title: "Festival de Cine de Punta del Este",
     cat: "Festivales", date: "2027-02-20", time: "A confirmar",
     place: "Maldonado y Punta del Este",
     desc: "29.ª edición del festival de cine de la ciudad, con funciones libres y gratuitas en Sala Cantegril, el Teatro Margarita Xirgú y Grupocine. Del 20 al 26 de febrero.",
-    endDate: "2027-02-26"
+    endDate: "2027-02-26",
+    photo: "festival-cine-punta-del-este.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
+  },
+
+  /* Cargados el 23/10 (fuentes: fuk.uy, Cadena del Mar, conciertosdeleste.org.uy y calendarios de inscripción del IRONMAN) */
+  {
+    title: "Gran Premio Punta del Este de Karting",
+    cat: "Autos", date: "2026-10-30", time: "A confirmar",
+    place: "Circuito callejero, Parada 1 de Playa Brava (Los Dedos)",
+    desc: "4.ª edición del Gran Premio en un circuito armado en la calle junto a Los Dedos: 8.ª fecha del Campeonato Nacional de la Federación Uruguaya de Karting y cierre del Torneo Clausura, con pilotos de todas las categorías.",
+    link: "https://fuk.uy/", linkLabel: "Ver en la Federación",
+    geo: [-34.9437, -54.9339],
+    endDate: "2026-11-01",
+    photo: "gran-premio-karting-punta-del-este.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
+  },
+  {
+    title: "12 Violoncellos de Buenos Aires",
+    cat: "Música en vivo", date: "2026-10-31", time: "19:30",
+    place: "Grand Center, The Grand Hotel, Punta del Este",
+    desc: "Doce violonchelistas de Buenos Aires en concierto, dentro de la temporada de Conciertos del Este. Entradas remanentes por mail o desde una hora antes en sala.",
+    link: "https://www.conciertosdeleste.org.uy/", linkLabel: "Ver temporada",
+    contact: "mailto:conciertosdeleste@gmail.com",
+    photo: "12-violoncellos-grand-hotel.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
+  },
+  {
+    title: "Callas Trio en Conciertos del Este",
+    cat: "Música en vivo", date: "2026-11-14", time: "19:30",
+    place: "Hotel del Lago Golf & Art Resort, Punta del Este",
+    desc: "El trío austríaco de violín, chelo y piano cierra la temporada 2026 de Conciertos del Este. Entradas remanentes por mail o desde una hora antes en sala.",
+    link: "https://www.conciertosdeleste.org.uy/", linkLabel: "Ver temporada",
+    contact: "mailto:conciertosdeleste@gmail.com",
+    photo: "callas-trio-hotel-del-lago.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
+  },
+  {
+    title: "IRONMAN 70.3 Punta del Este",
+    cat: "Deportes", date: "2027-03-07", time: "07:00",
+    place: "Punta del Este",
+    desc: "1,9 km de natación, 90 km de bici y 21 km de carrera por la costa de Punta del Este: la fecha sudamericana del circuito mundial de triatlón, con atletas de toda la región.",
+    link: "https://www.ironman.com/races/im703-punta-del-este", linkLabel: "Inscripciones y programa",
+    photo: "ironman-punta-del-este.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
   },
 
   /* Cargados el 20/10 desde la lista de fiestas del equipo: solo se confirmó la fecha y el Instagram.

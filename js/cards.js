@@ -36,6 +36,24 @@ function geoOf(e) {
   return key ? VENUES[key] : null;
 }
 
+/* Punto para calcular el traslado: el del mapa (geoOf) o, si el lugar solo nombra una zona ("La Barra, Punta del Este"),
+   el centro de esa zona. No se usa para el mapa, donde un pin aproximado confundiría. */
+const RIDE_AREAS = { "la barra": [-34.9130, -54.8660], "manantiales": [-34.8990, -54.8290], "jose ignacio": [-34.8445, -54.6340],
+  "maldonado": [-34.9080, -54.9560], "peninsula": [-34.9615, -54.9480], "playa brava": [-34.9360, -54.9330], "playa mansa": [-34.9360, -54.9330] };
+function rideGeo(e) {
+  const g = geoOf(e);
+  if (g) return g;
+  const place = norm(e.place);
+  const key = Object.keys(RIDE_AREAS).find(k => place.includes(k));
+  return key ? RIDE_AREAS[key] : null;
+}
+
+/* ¿Se ofrece traslado con chofer para este evento? Una sola regla para la página del evento y Armar plan:
+   entradas a la venta + categoría de RIDE_CATS (config.js) + un lugar para calcular el precio.
+   traslado: true / false en data.js lo fuerza o lo apaga. */
+const rideOK = e => Boolean(rideGeo(e)) && (e.traslado === true
+  || (e.traslado !== false && Boolean(e.tickets) && typeof RIDE_CATS !== "undefined" && RIDE_CATS.includes(e.cat)));
+
 /* Link de entradas. Si el dominio está en AFILIADOS (config.js) se le agrega tu código
    y queda marcado como link de referido. */
 function ticketLink(e) {

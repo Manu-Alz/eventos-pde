@@ -80,6 +80,18 @@ const moreCard = e => `
         <span class="ev-mini-t"><small><i></i>${esc(dayLabel(e))} ${esc(monthLabel(e))} · ${esc(e.cat)}</small><b>${esc(e.title)}</b></span>
       </a>`;
 
+/* "Traslado con chofer": solo en los eventos que cumplen rideOK (cards.js: entradas a la venta, fiesta o música en vivo).
+   js/traslado.js arma el bloque con estos datos (precio al instante y pago con tarjeta); sin JavaScript queda el título.
+   En los demás eventos va solo una línea discreta a Armar plan (aeropuerto y alojamiento). */
+function rideBox(e) {
+  const id = esc(slugOf(e));
+  if (!rideOK(e)) return `<a class="ev-planlink" href="/plan.html?add=${id}" data-ev="plan_evento" data-n="${esc(e.title)}">${ico("plane")}<span><b>¿Venís de afuera?</b> Armá tu plan con traslado del aeropuerto y alojamiento</span>${ico("arrow")}</a>`;
+  return `<section class="ride" id="ride" aria-labelledby="ride-h" data-id="${id}" data-title="${esc(e.title)}" data-date="${e.date}"${e.endDate && e.endDate !== e.date ? ` data-end="${e.endDate}"` : ""} data-time="${esc(e.time)}" data-place="${esc(shortPlace(e))}" data-geo="${rideGeo(e).join(",")}">
+        <h2 id="ride-h">Traslado con chofer</h2>
+        <p>Te llevamos y te traemos, con precio final y pago con tarjeta.</p>
+      </section>`;
+}
+
 /* ============ 3. Página de un evento ============ */
 function eventPage(e, live, v) {
   const t = ticketLink(e), free = safeUrl(e.link), contact = safeUrl(e.contact), route = mapUrl(e);
@@ -150,16 +162,12 @@ function eventPage(e, live, v) {
         ${fact("pin", "Lugar", route ? `<a href="${esc(route)}" target="_blank" rel="noopener" data-ev="mapa" data-n="${esc(e.title)}">${esc(e.place)} ↗</a>` : esc(e.place))}
         ${e.price ? fact("ticket", "Entradas (puede cambiar según el lote)", esc(e.price)) : ""}
       </ul>
-      ${mapEmbed(e, route)}
       <div class="ev-actions">
         ${main}
         <div class="ev-row">${second}</div>
       </div>
-      <a class="ev-trip" href="/plan.html?add=${esc(slugOf(e))}" data-ev="plan_evento" data-n="${esc(e.title)}">
-        <span class="ev-trip-i">${ico("car")}</span>
-        <span class="ev-trip-t"><small>Si venís de afuera</small><b>Armá tu plan con este evento</b><span>Te llevamos y te traemos con chofer, sumamos tus entradas y, si querés, dónde quedarte. Una sola cotización, sin compromiso.</span></span>
-        <span class="ev-trip-go">${ico("arrow")}</span>
-      </a>
+      ${rideBox(e)}
+      ${mapEmbed(e, route)}
     </div>
   </main>
 
@@ -179,6 +187,8 @@ ${t ? `<div class="ev-buybar"><a class="btn" href="${esc(t.url)}" target="_blank
 <script src="/js/analytics.js?v=${v}"></script>
 <script src="/js/site.js?v=${v}"></script>
 <script src="/js/plan.js?v=${v}"></script>
+<script src="/js/tarifas.js?v=${v}"></script>
+<script src="/js/traslado.js?v=${v}"></script>
 </body>
 </html>
 `;

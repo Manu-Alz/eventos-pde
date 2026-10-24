@@ -39,7 +39,72 @@
 .ev-row .btn{background:var(--glass)}
 @media (hover:hover){.ev-row .btn:hover{background:var(--glass-hover)}}
 
-/* 4. "Armá tu plan con este evento": lleva a Armar plan (plan.html?add=<id>) con el evento ya sumado. Es el único acceso al plan de la página */
+/* 4. Traslado con chofer (lo arma js/traslado.js): precio al instante y pago con tarjeta. Es el único acceso al plan de la página.
+   Estructura: .ride > [.ride-head, .ride-seg, .ride-grid (campos), .ride-note, form.ride-contact, .ride-bar (total + botón), .ride-fine, .ride-plan] */
+.ride{position:relative;display:grid;gap:16px;padding:clamp(18px,3vw,26px);border-radius:28px;scroll-margin-top:84px;
+  background:radial-gradient(90% 70% at 100% 0%,rgba(124,77,255,.26),transparent 62%),radial-gradient(70% 60% at 0% 100%,rgba(76,195,219,.10),transparent 70%),var(--surface);
+  border:1px solid rgba(124,77,255,.35);box-shadow:0 30px 60px -36px #000}
+.ride>h2{font-size:24px;font-weight:600}                                   /* sin JavaScript */
+.ride>p{margin:0;color:var(--muted)}
+.ride-head{display:flex;align-items:flex-start;gap:14px}
+.ride-i{flex:none;display:grid;place-items:center;width:52px;height:52px;border-radius:18px;background:#7C4DFF;color:#fff;box-shadow:0 12px 26px -10px rgba(124,77,255,.8)}
+.ride-i .ico{width:26px;height:26px}
+.ride-ht{display:grid;gap:4px;min-width:0}
+.ride-eb{margin:0;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#a98bff}
+.ride-ht h2{font-size:clamp(24px,3.4vw,30px);font-weight:600;letter-spacing:-.025em}
+.ride-ht p:not(.ride-eb){margin:2px 0 0;font-size:15px;color:var(--muted)}
+/* Ida y vuelta, solo ida, solo vuelta: la píldora blanca se desliza (utils.js slidePill) */
+.ride-seg{display:flex;padding:4px;border-radius:999px;background:var(--glass);border:1px solid var(--line)}
+.ride-seg button{flex:1 1 0;min-width:0;min-height:44px;padding:0 10px;border:0;border-radius:999px;background:none;color:var(--ink);font:700 14px "DM Sans",sans-serif;cursor:pointer;white-space:nowrap;transition:color .4s var(--ease)}
+.ride-seg button[aria-pressed="true"]{color:var(--bg)}
+.ride-grid,.ride-contact{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 14px}
+.ride-contact{grid-template-columns:minmax(0,1fr);padding-top:16px;border-top:1px solid var(--line)}
+.ride-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 14px}
+.ride-q{margin:0;font-weight:700}
+.ride-f{display:grid;gap:7px;min-width:0;font-size:13px;font-weight:600;color:var(--muted)}
+.ride-f input,.ride-f select{width:100%;min-width:0;min-height:48px;padding:10px 12px;border-radius:14px;border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:var(--ink);font:500 16px "DM Sans",sans-serif;color-scheme:dark;-webkit-appearance:none;appearance:none}
+.ride-f select{background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%239a9aa4%27 stroke-width=%272%27 stroke-linecap=%27round%27%3E%3Cpath d=%27M6 9l6 6 6-6%27/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:18px;padding-right:38px}
+.ride-f select option{color:#151518}
+.ride-f input:focus,.ride-f select:focus{border-color:#7C4DFF;outline:none;box-shadow:0 0 0 3px rgba(124,77,255,.25)}
+.ride-f input:user-invalid,.ride-f select:user-invalid{border-color:#ff6b8a}
+.ride-step{display:flex;align-items:center;justify-content:space-between;min-height:48px;padding:0 5px;border-radius:14px;border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06)}
+.ride-step button{width:38px;height:38px;border:0;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:var(--ink);background:var(--glass-hover);font:700 18px "DM Sans",sans-serif}
+.ride-step output{font:700 18px "Bricolage Grotesque",sans-serif;color:var(--ink)}
+.ride-note{display:flex;align-items:flex-start;gap:10px;margin:0;padding:12px 14px;border-radius:16px;background:var(--glass);font-size:14px;color:var(--muted)}
+.ride-note .ico{flex:none;width:18px;height:18px;margin-top:2px;color:#46d9a0}
+.ride-note b{color:var(--ink)}
+.ride-note a{color:var(--ink);font-weight:700;text-underline-offset:3px}
+/* Total y botón: blanco, como "Comprar entradas" */
+.ride-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 10px 10px 18px;border-radius:22px;background:#F7F5F2;color:#151518}
+.ride-total{display:grid;line-height:1.15;min-width:0}
+.ride-total small{font-size:12px;color:#6b6b73;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ride-total b{font:700 26px/1.1 "Bricolage Grotesque",sans-serif;letter-spacing:-.02em}
+.ride-go{flex:none;min-height:50px;padding:0 22px;background:#151518;color:#fff;font-size:15px}
+.ride-go:disabled{opacity:.6}
+.ride-total b small{font:600 13px "DM Sans",sans-serif;letter-spacing:0;color:#6b6b73;margin-right:2px}
+/* Tres garantías cortas debajo del total */
+.ride-trust{list-style:none;margin:-2px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--muted)}
+.ride-trust li{display:flex;align-items:center;gap:6px}
+.ride-trust .ico{flex:none;width:15px;height:15px;color:#46d9a0}
+.ride-fine{display:flex;align-items:flex-start;gap:8px;margin:-4px 0 0;font-size:13px;color:var(--muted)}
+.ride-fine .ico{flex:none;width:15px;height:15px;margin-top:2px;color:#46d9a0}
+.ride-plan{display:inline-flex;align-items:center;gap:6px;justify-self:start;min-height:40px;color:var(--ink);font-weight:600;font-size:14px;text-underline-offset:4px}
+.ride-plan .ico{width:15px;height:15px}
+@media (max-width:520px){
+  .ride-two{grid-template-columns:minmax(0,1fr)}
+  .ride-wide{grid-column:1/-1}                 /* zona, dirección y día a lo ancho; personas y hora lado a lado */
+  .ride-bar{flex-wrap:wrap}
+  .ride-go{flex:1 1 100%}
+}
+body.ride-on .plan-fab{display:none!important}   /* traslado.js: la píldora "Tu plan" no tapa el bloque */
+/* Eventos sin traslado (no son fiesta ni música en vivo con entradas): una sola línea discreta a Armar plan */
+.ev-planlink{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:18px;text-decoration:none;color:var(--muted);font-size:14px;background:var(--glass);border:1px solid var(--line);transition:background .25s,border-color .25s}
+.ev-planlink b{color:var(--ink)}
+.ev-planlink span{flex:1;min-width:0}
+.ev-planlink .ico{flex:none;width:18px;height:18px;color:var(--ink)}
+.ev-planlink .ico:last-child{width:16px;height:16px;transition:transform .35s var(--ease)}
+@media (hover:hover){.ev-planlink:hover{background:var(--glass-hover);border-color:rgba(255,255,255,.22)}.ev-planlink:hover .ico:last-child{transform:rotate(45deg)}}
+/* Tarjeta "Armá tu plan con este evento" de las páginas anteriores (hasta que GitHub las rehace) */
 .ev-trip-i{flex:none;display:grid;place-items:center;width:52px;height:52px;border-radius:18px;background:#7C4DFF;color:#fff}
 .ev-trip-i .ico{width:24px;height:24px}
 @media (max-width:420px){.ev-trip-i{display:none}}
@@ -98,4 +163,5 @@
   .ev-buybar .btn .ico{width:19px;height:19px}
   body:has(.ev-buybar){padding-bottom:84px}
   body:has(.ev-buybar) .plan-fab{bottom:calc(86px + env(safe-area-inset-bottom,0px))}
+  body:has(.ev-buybar) .ev-actions .ev-cta{display:none}   /* el botón de entradas ya está fijo abajo: no se repite */
 }
