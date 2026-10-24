@@ -46,6 +46,14 @@ js/
 - Booking se abre en el idioma elegido. Los mails al cliente y lo que nos llega por WhatsApp o mail siguen en español (en el pedido de Armar plan figura el idioma de la persona).
 - Para traducir un texto nuevo: agregalo en `js/i18n.js`, en `D`, con sus dos traducciones (`"Texto": ["English", "Português"]`). Sin traducción se ve en español, nunca vacío. Los textos con números o fechas van en `RULES`.
 
+## Páginas para Google (/agenda/…)
+
+Para aparecer cuando alguien busca "eventos en Punta del Este", "fiestas en Punta del Este", "Año Nuevo en Punta del Este" o "qué hacer este fin de semana", el build (`tools/build-eventos.js`, el mismo de las páginas de eventos) arma páginas fijas en `agenda/`:
+- `/agenda/`: todos los eventos, por mes ("Eventos en Punta del Este 2026–2027: agenda completa").
+- Una por categoría con eventos (`/agenda/fiestas-en-punta-del-este/`…), Año Nuevo, cada mes con eventos y "este fin de semana" (se actualiza sola: GitHub rearma todo cada día).
+- Van en el sitemap, con datos para Google (lista de eventos y migas de pan), y se enlazan entre sí, desde el pie ("Agenda por mes y categoría") y desde cada evento ("Más fiestas en Punta del Este →").
+- Los textos de arriba de cada una están en `CAT_GUIDE` y `guideList` (tools/paginas.js). No hay que tocar nada para que se mantengan: salen de data.js.
+
 ## Mail
 
 - **Contacto oficial: `contacto@eventospde.com`** (web, mails a clientes, media kit). No es una casilla aparte: Namecheap lo reenvía al Gmail `eventospde.uy@gmail.com`, que sigue administrando todo (planilla, script, Mercado Pago, Analytics, GitHub).

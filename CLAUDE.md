@@ -19,7 +19,7 @@ An event is not "loaded" until every point below is checked off. The site does p
    - URL format: `https://images.unsplash.com/photo-<id>?w=1000&q=60&fm=webp&fit=max`, under ~300 KB;
    - add the comment `// foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas`;
    - list it in PENDIENTES.md.
-7. **Calendar, grid, plan and event page:** these come out on their own from data.js. The event page (`evento/<slug>/`) and the sitemap only exist after the build is run (point 9).
+7. **Calendar, grid, plan, event page and Google pages:** these come out on their own from data.js. The event page (`evento/<slug>/`), the guide pages (`agenda/`: category, month, New Year's, weekend) and the sitemap only exist after the build is run (point 9). For a new category, add its text to `CAT_GUIDE` in tools/paginas.js.
 8. **Translation:**
    - the event's text stays in Spanish (title, desc, place);
    - dates, categories and buttons are translated by `js/i18n.js` on its own;

@@ -22,13 +22,15 @@ const files = vm.runInContext(`buildSite(${JSON.stringify(v)})`, ctx);
 
 /* Las páginas de eventos vencidos se borran: se arma la carpeta de cero */
 fs.rmSync(path.join(root, "evento"), { recursive: true, force: true });
+fs.rmSync(path.join(root, "agenda"), { recursive: true, force: true });            // páginas de la agenda (categorías, meses…)
 for (const [rel, content] of Object.entries(files)) {
   const full = path.join(root, rel);
   fs.mkdirSync(path.dirname(full), { recursive: true });
   fs.writeFileSync(full, content);
 }
 const pages = Object.keys(files).filter(f => f.startsWith("evento/")).length;
-console.log(`Listo: ${pages} páginas de eventos y sitemap.xml (hoy ${vm.runInContext("TODAY", ctx)}, v=${v}).`);
+const guides = Object.keys(files).filter(f => f.startsWith("agenda/")).length;
+console.log(`Listo: ${pages} páginas de eventos, ${guides} páginas de la agenda y sitemap.xml (hoy ${vm.runInContext("TODAY", ctx)}, v=${v}).`);
 
 /* Traslado con chofer: cuántos eventos lo ofrecen, y aviso si uno debería tenerlo pero le falta el lugar para el precio */
 const rides = vm.runInContext(`(() => { const live = EV.filter(isLiveEvent);

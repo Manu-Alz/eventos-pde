@@ -167,6 +167,19 @@ body.ride-on .plan-fab{display:none!important}   /* traslado.js: la píldora "Tu
 
 /* 5. Más eventos en Punta */
 .ev-more{margin:0 0 20px}
+/* Páginas de la agenda (/agenda/…): título grande, texto de arriba, listas por mes y links a las demás */
+.ag{display:grid;gap:8px;margin:8px 0 40px}
+.ag-eyebrow{margin:0;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--sea)}
+.ag h1{font-size:clamp(38px,8vw,72px);font-weight:800;letter-spacing:-.04em;line-height:1}
+.ag-intro{max-width:720px;margin:10px 0 18px;font-size:18px;color:var(--muted)}
+.ag-sec{margin-top:18px}
+.ag-links{margin-top:28px}
+.ag-links h2{font-size:24px;font-weight:600;letter-spacing:-.02em;margin-bottom:12px}
+.ag-links div{display:flex;flex-wrap:wrap;gap:8px}
+.ag-links a{padding:10px 16px;border-radius:999px;border:1px solid var(--line);background:var(--glass);color:var(--ink);text-decoration:none;font-weight:600;font-size:15px}
+.ag-links a:hover{background:var(--glass-hover)}
+.ag-acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.ev-catlink{display:inline-block;margin-left:14px;color:var(--ink);font-weight:700;text-underline-offset:4px}
 .ev-more h2{font-size:clamp(28px,5vw,40px);font-weight:600;letter-spacing:-.035em}
 .ev-more-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(260px,100%),1fr));gap:12px;margin:18px 0}
 .ev-mini{display:flex;align-items:center;gap:12px;min-width:0;padding:10px;border-radius:20px;text-decoration:none;color:var(--ink);background:var(--glass);border:1px solid var(--line);transition:background .25s,border-color .25s}

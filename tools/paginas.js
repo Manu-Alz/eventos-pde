@@ -193,7 +193,8 @@ function eventPage(e, live, v) {
     <h2>Más eventos en Punta</h2>
     <div class="ev-more-grid">${more.map(moreCard).join("")}
     </div>
-    <a class="btn ghost ev-all" href="/">Ver toda la agenda</a>
+    <a class="btn ghost ev-all" href="/agenda/">Ver toda la agenda</a>
+    ${CAT_GUIDE[e.cat] ? `<a class="ev-catlink" href="/agenda/${CAT_GUIDE[e.cat].slug}/">${CAT_GUIDE[e.cat].more} →</a>` : ""}
   </section>` : ""}
 </div>
 
@@ -214,11 +215,12 @@ ${t ? `<div class="ev-buybar"><a class="btn" href="${esc(t.url)}" target="_blank
 }
 
 /* ============ 4. Sitemap ============ */
-function sitemapXml(live) {
+function sitemapXml(live, guides = []) {
   const row = (loc, pri, freq) => `  <url><loc>${SITE}${loc}</loc><lastmod>${TODAY}</lastmod><changefreq>${freq}</changefreq><priority>${pri}</priority></url>`;
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${STATIC_PAGES.map(([loc, pri, freq]) => row(loc, pri, freq)).join("\n")}
+${guides.map(g => row(g.path, g.path === "/agenda/" ? "0.9" : "0.8", "daily")).join("\n")}
 ${live.map(e => row(eventPath(e), "0.8", "weekly")).join("\n")}
 </urlset>
 `;
@@ -228,7 +230,153 @@ ${live.map(e => row(eventPath(e), "0.8", "weekly")).join("\n")}
    Devuelve { "ruta/del/archivo": "contenido" }. v = número de versión de los CSS/JS (el mismo ?v= que usa index.html). */
 function buildSite(v) {
   const live = EV.filter(isLiveEvent).sort(compareEvents);
-  const files = { "sitemap.xml": sitemapXml(live) };
+  const guides = guideList(live);
+  const files = { "sitemap.xml": sitemapXml(live, guides) };
   live.forEach(e => { files[`evento/${slugOf(e)}/index.html`] = eventPage(e, live, v); });
+  guides.forEach(g => { files[g.path.slice(1) + "index.html"] = guidePage(g, guides, v); });
   return files;
+}
+
+/* ============ 6. Páginas de la agenda para Google ============
+   Páginas fijas (HTML que Google lee directo) para lo que la gente busca: "eventos en Punta del Este" (/agenda/),
+   cada categoría ("fiestas en Punta del Este"), Año Nuevo, cada mes y este fin de semana. Se arman con los eventos
+   vigentes cada vez que corre el build (GitHub lo corre todos los días), y van en el sitemap.
+   El texto de arriba de cada una está en CAT_GUIDE y en guideList: es lo que Google muestra, conviene que sea propio. */
+const CAT_GUIDE = {
+  "Fiestas": { slug: "fiestas-en-punta-del-este", h1: "Fiestas en Punta del Este", more: "Más fiestas en Punta del Este",
+    intro: "Las fiestas de la temporada en Punta del Este, La Barra, Manantiales y José Ignacio: DJs internacionales, fiestas de Año Nuevo, sunsets y noches en Open Park, Narbona, Medellín Polo Club, Cipriani y más. Cada una con fecha, hora, lugar y link de entradas." },
+  "Música en vivo": { slug: "musica-en-vivo-en-punta-del-este", h1: "Música en vivo en Punta del Este", more: "Más música en vivo en Punta del Este",
+    intro: "Conciertos, shows y festivales de música en vivo en Punta del Este y Maldonado: clásica, jazz, rock y pop, con fecha, hora, lugar y entradas." },
+  "Náutica": { slug: "nautica-en-punta-del-este", h1: "Náutica en Punta del Este", more: "Más náutica en Punta del Este",
+    intro: "Regatas, circuitos de vela y eventos náuticos en el puerto de Punta del Este y la costa de Maldonado." },
+  "Autos": { slug: "autos-en-punta-del-este", h1: "Autos en Punta del Este", more: "Más eventos de autos en Punta del Este",
+    intro: "Karting, autos clásicos, exposiciones y carreras en Punta del Este: fechas, lugares y cómo llegar." },
+  "Deportes": { slug: "deportes-en-punta-del-este", h1: "Deportes en Punta del Este", more: "Más deportes en Punta del Este",
+    intro: "Triatlón, ciclismo, golf, running y torneos en Punta del Este y alrededores, con fecha, lugar e inscripción." },
+  "Festivales": { slug: "festivales-en-punta-del-este", h1: "Festivales en Punta del Este", more: "Más festivales en Punta del Este",
+    intro: "Festivales de cine, música y cultura en Punta del Este y Maldonado durante toda la temporada." },
+  "Gastronomía": { slug: "gastronomia-en-punta-del-este", h1: "Gastronomía en Punta del Este", more: "Más gastronomía en Punta del Este",
+    intro: "Ferias, cenas, catas y eventos gastronómicos en Punta del Este, La Barra y José Ignacio." }
+};
+const monthKey = iso => iso.slice(0, 7);
+const monthName = ym => `${MESES[+ym.slice(5, 7) - 1]} ${ym.slice(0, 4)}`;
+const touches = (e, from, to) => e.date <= to && (e.endDate || e.date) >= from;     // el evento cae entre esas fechas
+
+function guideList(live) {
+  const year = live.find(e => e.date >= `${TODAY.slice(0, 4)}-12-31`)?.date.slice(0, 4) || TODAY.slice(0, 4);
+  const nye = `${year}-12-31`, nyeNext = addDays(nye, 1);
+  /* Este fin de semana: del viernes al domingo (si hoy ya es fin de semana, el de ahora) */
+  const wd = new Date(TODAY + "T12:00:00Z").getUTCDay();
+  const fri = wd === 0 ? addDays(TODAY, -2) : wd === 6 ? addDays(TODAY, -1) : addDays(TODAY, 5 - wd), sun = addDays(fri, 2);
+  const weekend = live.filter(e => touches(e, fri < TODAY ? TODAY : fri, sun));
+  const guides = [{ path: "/agenda/", h1: "Eventos en Punta del Este", eyebrow: "Agenda completa",
+    title: `Eventos en Punta del Este ${TODAY.slice(0, 4)}–${+TODAY.slice(0, 4) + 1}: agenda completa | Eventos PDE`,
+    intro: "Todos los eventos de la temporada en Punta del Este, La Barra, Manantiales, José Ignacio y Maldonado: fiestas, música en vivo, deportes, náutica, autos, festivales y gastronomía. Ordenados por fecha, con hora, lugar y link de entradas.",
+    events: live, byMonth: true }];
+  guides.push({ path: "/agenda/este-fin-de-semana-en-punta-del-este/", h1: "Qué hacer este fin de semana en Punta del Este", eyebrow: "Este fin de semana",
+    title: "Qué hacer este fin de semana en Punta del Este | Eventos PDE",
+    intro: weekend.length ? `Eventos del ${parseInt(fri.slice(8), 10)} al ${parseInt(sun.slice(8), 10)} de ${MESES[+sun.slice(5, 7) - 1]} en Punta del Este: fiestas, shows, deportes y más, con hora, lugar y entradas.`
+      : "Este fin de semana no hay eventos cargados en Punta del Este. Estos son los próximos, ordenados por fecha.",
+    events: weekend.length ? weekend : live.slice(0, 12) });
+  const nyeEvents = live.filter(e => touches(e, nye, nyeNext));
+  if (nyeEvents.length) guides.push({ path: "/agenda/ano-nuevo-en-punta-del-este/", h1: `Año Nuevo ${+year + 1} en Punta del Este`, eyebrow: "Fin de año",
+    title: `Año Nuevo ${+year + 1} en Punta del Este: fiestas y entradas | Eventos PDE`,
+    intro: `Dónde recibir el ${+year + 1} en Punta del Este: las fiestas del 31 de diciembre en La Barra, Manantiales, José Ignacio y Punta, con open bar, DJs y links de entradas.`,
+    events: nyeEvents });
+  for (const [cat, g] of Object.entries(CAT_GUIDE)) {
+    const evs = live.filter(e => e.cat === cat);
+    if (evs.length) guides.push({ path: `/agenda/${g.slug}/`, h1: g.h1, eyebrow: cat, title: `${g.h1}: agenda y entradas | Eventos PDE`, intro: g.intro, events: evs, byMonth: evs.length > 6 });
+  }
+  for (const ym of [...new Set(live.map(e => monthKey(e.date)))]) {
+    const evs = live.filter(e => touches(e, `${ym}-01`, `${ym}-31`)), m = monthName(ym);
+    guides.push({ path: `/agenda/eventos-en-punta-del-este-${MESES[+ym.slice(5, 7) - 1]}-${ym.slice(0, 4)}/`, h1: `Eventos en Punta del Este en ${m}`, eyebrow: cap1(m), month: true,
+      title: `Eventos en Punta del Este en ${m} | Eventos PDE`,
+      intro: `Qué hacer en Punta del Este en ${m}: ${evs.length} ${evs.length === 1 ? "evento" : "eventos"} entre fiestas, música en vivo, deportes y más, con fecha, hora, lugar y entradas.`, events: evs });
+  }
+  return guides;
+}
+
+/* Tarjetita con hora (para las listas de la agenda) */
+const guideCard = e => moreCard(e).replace("</small>", `${hasTime(e) ? ` · ${e.time}` : ""}</small>`);
+
+function guidePage(g, guides, v) {
+  const url = SITE + g.path;
+  const desc = cut(g.intro, 158);
+  const groups = g.byMonth
+    ? [...new Set(g.events.map(e => monthKey(e.date)))].map(ym => [cap1(monthName(ym)), g.events.filter(e => monthKey(e.date) === ym)])
+    : [[null, g.events]];
+  const others = guides.filter(x => x !== g);
+  const ld = [{
+    "@context": "https://schema.org", "@type": "ItemList", name: g.h1, url,
+    itemListElement: g.events.map((e, i) => ({ "@type": "ListItem", position: i + 1, url: SITE + eventPath(e), name: e.title }))
+  }, {
+    "@context": "https://schema.org", "@type": "BreadcrumbList",
+    itemListElement: [{ "@type": "ListItem", position: 1, name: "Eventos PDE", item: SITE + "/" },
+      ...(g.path === "/agenda/" ? [] : [{ "@type": "ListItem", position: 2, name: "Agenda", item: SITE + "/agenda/" }]),
+      { "@type": "ListItem", position: g.path === "/agenda/" ? 2 : 3, name: g.h1, item: url }]
+  }];
+  return `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>${esc(g.title)}</title>
+<meta name="description" content="${esc(desc)}">
+<meta name="format-detection" content="telephone=no">
+<link rel="canonical" href="${url}">
+<meta name="theme-color" content="#151518">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Eventos PDE">
+<meta property="og:locale" content="es_UY">
+<meta property="og:title" content="${esc(g.h1)}">
+<meta property="og:description" content="${esc(desc)}">
+<meta property="og:url" content="${url}">
+<meta property="og:image" content="${esc(g.events[0] ? absPhoto(g.events[0]) : SITE + "/img/og.jpg?v=2")}">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css?v=${v}">
+<link rel="stylesheet" href="/css/evento.css?v=${v}">
+<link rel="stylesheet" href="/css/plan.css?v=${v}">
+<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, "\\u003c")}</script>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="logo" href="/" aria-label="Eventos PDE, inicio">Eventos<span>PDE</span></a>
+  </header>
+
+  <a class="ev-back" href="${g.path === "/agenda/" ? "/" : "/agenda/"}">‹ ${g.path === "/agenda/" ? "Inicio" : "Toda la agenda de Punta del Este"}</a>
+
+  <main class="ag">
+    <p class="ag-eyebrow">${esc(g.eyebrow)}</p>
+    <h1>${esc(g.h1)}</h1>
+    <p class="ag-intro">${esc(g.intro)}</p>
+    ${groups.map(([h, evs]) => `<section class="ev-more ag-sec">
+      ${h ? `<h2>${esc(h)}</h2>` : ""}
+      <div class="ev-more-grid">${evs.map(guideCard).join("")}
+      </div>
+    </section>`).join("\n    ")}
+    <nav class="ag-links" aria-label="Más de la agenda">
+      <h2>Más de la agenda</h2>
+      <div>${others.map(x => `<a href="${x.path}">${esc(x.h1)}</a>`).join("")}</div>
+    </nav>
+    <div class="ag-acts"><a class="btn" href="/">Ver la agenda con calendario y mapa</a><a class="btn ghost" href="/plan.html">Armar mi plan</a></div>
+  </main>
+</div>
+
+<div class="wrap"><footer class="foot" id="site-footer"><span>Punta del Este, Uruguay</span></footer></div>
+
+<script src="/js/config.js?v=${v}"></script>
+<script src="/js/utils.js?v=${v}"></script>
+<script src="/js/i18n.js?v=${v}"></script>
+<script src="/js/analytics.js?v=${v}"></script>
+<script src="/js/site.js?v=${v}"></script>
+<script src="/js/plan.js?v=${v}"></script>
+</body>
+</html>
+`;
 }
