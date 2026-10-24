@@ -406,5 +406,69 @@ const EV = [
     desc: "Fantasy, la fiesta de Año Nuevo de Open Park, con open bar junto al puente de La Barra. Organizan About, Blackout, Kabûl y Brothers.",
     tickets: "https://app.entraste.com/events/fantasy-nye-2027", price: "Desde USD 110",
     photo: "fantasy-nye-open-park.webp"
+  },
+  {
+    title: "El Templo: NYE 2027",
+    cat: "Fiestas", date: "2026-12-31", time: "23:59",
+    place: "El Bosque, Ruta 10 km 169",
+    desc: "El Templo recibe el 2027 en El Bosque con dos escenarios, el Commercial Stage y el Humanos Stage. Para mayores de 30, con entradas generales, VIP y opción con consumo incluido.",
+    tickets: "https://app.entraste.com/events/el-templo-nye-2027", price: "Desde USD 120",
+    photo: "el-templo-nye-el-bosque.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
+  },
+  {
+    title: "Palito Bombón",
+    cat: "Fiestas", date: "2026-12-29", time: "23:59",
+    place: "Ruta 104 km 3,5, Manantiales",
+    desc: "Palito Bombón, el martes 29 de diciembre en Ruta 104 km 3,5. Sector general para mayores de 23 y VIP Standing para mayores de 25.",
+    tickets: "https://app.entraste.com/events/palito-bombon", price: "Desde USD 30",
+    photo: "palito-bombon-ruta-104.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
+  },
+  {
+    title: "Lovers",
+    cat: "Fiestas", date: "2027-01-02", time: "23:59",
+    place: "Ruta 104 km 3,5, Manantiales",
+    desc: "Lovers, el sábado 2 de enero en Ruta 104 km 3,5. Sector general para mayores de 21 y VIP Standing para mayores de 24.",
+    tickets: "https://app.entraste.com/events/lovers", price: "Desde USD 40",
+    photo: "lovers-ruta-104.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
+  },
+  {
+    title: "Arde By JW 2027",
+    cat: "Fiestas", date: "2027-01-03", time: "23:59",
+    place: "Open Park, El Placer",
+    desc: "Arde By JW vuelve a Open Park el domingo 3 de enero, bajo la carpa de El Placer, junto al puente de La Barra. Hay sector general, VIP Standing (mayores de 22) y Backstage (mayores de 25).",
+    tickets: "https://app.entraste.com/events/arde-by-jw-2027", price: "Desde USD 60",
+    photo: "arde-by-jw-open-park.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
+  },
+  {
+    title: "Franky Rizardo: Flow en Polo Medellín",
+    cat: "Fiestas", date: "2027-01-03", time: "22:00",
+    place: "Medellín Polo Club, Ruta 10 km 176 (Punta del Este)",
+    desc: "Flow, la marca del DJ holandés Franky Rizardo, llega por primera vez a Punta del Este, en La Pista de Medellín. Suma residencias en Fabric London y Pacha Ibiza y escenario propio en Tomorrowland. Ingreso hasta las 4:00, solo mayores de 18.",
+    tickets: "https://venti.live/evento/PM-Pres-LISTEN-TO-FLOW-FRANKY-RIZARDO", price: "Desde USD 75",
+    photo: "franky-rizardo-polo-medellin.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
+  },
+  {
+    title: "La Fiesta Punta: Réveillon 2027",
+    cat: "Fiestas", date: "2026-12-31", time: "22:00",
+    place: "Tommy Bistró, Hotel Tío Tom, Ruta Interbalnearia km 115,5 (Solanas)",
+    desc: "Réveillon frente al mar en Solanas, con open bar, open food y fuegos artificiales, de 22:00 a 5:30. Se recomienda ir de blanco. Las entradas son para mayores de 18; los chicos de 7 a 17 entran con sus padres hasta las 00:30.",
+    tickets: "https://redtickets.uy/evento/La-Fiesta-Punta-2027/33292/",
+    photo: "la-fiesta-punta-solanas.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
+  },
+  {
+    title: "Épica Gravel 2026",
+    cat: "Deportes", date: "2026-11-21", time: "07:00",
+    place: "Laguna del Sauce, Punta del Este",
+    desc: "Cuarta edición de la Épica Gravel, una carrera de ciclismo por los caminos de tierra de Laguna del Sauce. Hay recorridos de 50 y 100 millas, con tercer tiempo y premios al final. La inscripción es nominativa.",
+    tickets: "https://redtickets.uy/evento/EPICA-GRAVEL-2026--Punta-del-Este-Uruguay/28720/", price: "Inscripción USD 160",
+    photo: "epica-gravel-laguna-del-sauce.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
+  },
+  {
+    title: "2.ª Copa Fundación Futuro del Este (golf)",
+    cat: "Deportes", date: "2026-11-21", time: "08:00",
+    place: "La Barra Golf Club, Ruta 104 km 2,5 (Manantiales)",
+    desc: "Torneo solidario de golf en La Barra Golf Club. Lo recaudado va a la Escuela de Atletas Guía de la Fundación Futuro del Este, que acompaña a personas con discapacidad en el deporte.",
+    tickets: "https://redtickets.uy/evento/TORNEO-DE-GOLF--SEGUNDA-COPA-FUNDACION-FUTURO-DEL-ESTE/34198/",
+    photo: "copa-futuro-del-este-la-barra-golf.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
   }
 ];

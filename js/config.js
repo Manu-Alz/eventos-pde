@@ -63,7 +63,9 @@ const VENUES = {
   "Playa Montoya":          [-34.91540, -54.84836],
   "The Grand Hotel":        [-34.94481, -54.92010],
   "Hotel del Lago":         [-34.85969, -55.05609],
-  "OAK":                    [-34.91545, -54.85244]
+  "OAK":                    [-34.91545, -54.85244],
+  "Tío Tom":                [-34.88650, -55.04600],
+  "La Barra Golf Club":     [-34.88228, -54.84202]
 };
 
 /* ============ 2c. Alojamientos con convenio (catálogo de "Armar plan") ============
