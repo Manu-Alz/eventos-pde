@@ -336,7 +336,7 @@ function stayStep(list) {
 
 /* Booking: un bloque claro con lo que se va a buscar y el botón; aviso de que es un link de referido */
 /* Mini calendario de la estadía: se toca el día que llega y después el día que se va; las noches del medio quedan pintadas.
-   Los días con eventos del plan llevan un punto del color de su categoría. Los días pasados no se pueden tocar. */
+   Los días con eventos del plan llevan un aro alrededor del número. Los días pasados no se pueden tocar. */
 let calMonth = "", calFirst = "";                 // mes a la vista (AAAA-MM) y entrada ya tocada que espera la salida
 const SEMANA = ["L", "M", "M", "J", "V", "S", "D"];
 function calHtml(list) {
@@ -344,19 +344,19 @@ function calHtml(list) {
   const month = calMonth || (a || TODAY).slice(0, 7), [y, m] = month.split("-").map(Number);
   const lead = (new Date(`${month}-01T12:00:00Z`).getUTCDay() + 6) % 7, days = new Date(Date.UTC(y, m, 0)).getUTCDate();
   const evDay = {};
-  list.forEach(e => { for (let d = e.date; d <= (e.endDate || e.date); d = addDays(d, 1)) evDay[d] = evDay[d] || CATS[e.cat]; });
+  list.forEach(e => { for (let d = e.date; d <= (e.endDate || e.date); d = addDays(d, 1)) evDay[d] = true; });
   const cells = Array.from({ length: lead }, () => "<span></span>");
   for (let i = 1; i <= days; i++) {
     const d = `${month}-${pad(i)}`, mid = Boolean(a && b && d > a && d < b);
-    const cls = [d === a && "is-in", d === a && !b && "is-alone", d === b && "is-out", mid && "is-mid", d === TODAY && "is-today"].filter(Boolean).join(" ");
-    cells.push(`<button type="button" class="pl-cal-d ${cls}" data-day="${d}"${d < TODAY ? " disabled" : ""} aria-pressed="${d === a || d === b || mid}" aria-label="${dateShort(d)}${evDay[d] ? ", día de evento" : ""}">${i}${evDay[d] ? `<i style="--c:${evDay[d]}"></i>` : ""}</button>`);
+    const cls = [d === a && "is-in", d === a && !b && "is-alone", d === b && "is-out", mid && "is-mid", evDay[d] && "has-ev"].filter(Boolean).join(" ");
+    cells.push(`<button type="button" class="pl-cal-d ${cls}" data-day="${d}"${d < TODAY ? " disabled" : ""} aria-pressed="${d === a || d === b || mid}" aria-label="${dateShort(d)}${evDay[d] ? ", día de evento" : ""}"><span>${i}</span></button>`);
   }
   return `<div class="pl-cal-h"><button type="button" class="pl-cal-nav" data-calnav="-1" aria-label="Mes anterior"${month > TODAY.slice(0, 7) ? "" : " disabled"}>${ico("arrow")}</button>
       <b>${MESES[m - 1].replace(/^./, c => c.toUpperCase())} ${y}</b>
       <button type="button" class="pl-cal-nav" data-calnav="1" aria-label="Mes siguiente">${ico("arrow")}</button></div>
     <div class="pl-cal-w" aria-hidden="true">${SEMANA.map(s => `<span>${s}</span>`).join("")}</div>
     <div class="pl-cal-g">${cells.join("")}</div>
-    ${Object.keys(evDay).length ? `<small class="pl-cal-key"><i style="background:${Object.values(evDay)[0]}"></i>Días de tus eventos</small>` : ""}`;
+    ${Object.keys(evDay).length ? `<small class="pl-cal-key"><i></i>Días de tus eventos</small>` : ""}`;
 }
 /* Un toque en un día: primero la entrada, después la salida (si toca un día anterior, ese pasa a ser la entrada) */
 function pickDay(d) {
