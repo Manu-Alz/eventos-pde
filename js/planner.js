@@ -136,6 +136,7 @@ function bookingUrl(list) {
   const B = typeof BOOKING === "object" ? BOOKING : {};
   if (B.aid) q.set("aid", B.aid);
   q.set("label", "eventospde-plan");
+  if (typeof I18N === "object") q.set("lang", I18N.booking);          // Booking se abre en español, inglés o portugués
   const dest = "https://www.booking.com/searchresults.es.html?" + q;
   return B.link ? B.link + encodeURIComponent(dest) : dest;          // link de afiliado (Travelpayouts, CJ o Awin) + la búsqueda
 }
@@ -360,7 +361,7 @@ function stayStep(list) {
    plan van con el número en celeste. Con eventos, un toque cambia la llegada (hasta el día del primer evento) o la salida
    (desde el día después del último); los días del medio son fijos. Sin eventos: primero la llegada, después la salida. */
 let calMonth = "", calFirst = "";                 // mes a la vista (AAAA-MM) y entrada ya tocada que espera la salida
-const SEMANA = ["L", "M", "M", "J", "V", "S", "D"];
+const SEMANA = typeof I18N === "object" ? I18N.week() : ["L", "M", "M", "J", "V", "S", "D"];
 function calHtml(list) {
   const a = calFirst || stayIn(list), b = calFirst ? "" : stayOut(list);
   const month = calMonth || (a || TODAY).slice(0, 7), [y, m] = month.split("-").map(Number);
@@ -779,9 +780,9 @@ function doneHtml(ref, f, ok, msg) {
   if (ok) return `<div class="pl-done">
       <p class="pl-eyebrow" style="color:#46d9a0">Pedido ${esc(ref)}</p>
       <h2>¡Listo, ${name}! Recibimos tu plan.</h2>
-      <p>Te mandamos la cotización a <b>${esc(f.email)}</b> con todo lo que incluye, el total y el botón para pagar online. Revisá también promociones o spam.</p>
+      <p>Te mandamos el precio a <b>${esc(f.email)}</b> con todo lo que incluye, el total y el botón para pagar online. Revisá también promociones o spam.</p>
       <ol class="pl-how">
-        <li><b>Cotizamos</b><span>Entradas, traslados y alojamiento para tus fechas.</span></li>
+        <li><b>Cotizamos</b><span>Traslado y alojamiento para tus fechas.</span></li>
         <li><b>Te llega por mail</b><span>Con el detalle y el total en dólares.</span></li>
         <li><b>Pagás online y listo</b><span>Después te escribimos para coordinar cada tramo.</span></li>
       </ol>
@@ -828,8 +829,8 @@ async function submitPlan(form) {
       /* Solo se va a pagar si el script devolvió una reserva de traslado (TRS-…): un script viejo, sin traslados,
          contestaría ok pero sin reserva, y la página de pago diría "No encontramos el pedido" */
       if (r.ok && /^TRS-/.test(r.ref || "") && (r.url || r.pagina)) { location.href = r.url || r.pagina; return; }
-      alert((!r.ok && r.error) || "No pudimos abrir el pago en este momento. Escribinos por WhatsApp y te mandamos el link.");
-    } catch (_) { alert("No pudimos abrir el pago. Revisá la conexión y probá de nuevo."); }
+      alert((!r.ok && r.error) || (typeof I18N === "object" ? I18N.t("No pudimos abrir el pago en este momento. Escribinos por WhatsApp y te mandamos el link.") : "No pudimos abrir el pago en este momento. Escribinos por WhatsApp y te mandamos el link."));
+    } catch (_) { alert(typeof I18N === "object" ? I18N.t("No pudimos abrir el pago. Revisá la conexión y probá de nuevo.") : "No pudimos abrir el pago. Revisá la conexión y probá de nuevo."); }
     btn.disabled = false; refresh(list);
     return;
   }

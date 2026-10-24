@@ -202,6 +202,7 @@ ${t ? `<div class="ev-buybar"><a class="btn" href="${esc(t.url)}" target="_blank
 
 <script src="/js/config.js?v=${v}"></script>
 <script src="/js/utils.js?v=${v}"></script>
+<script src="/js/i18n.js?v=${v}"></script>
 <script src="/js/analytics.js?v=${v}"></script>
 <script src="/js/site.js?v=${v}"></script>
 <script src="/js/plan.js?v=${v}"></script>

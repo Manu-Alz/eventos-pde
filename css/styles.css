@@ -50,6 +50,14 @@ header.top .hact{margin-left:6px}
   background:rgba(21,21,24,.96);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 30px 60px -30px #000}
 .nav-menu a{padding:15px 16px;border-radius:14px;color:var(--ink);text-decoration:none;font-size:18px;font-weight:600}
 .nav-menu a:hover,.nav-menu a[aria-current]{background:var(--glass-hover)}
+/* Idioma: ES · EN · PT (js/i18n.js). En el celular va adentro del menú */
+.lang{display:inline-flex;gap:2px;padding:3px;border:1px solid var(--line);border-radius:999px;background:var(--glass)}
+.lang button{min-width:36px;min-height:32px;padding:0 8px;border:0;border-radius:999px;background:none;color:rgba(244,244,245,.6);font:700 12px 'DM Sans',sans-serif;letter-spacing:.06em;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--sun);color:#fff}
+header.top .hact .lang{margin-right:4px}
+.nav-lang{padding:10px 8px 4px}
+.nav-lang .lang button{min-width:52px;min-height:40px;font-size:14px}
+@media (max-width:960px){header.top .hact .lang{display:none}}
 @media (min-width:961px){.nav-menu{display:none!important}}
 @media (max-width:960px){
   .nav-links{display:none}

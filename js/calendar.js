@@ -5,7 +5,7 @@
    - Se puede deslizar a los costados para cambiar de mes.
    Requiere: config.js (CATS), utils.js (esc, pad, MESES, TODAY), cards.js (cardEl, compareEvents) */
 
-const WEEKDAYS = ["L", "M", "M", "J", "V", "S", "D"];
+const WEEKDAYS = typeof I18N === "object" ? I18N.week() : ["L", "M", "M", "J", "V", "S", "D"];   // del lunes al domingo, en el idioma elegido
 
 /* ============ 1. Datos ============ */
 /* Mapa "AAAA-MM-DD" -> eventos (los de varios días aparecen en cada día) */

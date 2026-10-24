@@ -19,10 +19,11 @@
     head.append(logo);
     head.insertAdjacentHTML("beforeend", `
       <nav class="nav-links" aria-label="Secciones">${NAV.map(([h, t]) => `<a href="${h}"${cur(h)}>${t}</a>`).join("")}</nav>
-      <div class="hact">${cta}<button type="button" class="nav-burger" aria-expanded="false" aria-controls="nav-menu" aria-label="Abrir el menú"><span></span><span></span><span></span></button></div>
+      <div class="hact">${typeof I18N === "object" ? I18N.switcher() : ""}${cta}<button type="button" class="nav-burger" aria-expanded="false" aria-controls="nav-menu" aria-label="Abrir el menú"><span></span><span></span><span></span></button></div>
       <div class="nav-menu" id="nav-menu" hidden>
         ${NAV.map(([h, t]) => `<a href="${h}"${cur(h)}>${t}</a>`).join("")}
         <a href="mailto:${esc(CONFIG.email)}" data-ev="email_sitio">Escribinos</a>
+        ${typeof I18N === "object" ? `<div class="nav-lang">${I18N.switcher()}</div>` : ""}
       </div>`);
     const burger = head.querySelector(".nav-burger"), menu = $("nav-menu");
     const open = on => { menu.hidden = !on; burger.setAttribute("aria-expanded", on); burger.setAttribute("aria-label", on ? "Cerrar el menú" : "Abrir el menú"); head.classList.toggle("menu-open", on); };

@@ -25,6 +25,7 @@ js/
   data.js           los eventos                                      (se edita seguido)
   utils.js          utilidades compartidas
   analytics.js      Google Analytics y conteo de clics
+  i18n.js           idiomas: español, inglés y portugués (diccionario D y reglas para fechas y números); va después de utils.js en todas las páginas
   site.js           barra de arriba (cápsula con Agenda, Calendario, Mapa, Publicar evento, Quiénes somos y el botón "Armar mi plan"; en el celular, botón + menú ☰; los links van a /#agenda, /#calendario y /#mapa), pie de página (marca, columnas Agenda / Trabajá con nosotros / Contacto; los links se cambian acá) y animación de todas las preguntas frecuentes (.faq y .pl-faq)
   cards.js          piezas de una publicación y tarjeta
   tarifas.js        zonas de Punta y cálculo del precio de los traslados (los precios están en config.js, TARIFAS)
@@ -37,6 +38,13 @@ js/
   app.js            filtros, lista e inicio
   publicar.js       página de publicar
 ```
+
+## Idiomas (español, inglés y portugués)
+
+- La barra tiene **ES · EN · PT** (en el celular, adentro del menú ☰). La primera vez se elige solo según el idioma del teléfono (portugués → PT, inglés → EN, el resto → español) y después queda el que la persona eligió. Un link con `?lang=pt` (o `en`, `es`) abre la web en ese idioma, para compartir con brasileños.
+- Se traduce todo lo de la interfaz: barra, botones, filtros, fechas, Armar plan, la página de cada evento, Pagar, Publicar, Quiénes somos y los mensajes. **Lo que escribe cada organizador queda en español** (nombre del evento, descripción y lugar).
+- Booking se abre en el idioma elegido. Los mails al cliente y lo que nos llega por WhatsApp o mail siguen en español (en el pedido de Armar plan figura el idioma de la persona).
+- Para traducir un texto nuevo: agregalo en `js/i18n.js`, en `D`, con sus dos traducciones (`"Texto": ["English", "Português"]`). Sin traducción se ve en español, nunca vacío. Los textos con números o fechas van en `RULES`.
 
 ## Mail
 
