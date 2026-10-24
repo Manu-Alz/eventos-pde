@@ -2,6 +2,8 @@
 
 Agenda de eventos de Punta del Este. Sitio estático (HTML, CSS y JS puros): se sube tal cual a GitHub Pages, Netlify o cualquier hosting.
 
+> Lo que está apagado, de prueba o esperando algo tuyo: [PENDIENTES.md](PENDIENTES.md).
+
 ## Estructura
 
 ```
