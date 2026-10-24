@@ -54,6 +54,22 @@ function rideGeo(e) {
 const rideOK = e => Boolean(rideGeo(e)) && (e.traslado === true
   || (e.traslado !== false && Boolean(e.tickets) && typeof RIDE_CATS !== "undefined" && RIDE_CATS.includes(e.cat)));
 
+/* ¿Se reserva chofer propio en la web? (CHOFER.propio en config.js). Si no, en esos eventos sale Uber */
+const choferPropio = () => typeof CHOFER === "object" && CHOFER.propio === true;
+const rideBookable = e => rideOK(e) && choferPropio();
+
+/* Uber con el lugar del evento ya cargado (link universal: abre la app o, si no la tiene, la web de Uber).
+   "ir": desde donde está la persona hasta el evento. "volver": desde el evento; el destino lo pone en Uber. */
+function uberUrl(e, way) {
+  const g = rideGeo(e);
+  if (!g) return "";
+  const end = way === "ir" ? "dropoff" : "pickup";
+  const q = [`action=setPickup`, way === "ir" ? "pickup=my_location" : "",
+    `${end}[latitude]=${g[0]}`, `${end}[longitude]=${g[1]}`,
+    `${end}[nickname]=${encodeURIComponent(shortPlace(e))}`, `${end}[formatted_address]=${encodeURIComponent(e.place)}`].filter(Boolean);
+  return "https://m.uber.com/ul/?" + q.join("&");
+}
+
 /* Link de entradas. Si el dominio está en AFILIADOS (config.js) se le agrega tu código
    y queda marcado como link de referido. */
 function ticketLink(e) {

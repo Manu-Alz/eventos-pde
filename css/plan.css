@@ -189,8 +189,9 @@
 /* "Que me lo busquen ustedes": mismo bloque en violeta, con el presupuesto */
 .pl-booking.is-aliados{background:rgba(124,77,255,.12);border-color:rgba(124,77,255,.45)}
 /* Dónde lo buscamos (traslados): separado del alojamiento por una línea */
-.pl-pickup{display:grid;gap:12px;padding-top:16px;border-top:1px solid var(--line)}
-.pl-card>.pl-pickup:first-child,.pl-row+.pl-pickup{padding-top:0;border-top:0}
+/* "Para el chofer: ¿dónde te alojás?" (al final del paso 2, solo si pidió traslados) */
+.pl-pickup .pl-q{margin:0}
+.pl-hint{font-size:14px;color:var(--muted)}
 .pl-stays{display:grid;gap:10px}
 .pl-stay-card{position:relative;display:grid;grid-template-columns:96px minmax(0,1fr);gap:14px;align-items:center;padding:10px 46px 10px 10px;border-radius:20px;border:1.5px solid var(--line);background:var(--glass);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
 .pl-stay-card[aria-pressed="true"]{border-color:#7C4DFF;background:rgba(124,77,255,.14)}

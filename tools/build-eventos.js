@@ -34,7 +34,7 @@ console.log(`Listo: ${pages} páginas de eventos y sitemap.xml (hoy ${vm.runInCo
 const rides = vm.runInContext(`(() => { const live = EV.filter(isLiveEvent);
   return { ok: live.filter(rideOK).length,
            sinLugar: live.filter(e => e.traslado !== false && e.tickets && RIDE_CATS.includes(e.cat) && !rideGeo(e)).map(e => e.title) }; })()`, ctx);
-console.log(`Traslado con chofer en ${rides.ok} eventos.` + (rides.sinLugar.length
+console.log(`${vm.runInContext("choferPropio()", ctx) ? "Traslado con chofer propio" : "Cómo ir y volver con Uber (chofer propio apagado)"} en ${rides.ok} eventos.` + (rides.sinLugar.length
   ? ` Sin traslado por falta de ubicación (agregá el lugar a VENUES o geo al evento): ${rides.sinLugar.join(", ")}` : ""));
 
 /* Fotos de eventos vencidos: se borran de img/eventos cuando el evento terminó hace más de GRACIA días.

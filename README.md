@@ -114,6 +114,15 @@ En el paso 3 de Armar plan, con fechas, zona y tipo elegidos, la persona elige *
 
 **Hoteles e inmobiliarias que quieran sumarse:** la sección "Para hoteles e inmobiliarias" de `nosotros.html` (link en el pie, "Hoteles e inmobiliarias") explica cómo trabajamos y tiene el botón "Quiero sumarme" (mail a contacto@).
 
+## Chofer propio o Uber (interruptor `CHOFER.propio` en `js/config.js`)
+
+**Hoy está apagado** (`CHOFER = { propio: false }`), porque todavía no hay choferes propios. Mientras tanto:
+- En la página de cada fiesta o show con entradas sale **"Cómo ir y volver"** con dos botones de **Uber**: "Para ir" (destino: el evento) y "Para volver" (origen: el evento; el destino lo pone la persona en Uber). Se abre la app de Uber o su web, con el lugar ya cargado. Sin comisión.
+- En Armar plan no se ofrece chofer a los eventos, y el traslado del aeropuerto o del puerto **se cotiza** (no se paga al instante): lo coordinás con un remise o chofer por pedido.
+- Al final del paso 2, solo si pidió algún traslado, una pregunta: **"Para el chofer: ¿dónde te alojás?"** (zona, que se completa sola con la del alojamiento, y dirección opcional; si falta, se pide por WhatsApp).
+
+**Cuando tengan choferes:** poné `propio: true`, subí el cambio y vuelve todo lo de abajo (reserva con precio al instante y pago con tarjeta, en la página del evento y en Armar plan). Revisá también la pregunta frecuente "¿Cómo voy y vuelvo de los eventos?" y la de "¿Cómo pago?" en `plan.html` (texto y bloque `ld+json`).
+
 ## Traslados con chofer: reservar y pagar al instante
 
 Para turistas y también para la gente de acá (la vuelta de la fiesta sin manejar ni buscar taxi).

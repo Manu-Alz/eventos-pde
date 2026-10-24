@@ -105,6 +105,11 @@ const BOOKING = {
 /* En qué eventos se ofrece el traslado: solo los que tienen entradas a la venta (tickets) y son de estas categorías,
    donde la gente sale tarde y conviene no manejar. Un evento puntual se fuerza con traslado: true o se apaga con traslado: false. */
 const RIDE_CATS = ["Fiestas", "Música en vivo"];
+/* Chofer propio (reservar y pagar el traslado en la web). Mientras no haya choferes, va en false:
+   - en la página de esos eventos sale "Cómo ir y volver" con Uber (lugar del evento ya cargado) en vez de la reserva;
+   - en Armar plan no se ofrece chofer a los eventos, y el traslado del aeropuerto se cotiza (no se paga al instante).
+   Con true vuelve todo: reserva con precio al instante y pago con tarjeta (traslado.js). */
+const CHOFER = { propio: false };
 const TARIFAS = {
   tramos:   [[6, 20], [15, 30], [30, 45], [Infinity, 65]],
   llegadas: { pde: 50, mvd: 170, bqmvd: 180, bqcol: 320, bus: 20 },

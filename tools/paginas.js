@@ -81,10 +81,28 @@ const moreCard = e => `
       </a>`;
 
 /* "Traslado con chofer": solo en los eventos que cumplen rideOK (cards.js: entradas a la venta, fiesta o música en vivo).
+   Con chofer propio (CHOFER.propio en config.js) es la reserva con pago (traslado.js); sin chofer propio, Uber.
    js/traslado.js arma el bloque con estos datos (precio al instante y pago con tarjeta); sin JavaScript queda el título.
    En los demás eventos va solo una línea discreta a Armar plan (aeropuerto y alojamiento). */
 function rideBox(e) {
   const id = esc(slugOf(e));
+  /* Sin chofer propio todavía (CHOFER.propio en config.js): "Cómo ir y volver" con Uber, con el lugar del evento ya cargado */
+  if (rideOK(e) && !choferPropio()) return `<section class="ride ride-uber" aria-labelledby="uber-h">
+        <div class="ride-head">
+          <span class="ride-i">${ico("car")}</span>
+          <div class="ride-ht">
+            <p class="ride-eb">Cómo ir y volver</p>
+            <h2 id="uber-h">Volvé seguro, sin manejar</h2>
+            <p>Pedí un Uber con el lugar del evento ya cargado. Para la vuelta, tocá el botón cuando estés saliendo.</p>
+          </div>
+        </div>
+        <div class="uber-btns">
+          <a class="btn uber-go" href="${esc(uberUrl(e, "ir"))}" target="_blank" rel="noopener" data-ev="uber_ir" data-n="${esc(e.title)}"><span><b>Para ir</b><small>Hasta ${esc(shortPlace(e))}</small></span>${ico("arrow")}</a>
+          <a class="btn uber-go" href="${esc(uberUrl(e, "volver"))}" target="_blank" rel="noopener" data-ev="uber_volver" data-n="${esc(e.title)}"><span><b>Para volver</b><small>Desde ${esc(shortPlace(e))}</small></span>${ico("arrow")}</a>
+        </div>
+        <p class="uber-fine">Se abre la app de Uber (o su web, si no la tenés). El precio lo ves en Uber antes de confirmar.</p>
+        <a class="ride-plan" href="/plan.html?add=${id}" data-ev="plan_evento" data-n="${esc(e.title)}">¿Venís de afuera? Armá tu plan con aeropuerto y alojamiento ${ico("arrow")}</a>
+      </section>`;
   if (!rideOK(e)) return `<a class="ev-planlink" href="/plan.html?add=${id}" data-ev="plan_evento" data-n="${esc(e.title)}">${ico("plane")}<span><b>¿Venís de afuera?</b> Armá tu plan con traslado del aeropuerto y alojamiento</span>${ico("arrow")}</a>`;
   return `<section class="ride" id="ride" aria-labelledby="ride-h" data-id="${id}" data-title="${esc(e.title)}" data-date="${e.date}"${e.endDate && e.endDate !== e.date ? ` data-end="${e.endDate}"` : ""} data-time="${esc(e.time)}" data-place="${esc(shortPlace(e))}" data-geo="${rideGeo(e).join(",")}">
         <h2 id="ride-h">Traslado con chofer</h2>

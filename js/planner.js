@@ -68,8 +68,9 @@ const dow = iso => DOW[new Date(iso + "T12:00:00Z").getUTCDay()];
 const dmy2 = iso => (iso ? iso.split("-").reverse().slice(0, 2).join("/") : "");
 const daysBetween = (a, b) => Math.round((Date.parse(b) - Date.parse(a)) / 864e5);
 const hasHour = e => /^\d{1,2}:\d{2}$/.test(e.time);
-/* Chofer: solo en los eventos con traslado (rideOK, cards.js: fiestas y música en vivo con entradas); en los demás, "no" */
-const trOf = e => (rideOK(e) ? opts.tr[slugOf(e)] || "ida y vuelta" : "no");
+/* Chofer: solo en los eventos con traslado (rideOK, cards.js: fiestas y música en vivo con entradas) y si hay chofer propio
+   (CHOFER.propio en config.js; sin chofer propio, la página del evento ofrece Uber); en los demás, "no" */
+const trOf = e => (rideBookable(e) ? opts.tr[slugOf(e)] || "ida y vuelta" : "no");
 const goes = tr => tr === "ida y vuelta" || tr === "solo ida";      // ese tramo necesita hora de búsqueda
 /* Entradas: con link de compra, por defecto "Las compro yo" (las paga al instante en la ticketera, con nuestro código de
    afiliado si hay); sin link pero con precio, "Incluilas" (se cotizan); sin ninguno de los dos (gratis o sin datos), nada */
@@ -202,7 +203,7 @@ function eventCard(e) {
         <div class="pl-opt-h"><b>${ico("ticket")}Entradas</b><span class="pl-opt-x" data-note="tix-${id}">${tixNoteHtml(e)}</span></div>
         ${seg("tix", id, e.tickets ? [["no", "Las compro yo"], ["si", "Incluilas en el plan"]] : [["si", "Incluilas en el plan"], ["no", "Ya las tengo"]], tixOf(e), `Entradas para ${e.title}`)}
       </div>` : ""}
-      ${rideOK(e) ? `<div class="pl-opt">
+      ${rideBookable(e) ? `<div class="pl-opt">
         <div class="pl-opt-h"><b>${ico("car")}Chofer</b><span class="pl-opt-x" data-note="tr-${id}">${pickHtml(e)}</span></div>
         ${seg("tr", id, RIDES, trOf(e), `Chofer para ${e.title}`)}
       </div>` : ""}
@@ -224,7 +225,7 @@ function chosenHtml(list) {
 
 function eventsStep(list) {
   return `<section class="pl-sec">
-    ${stepHead(1, "Elegí tus eventos", "Sumá los eventos a los que vas. En fiestas y shows con entrada también podés pedir chofer.")}
+    ${stepHead(1, "Elegí tus eventos", choferPropio() ? "Sumá los eventos a los que vas. En fiestas y shows con entrada también podés pedir chofer." : "Sumá los eventos a los que vas y elegí cómo conseguís las entradas.")}
     <div class="pl-cat">
       <p class="pl-lbl">Agenda <small>tocá un evento para sumarlo</small></p>
       <label class="pl-find">${ico("search")}<input type="search" id="pl-q" placeholder="Buscar evento, artista o lugar" aria-label="Buscar evento" enterkeyhint="search" autocomplete="off" spellcheck="false"></label>
@@ -273,6 +274,7 @@ function arrivalStep(list) {
       : arr ? `<p class="pl-tip">${ico("check")}<span>Perfecto. Si cambiás de idea, elegí cómo llegás y lo sumamos.</span></p>`
       : `<p class="pl-tip">${ico("plane")}<span>Si venís de afuera, el traslado desde el aeropuerto o el puerto es lo que más tiempo te ahorra.</span></p>`}
     </div>
+    ${pickupHtml()}
   </section>`;
 }
 
@@ -327,7 +329,6 @@ function stayStep(list) {
         </div>
         <div class="pl-booking${opts.stayMode === "aliados" ? " is-aliados" : ""}" id="pl-booking">${bookingHtml(list)}</div>
         <div id="pl-stays">${staysHtml(list)}</div>` : ""}
-      ${pickupHtml()}
     </div>
   </section>`;
 }
@@ -343,13 +344,16 @@ function bookingHtml(list) {
 }
 
 /* Dónde lo buscamos (para los traslados): la zona da el precio al instante; la dirección puede quedar para después */
+/* Para los traslados: dónde se aloja (el chofer lo lleva o lo busca ahí). Una sola pregunta clara, al final del paso 2;
+   se ve solo si pidió algún traslado. La zona se completa sola con la del alojamiento del paso 3. */
 function pickupHtml() {
-  return `<div class="pl-pickup">
-    <p class="pl-q">¿Dónde te buscamos? <small>${stayOn() ? "(si todavía no reservaste, elegí la zona y la dirección nos la pasás después)" : "(con la zona ves el precio de los traslados al instante)"}</small></p>
+  return `<div class="pl-card pl-pickup" id="pl-pickup">
+    <p class="pl-q">Para el chofer: ¿dónde te alojás?</p>
     <div class="pl-two">
-      <label>Zona<select name="rideZone"><option value="">Elegí tu zona</option>${ZONES.map(z => `<option${z.name === opts.rideZone ? " selected" : ""}>${esc(z.name)}</option>`).join("")}</select></label>
-      <label>Dirección u hotel<input name="from" value="${esc(opts.from || "")}" placeholder="Calle y número, o el hotel" autocomplete="off"></label>
-    </div></div>`;
+      <label>Zona<select name="rideZone"><option value="">Elegí la zona</option>${ZONES.map(z => `<option${z.name === opts.rideZone ? " selected" : ""}>${esc(z.name)}</option>`).join("")}</select></label>
+      <label><span>Dirección u hotel <small>(si ya la sabés)</small></span><input name="from" value="${esc(opts.from || "")}" placeholder="Ej.: Calle 20 y Gorlero" autocomplete="off"></label>
+    </div>
+    <small class="pl-hint">Si todavía no la sabés, dejala vacía: te la pedimos por WhatsApp antes del viaje.</small></div>`;
 }
 
 function contactStep() {
@@ -377,7 +381,7 @@ const nothingToDo = list => { const t = totals(list); return !t.rides && !t.airp
 
 function instant(list) {
   const t = totals(list), zone = opts.rideZone, p = people(), a = opts.arr, items = [];
-  if (quoteStay() || t.tix.length || (!t.rides && !t.airport) || !zoneByName(zone)) return null;
+  if (!choferPropio() || quoteStay() || t.tix.length || (!t.rides && !t.airport) || !zoneByName(zone)) return null;
   for (const e of t.withRide) {
     const tr = trOf(e), legs = tr === "ida y vuelta" ? 2 : 1, g = geoOf(e);
     const usd = rideUSD(zone, g, legs, p);
@@ -513,7 +517,8 @@ function refresh(list = planEvents()) {
   if (!nothingToDo(list)) $("pl-warn")?.remove();                   // el aviso "elegí qué resolvemos" se va solo
   /* Solo traslados con precio: total a la vista y pago con tarjeta; si no, cotización */
   const ins = instant(list);
-  const needZone = !quoteStay() && !t.tix.length && (t.rides || t.airport) && !zoneByName(opts.rideZone);
+  const needZone = choferPropio() && !quoteStay() && !t.tix.length && (t.rides || t.airport) && !zoneByName(opts.rideZone);
+  if ($("pl-pickup")) $("pl-pickup").hidden = !(t.rides || t.airport);   // "¿Dónde te alojás?" solo si hay traslados
   if ($("pl-booking")) {                                                   // el link a Booking y el texto siguen a fechas, zona, personas y tipo
     if ($("pl-booking-go")) $("pl-booking-go").href = bookingUrl(list);
     const bt = $("pl-booking").querySelector(".pl-booking-t span b"); if (bt) bt.innerHTML = bookingText(list);
@@ -522,7 +527,7 @@ function refresh(list = planEvents()) {
   if (ins) $("pl-total").querySelector("b").textContent = `US$ ${ins.usd}`;
   $("pl-cta").textContent = ins ? `Pagar US$ ${ins.usd} con tarjeta` : "Pedir cotización";
   $("pl-fine").textContent = ins ? "Precio final, sin esperar cotización. Pagás con tarjeta y te confirmamos el chofer por WhatsApp."
-    : needZone ? "Elegí tu zona en el paso 3 y ves el precio de los traslados al instante."
+    : needZone ? "Elegí la zona de tu alojamiento en el paso 2 y ves el precio de los traslados al instante."
     : nothingToDo(list) ? (viaBooking() ? "El alojamiento lo reservás en Booking (paso 3). Sumá chofer o traslado del aeropuerto si querés que te llevemos." : "Sumá chofer, traslado del aeropuerto o alojamiento para pedir tu plan.")
     : t.tix.length || quoteStay() ? "Con entradas o alojamiento de nuestros aliados te mandamos el total por mail, sin costo ni compromiso, y pagás online con tarjeta."
     : "Sin costo ni compromiso. Te mandamos el total por mail y pagás online con tarjeta solo si te sirve.";
@@ -651,7 +656,7 @@ function itinerary(list) {
     const tr = trOf(e);
     lines.push(`• ${legDay(e.date)} ${hasHour(e) ? e.time + " " : ""}· ${e.title} · ${shortPlace(e)}`
       + (tixOf(e) === "si" ? ` · ${plural(p, "entrada", "entradas")}` : hasTix(e) ? " · entradas por su cuenta" : "")
-      + (rideOK(e) ? ` · ${RIDE_TEXT[tr]}${goes(tr) && pickOf(e) ? `, te buscamos ${pickOf(e)}` : ""}` : ""));
+      + (rideBookable(e) ? ` · ${RIDE_TEXT[tr]}${goes(tr) && pickOf(e) ? `, te buscamos ${pickOf(e)}` : ""}` : ""));
   });
   if (t.real) {
     lines.push(`• Regreso: ${legDay(arrOut(list))}${a.outTime ? ` ${a.outTime}` : ""} · ${t.arr.place}${a.outRef ? ` · ${t.arr.ref.toLowerCase()} ${a.outRef}` : ""}`
@@ -723,14 +728,11 @@ async function submitPlan(form) {
   /* Solo traslados con precio: se reserva y se paga ya (el script vuelve a calcular el precio y abre Mercado Pago) */
   const ins = instant(list);
   if (ins) {
-    const from = form.querySelector('[name="from"]');
-    /* Con alojamiento en Booking puede no tener hotel todavía: la dirección queda para después */
-    if (from && !from.value.trim() && !stayOn()) { from.closest(".pl-sec").scrollIntoView({ behavior: "smooth", block: "start" }); setTimeout(() => { from.focus({ preventScroll: true }); }, 450); return; }
     btn.disabled = true; btn.textContent = "Abriendo el pago…";
     track("plan_pagar", { eventos: list.length, usd: ins.usd, llegada: opts.arr.via || "" });
     try {
       const res = await fetch(CONFIG.formUrl, { method: "POST", headers: { "Content-Type": "text/plain" }, body: JSON.stringify({
-        kind: "traslado", zone: opts.rideZone, address: f.from || (stayOn() ? "Hotel a confirmar (lo reserva en Booking)" : ""), people: people(), name: f.name, email: f.email, phone: f.phone,
+        kind: "traslado", zone: opts.rideZone, address: f.from || "A confirmar por WhatsApp", people: people(), name: f.name, email: f.email, phone: f.phone,
         notes: `País: ${f.country} · Idioma: ${f.lang}${viaBooking() ? ` · Alojamiento: lo reserva en Booking (${zoneOf(list)}, ${dmy2(stayIn(list))} al ${dmy2(stayOut(list))})` : ""}${f.notes ? ` · ${f.notes}` : ""}`, items: ins.items.map(({ usd, ...it }) => it) }) });
       const r = await res.json();
       /* Solo se va a pagar si el script devolvió una reserva de traslado (TRS-…): un script viejo, sin traslados,
