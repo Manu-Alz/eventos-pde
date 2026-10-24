@@ -75,7 +75,7 @@ const goes = tr => tr === "ida y vuelta" || tr === "solo ida";      // ese tramo
 /* Entradas: con link de compra, por defecto "Las compro yo" (las paga al instante en la ticketera, con nuestro código de
    afiliado si hay); sin link pero con precio, "Incluilas" (se cotizan); sin ninguno de los dos (gratis o sin datos), nada */
 const hasTix = e => Boolean(e.tickets || e.price);
-const tixOf = e => (!hasTix(e) ? "no" : opts.tix[slugOf(e)] || (e.tickets ? "no" : "si"));
+const tixOf = () => "no";                    // las entradas se compran en la ticketera, con nuestro código de afiliado
 const stayOn = () => opts.stay === true;                            // alojamiento: apagado hasta que la persona lo prende
 /* El alojamiento se reserva en Booking (la persona paga ahí), salvo que pida que se lo busquemos (inmobiliarias y hoteles
    aliados) o elija uno con convenio del catálogo: esos se cotizan */
@@ -188,8 +188,19 @@ function pickHtml(e) {
 }
 function tixNoteHtml(e) {
   const t = ticketLink(e);
-  if (tixOf(e) === "si") return `<span>${plural(people(), "entrada", "entradas")}${e.price ? ` · ${esc(e.price)}` : ""} · van en la cotización</span>`;
-  return t ? `<a href="${esc(t.url)}" target="_blank" rel="noopener${t.affiliate ? " sponsored" : ""}" data-ev="entradas" data-n="${esc(e.title)}">Comprar ${ico("arrow")}</a>` : "";
+  return t ? `<a class="pl-buy" href="${esc(t.url)}" target="_blank" rel="noopener${t.affiliate ? " sponsored" : ""}" data-ev="entradas" data-n="${esc(e.title)}">Comprar${e.price ? ` · ${esc(e.price.replace(/^desde /i, "desde "))}` : ""} ${ico("arrow")}</a>`
+    : e.price ? `<span>${esc(e.price)}</span>` : "";
+}
+/* Con el chofer propio apagado: Uber para ir y volver, con el lugar del evento ya cargado (como en la página del evento) */
+function uberHtml(e) {
+  if (choferPropio() || !rideOK(e) || !uberUrl(e, "ir")) return "";
+  return `<div class="pl-opt">
+        <div class="pl-opt-h"><b>${ico("car")}Cómo ir y volver</b><span class="pl-opt-x">con Uber, sin manejar</span></div>
+        <div class="pl-uber">
+          <a href="${esc(uberUrl(e, "ir"))}" target="_blank" rel="noopener" data-ev="uber_ir" data-n="${esc(e.title)}">Para ir ${ico("arrow")}</a>
+          <a href="${esc(uberUrl(e, "volver"))}" target="_blank" rel="noopener" data-ev="uber_volver" data-n="${esc(e.title)}">Para volver ${ico("arrow")}</a>
+        </div>
+      </div>`;
 }
 
 function eventCard(e) {
@@ -201,9 +212,9 @@ function eventCard(e) {
       <h3><a href="/evento/${id}/">${esc(e.title)}</a></h3>
       <p class="pl-place">${ico("pin")}<span>${esc(e.place)}</span></p>
       ${hasTix(e) ? `<div class="pl-opt">
-        <div class="pl-opt-h"><b>${ico("ticket")}Entradas</b><span class="pl-opt-x" data-note="tix-${id}">${tixNoteHtml(e)}</span></div>
-        ${seg("tix", id, e.tickets ? [["no", "Las compro yo"], ["si", "Incluilas en el plan"]] : [["si", "Incluilas en el plan"], ["no", "Ya las tengo"]], tixOf(e), `Entradas para ${e.title}`)}
+        <div class="pl-opt-h"><b>${ico("ticket")}Entradas</b><span class="pl-opt-x">${tixNoteHtml(e)}</span></div>
       </div>` : ""}
+      ${uberHtml(e)}
       ${rideBookable(e) ? `<div class="pl-opt">
         <div class="pl-opt-h"><b>${ico("car")}Chofer</b><span class="pl-opt-x" data-note="tr-${id}">${pickHtml(e)}</span></div>
         ${seg("tr", id, RIDES, trOf(e), `Chofer para ${e.title}`)}
@@ -226,7 +237,7 @@ function chosenHtml(list) {
 
 function eventsStep(list) {
   return `<section class="pl-sec">
-    ${stepHead(1, "Elegí tus eventos", choferPropio() ? "Sumá los eventos a los que vas. En fiestas y shows con entrada también podés pedir chofer." : "Sumá los eventos a los que vas y elegí cómo conseguís las entradas.")}
+    ${stepHead(1, "Elegí tus eventos", choferPropio() ? "Sumá los eventos a los que vas. En fiestas y shows con entrada también podés pedir chofer." : "Sumá los eventos a los que vas: en cada uno tenés las entradas y cómo ir y volver.")}
     <div class="pl-cat">
       <p class="pl-lbl">Agenda <small>tocá un evento para sumarlo</small></p>
       <label class="pl-find">${ico("search")}<input type="search" id="pl-q" placeholder="Buscar evento, artista o lugar" aria-label="Buscar evento" enterkeyhint="search" autocomplete="off" spellcheck="false"></label>
@@ -405,12 +416,12 @@ function pickupHtml() {
 }
 
 function contactStep() {
-  return `<section class="pl-sec">
-    ${stepHead(4, "Tus datos", "Para mandarte la confirmación y coordinar cada tramo.")}
+  return `<section class="pl-sec" id="pl-contact">
+    ${stepHead(4, "Tus datos", "Para mandarte el precio por mail y coordinar.")}
     <div class="pl-card">
       <label>Nombre y apellido<input name="name" required autocomplete="name" value="${esc(opts.name || "")}"></label>
       <div class="pl-two">
-        <label>Mail<input type="email" name="email" required autocomplete="email" inputmode="email" value="${esc(opts.email || "")}" placeholder="ahí te llega la cotización"></label>
+        <label>Mail<input type="email" name="email" required autocomplete="email" inputmode="email" value="${esc(opts.email || "")}" placeholder="ahí te llega el precio"></label>
         <label>WhatsApp<input type="tel" name="phone" required autocomplete="tel" value="${esc(opts.phone || "")}" placeholder="con código de país: +54 9 11…"></label>
       </div>
       <div class="pl-two">
@@ -424,8 +435,11 @@ function contactStep() {
 
 /* Pago al instante: si el pedido es solo de traslados con precio (sin alojamiento ni entradas para conseguir) se cobra
    al reservar, con TARIFAS (tarifas.js). Devuelve { usd, items } o null (entonces se pide cotización). */
-/* Nada para pedir: ni chofer, ni aeropuerto, ni alojamiento, ni entradas incluidas */
-const nothingToDo = list => { const t = totals(list); return !t.rides && !t.airport && !quoteStay() && !t.tix.length; };
+/* ¿Hay algo que resolvemos nosotros? Traslado del aeropuerto o puerto, alojamiento con aliados o chofer (si está prendido).
+   Si no, el plan ya está completo: entradas en la ticketera, alojamiento en Booking y Uber; no hace falta pedir nada. */
+const needsUs = list => { const t = totals(list); return Boolean(t.rides || t.airport || quoteStay() || t.tix.length); };
+const nothingToDo = list => !needsUs(list);
+const usText = list => { const t = totals(list); return [t.airport && "del traslado", quoteStay() && "del alojamiento", t.rides && "del chofer"].filter(Boolean).join(" y "); };
 
 function instant(list) {
   const t = totals(list), zone = opts.rideZone, p = people(), a = opts.arr, items = [];
@@ -456,6 +470,8 @@ function summaryLines(list) {
   const line = (icon, b, s) => `<li>${ico(icon)}<span><b>${b}</b>${s ? `<small>${s}</small>` : ""}</span></li>`;
   return [
     t.tix.length ? line("ticket", plural(t.tix.length * p, "entrada", "entradas"), `${plural(t.tix.length, "evento", "eventos")} × ${plural(p, "persona", "personas")}`) : "",
+    list.some(e => ticketLink(e)) ? line("ticket", "Entradas", `las comprás en cada evento, con el botón Comprar`) : "",
+    !choferPropio() && list.some(e => rideOK(e)) ? line("car", "Ir y volver con Uber", `botones en ${plural(list.filter(e => rideOK(e)).length, "evento", "eventos")}`) : "",
     t.airport ? line("plane", TF_TEXT[t.tf], esc(t.arr.place)) : "",
     viaBooking() ? line("bed", "Alojamiento en Booking", `${bookingText(list)} · lo reservás vos`)
     : opts.stayMode === "aliados" && !stay ? line("bed", "Alojamiento con aliados", `${bookingText(list)} · te mandamos opciones`)
@@ -463,7 +479,7 @@ function summaryLines(list) {
       ? line("bed", `${plural(t.nights, "noche", "noches")} de alojamiento`, `${dmy2(stayIn(list))} al ${dmy2(stayOut(list))} · ${esc(stay ? stay.name : zone)}`)
       : line("bed", "Alojamiento", "Elegí las fechas en el paso 3")) : "",
     t.rides ? line("car", `${plural(t.rides, "viaje", "viajes")} con chofer`, `a ${plural(t.withRide.length, "evento", "eventos")}`) : ""
-  ].join("") || line("check", "Elegí qué incluir", "Entradas, traslados o alojamiento");
+  ].join("") || line("check", "Tu plan está vacío", "Sumá eventos, traslado o alojamiento");
 }
 function summaryTitle(list) {
   if (!list.length) return "Tu viaje";
@@ -532,7 +548,7 @@ function subText(list) {
   if (!list.length) return SUB_DEFAULT;
   const start = list[0].date, end = tripEnd(list);
   const when = start === end ? `el ${dow(start).toLowerCase()} ${dmy2(start)}` : `del ${dow(start).toLowerCase()} ${dmy2(start)} al ${dow(end).toLowerCase()} ${dmy2(end)}`;
-  return `${plural(list.length, "evento", "eventos")}, ${when}. Elegí qué querés que resolvamos: ${choferPropio() ? "chofer, " : ""}traslado del aeropuerto, entradas y dónde quedarte.`;
+  return `${plural(list.length, "evento", "eventos")}, ${when}. Comprá las entradas, sumá el traslado del aeropuerto si lo necesitás y elegí dónde quedarte.`;
 }
 
 function render() {
@@ -580,17 +596,19 @@ function refresh(list = planEvents()) {
   if ($("pl-cal")) $("pl-cal").innerHTML = calHtml(list);
   $("pl-total").hidden = !ins;
   if (ins) $("pl-total").querySelector("b").textContent = `US$ ${ins.usd}`;
-  $("pl-cta").textContent = ins ? `Pagar US$ ${ins.usd} con tarjeta` : "Pedir cotización";
+  const us = needsUs(list);
+  if ($("pl-contact")) $("pl-contact").hidden = !us;                   // "Tus datos" solo si hay algo que resolvemos nosotros
+  if ($("pl-share")) $("pl-share").hidden = !us;                        // sin pedido, compartir es el botón principal
+  $("pl-cta").textContent = ins ? `Pagar US$ ${ins.usd} con tarjeta` : us ? `Pedir precio ${usText(list)}` : list.length ? "Compartir mi plan" : "Elegí tus eventos";
   $("pl-fine").textContent = ins ? "Precio final, sin esperar cotización. Pagás con tarjeta y te confirmamos el chofer por WhatsApp."
     : needZone ? "Elegí la zona de tu alojamiento en el paso 2 y ves el precio de los traslados al instante."
-    : nothingToDo(list) ? (viaBooking() ? `El alojamiento lo reservás en Booking (paso 3). Si querés que te busquemos en el aeropuerto o el puerto, sumá el traslado en el paso 2${choferPropio() ? " o un chofer a tus fiestas" : ""}.` : `Sumá ${choferPropio() ? "chofer, " : ""}traslado del aeropuerto, alojamiento o entradas para pedir tu plan.`)
-    : t.tix.length || quoteStay() ? "Con entradas o alojamiento de nuestros aliados te mandamos el total por mail, sin costo ni compromiso, y pagás online con tarjeta."
-    : "Sin costo ni compromiso. Te mandamos el total por mail y pagás online con tarjeta solo si te sirve.";
-  $("pl-bar-s").textContent = ins ? `Total US$ ${ins.usd}` : "Sin costo ni compromiso";
-  $("pl-bar-go").textContent = ins ? "Pagar" : "Pedir cotización";
+    : us ? `Te mandamos el precio ${usText(list)} por mail. Sin costo ni compromiso: pagás online solo si te sirve.`
+    : list.length ? `Tu plan ya está listo y guardado en este celular: entradas en cada evento${viaBooking() ? ", alojamiento en Booking" : ""}${list.some(e => rideOK(e)) && !choferPropio() ? " y Uber para ir y volver" : ""}. Compartilo para tenerlo en WhatsApp. ¿Querés que te busquemos en el aeropuerto? Sumalo en el paso 2.`
+    : "Sumá eventos en el paso 1, o pedí el traslado del aeropuerto (paso 2) o que te busquemos alojamiento (paso 3).";
+  $("pl-bar-s").textContent = ins ? `Total US$ ${ins.usd}` : us ? "Sin costo ni compromiso" : list.length ? "Tu plan, listo" : "Empezá por tus eventos";
+  $("pl-bar-go").textContent = ins ? "Pagar" : us ? "Pedir precio" : list.length ? "Compartir" : "Ver plan";
   list.forEach(e => {
     const id = slugOf(e);
-    const tn = box.querySelector(`[data-note="tix-${id}"]`); if (tn) tn.innerHTML = tixNoteHtml(e);
     const rn = box.querySelector(`[data-note="tr-${id}"]`); if (rn && !rn.contains(document.activeElement)) rn.innerHTML = pickHtml(e);
   });
 }
@@ -764,11 +782,16 @@ function doneHtml(ref, f, ok, msg) {
 async function submitPlan(form) {
   const list = planEvents();
   const t = totals(list);
-  /* Tiene que pedir algo para resolver: chofer, traslado del aeropuerto, alojamiento o entradas */
-  if (nothingToDo(list)) {
-    $("pl-s1").closest(".pl-sec").scrollIntoView({ behavior: "smooth", block: "start" });
-    $("pl-warn")?.remove();
-    $("pl-chosen").insertAdjacentHTML("afterbegin", `<p class="pl-none pl-warn" id="pl-warn">${ico("car")}<span><b>Elegí qué querés que resolvamos:</b> ${choferPropio() ? "chofer a una fiesta, " : ""}traslado del aeropuerto (paso 2), alojamiento (paso 3) o entradas incluidas.</span></p>`);
+  /* Sin nada que resolvamos nosotros, el botón comparte el plan (o, sin eventos, lleva a elegirlos) */
+  if (!needsUs(list)) {
+    if (list.length) sharePlan($("pl-cta"));
+    else $("pl-s1").closest(".pl-sec").scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
+  }
+  if (stayOn() && (calFirst || nightsOf(list) < 1)) {                // alojamiento sin fechas completas
+    $("pl-cal").scrollIntoView({ behavior: "smooth", block: "center" });
+    $("pl-nights-t").textContent = calFirst ? "Falta el día que te vas: tocalo en el calendario." : "Tocá en el calendario el día que llegás y el día que te vas.";
+    $("pl-nights-t").classList.add("is-bad");
     return;
   }
   /* Los datos obligatorios se piden al final; si falta alguno, se marca y se lleva la vista ahí */
@@ -776,12 +799,6 @@ async function submitPlan(form) {
   if (bad) {
     bad.closest(".pl-sec")?.scrollIntoView({ behavior: "smooth", block: "start" });
     setTimeout(() => { bad.focus({ preventScroll: true }); bad.reportValidity(); }, 450);
-    return;
-  }
-  if (stayOn() && (calFirst || nightsOf(list) < 1)) {                // alojamiento sin fechas completas
-    $("pl-cal").scrollIntoView({ behavior: "smooth", block: "center" });
-    $("pl-nights-t").textContent = calFirst ? "Falta el día que te vas: tocalo en el calendario." : "Tocá en el calendario el día que llegás y el día que te vas.";
-    $("pl-nights-t").classList.add("is-bad");
     return;
   }
   const f = keepFields(form);
@@ -821,11 +838,11 @@ async function submitPlan(form) {
   scrollTo({ top: 0, behavior: "smooth" });
 }
 
-async function sharePlan() {
+async function sharePlan(btn = $("pl-share")) {
   const url = `${location.origin}/plan.html?e=${planIds().join(",")}`;
   track("plan_compartir", { eventos: planIds().length });
   if (navigator.share) { navigator.share({ title: "Mi plan en Punta", url }).catch(() => {}); return; }
-  try { await navigator.clipboard.writeText(url); $("pl-share").lastChild.textContent = "Link copiado"; }
+  try { await navigator.clipboard.writeText(url); btn.lastChild.textContent = "Link copiado"; }
   catch (_) { prompt("Copiá el link de tu plan:", url); }
 }
 
@@ -890,6 +907,7 @@ box.addEventListener("click", ev => {
     return;
   }
   if (t.closest("#pl-share")) { sharePlan(); return; }
+  if (t.closest("#pl-bar-go") && !needsUs(planEvents()) && planEvents().length) { ev.preventDefault(); sharePlan($("pl-cta")); return; }
   if (t.closest("#pl-save")) {
     Plan.set([...new Set([...Plan.get(), ...shared])]);
     location.replace("/plan.html");
