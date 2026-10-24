@@ -75,13 +75,13 @@
 
 .k-bottom{display:grid;gap:10px;text-shadow:0 1px 14px rgba(0,0,0,.45)}   /* la sombra del texto ayuda sobre pósters muy claros */
 /* Línea chica sobre el título: punto de color de la categoría + categoría · día y hora */
-.k-eyebrow{display:flex;align-items:center;gap:8px;margin:0;min-width:0;font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.82);white-space:nowrap}
+.k-eyebrow{display:flex;align-items:center;gap:8px;margin:0;min-width:0;font-size:13px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.82);white-space:nowrap}
 .k-eyebrow i{flex:none;width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c)}
 .k-eyebrow span{opacity:.5}
 .card h3{font-size:var(--card-title);font-weight:600;line-height:1.05;letter-spacing:-.025em;text-wrap:balance;
   display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;-webkit-line-clamp:3;line-clamp:3}
 .k-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:2px}
-.k-place{display:flex;align-items:center;gap:7px;min-width:0;margin:0;font-size:14px;color:rgba(255,255,255,.74)}
+.k-place{display:flex;align-items:center;gap:7px;min-width:0;margin:0;font-size:15px;color:rgba(255,255,255,.8)}
 .k-place .ico{flex:none;width:15px;height:15px}
 .k-place span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 /* Íconos: neutros (blanco sobre vidrio). Tamaños pares para que queden exactamente centrados */

@@ -309,7 +309,7 @@ function stayStep(list) {
 
 function contactStep() {
   return `<section class="pl-sec">
-    ${stepHead(4, "Tus datos", "Para mandarte la cotización y coordinar.")}
+    ${stepHead(4, "Tus datos", "Para mandarte la confirmación y coordinar cada tramo.")}
     <div class="pl-card">
       <label>Nombre y apellido<input name="name" required autocomplete="name" value="${esc(opts.name || "")}"></label>
       <div class="pl-two">
@@ -678,8 +678,10 @@ async function submitPlan(form) {
         kind: "traslado", zone: opts.rideZone, address: f.from || "", people: people(), name: f.name, email: f.email, phone: f.phone,
         notes: `País: ${f.country} · Idioma: ${f.lang}${f.notes ? ` · ${f.notes}` : ""}`, items: ins.items.map(({ usd, ...it }) => it) }) });
       const r = await res.json();
-      if (r.ok && (r.url || r.pagina)) { location.href = r.url || r.pagina; return; }
-      alert(r.error || "No pudimos abrir el pago. Probá de nuevo en un momento.");
+      /* Solo se va a pagar si el script devolvió una reserva de traslado (TRS-…): un script viejo, sin traslados,
+         contestaría ok pero sin reserva, y la página de pago diría "No encontramos el pedido" */
+      if (r.ok && /^TRS-/.test(r.ref || "") && (r.url || r.pagina)) { location.href = r.url || r.pagina; return; }
+      alert((!r.ok && r.error) || "No pudimos abrir el pago en este momento. Escribinos por WhatsApp y te mandamos el link.");
     } catch (_) { alert("No pudimos abrir el pago. Revisá la conexión y probá de nuevo."); }
     btn.disabled = false; refresh(list);
     return;

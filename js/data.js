@@ -76,6 +76,7 @@ const EV = [
     cat: "Fiestas", date: "2027-01-02", time: "23:00",
     place: "Open Park, El Placer",
     desc: "Marco Carola, el DJ italiano fundador de Music On, toca b2b con Dennis Cruz en Open Park, con Mau P, Frank Storm y Anto Zagu. Tech house de pista para abrir enero con una de las marcas más reconocidas del club.",
+    tickets: "https://entraste.com/evento/music-on-pde-2027", price: "Desde USD 65",
     photo: "music-on-open-park.webp",
     portada: true
   },
@@ -235,10 +236,11 @@ const EV = [
   {
     title: "Gran Premio Punta del Este de Karting",
     cat: "Autos", date: "2026-10-30", time: "A confirmar",
-    place: "Circuito callejero, Parada 1 de Playa Brava (Los Dedos)",
-    desc: "4.ª edición del Gran Premio en un circuito armado en la calle junto a Los Dedos: 8.ª fecha del Campeonato Nacional de la Federación Uruguaya de Karting y cierre del Torneo Clausura, con pilotos de todas las categorías.",
+    place: "Estacionamiento de Los Dedos, Parada 1 de Playa Brava",
+    desc: "4.ª edición del Gran Premio en un circuito armado en el estacionamiento de Los Dedos (La Mano): 8.ª fecha del Campeonato Nacional de la Federación Uruguaya de Karting y cierre del Torneo Clausura, con pilotos de todas las categorías.",
     link: "https://fuk.uy/", linkLabel: "Ver en la Federación",
-    geo: [-34.9437, -54.9339],
+    geo: [-34.95727, -54.93828],   // estacionamiento junto a La Mano (Los Dedos), sobre la rambla de Playa Brava
+    map: "https://www.google.com/maps/search/?api=1&query=-34.95727,-54.93828",
     endDate: "2026-11-01",
     photo: "gran-premio-karting-punta-del-este.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
   },
@@ -263,7 +265,8 @@ const EV = [
   {
     title: "IRONMAN 70.3 Punta del Este",
     cat: "Deportes", date: "2027-03-07", time: "07:00",
-    place: "Punta del Este",
+    place: "Rambla de Playa Mansa (Parada 3), Punta del Este",
+    geo: [-34.95714, -54.94091],   // largada y transición frente al muelle de la Parada 3; llegada junto a la Liga de Fomento (edición 2025)
     desc: "1,9 km de natación, 90 km de bici y 21 km de carrera por la costa de Punta del Este: la fecha sudamericana del circuito mundial de triatlón, con atletas de toda la región.",
     link: "https://www.ironman.com/races/im703-punta-del-este", linkLabel: "Inscripciones y programa",
     photo: "ironman-punta-del-este.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas

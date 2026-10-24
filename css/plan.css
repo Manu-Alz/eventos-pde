@@ -79,8 +79,8 @@
 /* Cuatro opciones: en pantallas angostas van en dos filas (la píldora se mueve igual) */
 @media (max-width:520px){.pl-seg.four{display:grid;grid-template-columns:1fr 1fr;row-gap:2px;border-radius:24px}}
 .pl-opt-flat{margin-top:0;padding-top:0;border-top:0}
-.pl-pick{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);white-space:nowrap}
-.pl-pick input{width:auto;min-height:40px;padding:4px 10px;border-radius:10px;border:1px solid var(--line);background:var(--glass);color:var(--ink);font:inherit;color-scheme:dark}
+.pl-pick{display:flex;align-items:center;gap:8px;font-size:15px;color:var(--muted);white-space:nowrap}
+.pl-pick input{width:auto;min-height:40px;padding:4px 10px;border-radius:10px;border:1px solid var(--line);background:var(--glass);color:var(--ink);font:500 16px "DM Sans",sans-serif;color-scheme:dark}   /* 16px: el iPhone no agranda la pantalla al tocarlo */
 /* Agenda adentro del plan: categorías y una fila de mini tarjetas que se desliza (en PC, con flechas) */
 /* La agenda va en un panel propio (buscador, categorías y fila de pósters), separada de "En tu plan" */
 .pl-cat{--pad:clamp(16px,2.6vw,22px);display:grid;gap:16px;min-width:0;padding:var(--pad) 0 calc(var(--pad) - 8px);border-radius:26px;background:var(--surface);border:1px solid var(--line)}
@@ -182,8 +182,8 @@
 
 /* 7. Campos de los formularios */
 .pl-two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
-.pl-card label,.pl-sum label{display:grid;gap:7px;font-size:13px;font-weight:600;color:var(--muted);min-width:0}
-.pl-card input,.pl-card select{width:100%;min-width:0;min-height:46px;padding:9px 12px;border-radius:12px;border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:var(--ink);font:500 15px 'DM Sans',sans-serif;color-scheme:dark}
+.pl-card label,.pl-sum label{display:grid;gap:7px;font-size:15px;font-weight:600;color:rgba(255,255,255,.86);min-width:0}
+.pl-card input,.pl-card select{width:100%;min-width:0;min-height:50px;padding:10px 13px;border-radius:12px;border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:var(--ink);font:500 16px 'DM Sans',sans-serif;color-scheme:dark}
 .pl-card input:focus,.pl-card select:focus{border-color:#7C4DFF;outline:none;box-shadow:0 0 0 3px rgba(124,77,255,.25)}
 .pl-card input[type="date"],.pl-card input[type="time"]{-webkit-appearance:none;appearance:none}
 .pl-card select option{color:#151518}

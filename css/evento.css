@@ -39,10 +39,12 @@
 .ev-row .btn{background:var(--glass)}
 @media (hover:hover){.ev-row .btn:hover{background:var(--glass-hover)}}
 
-/* 4. Traslado con chofer (lo arma js/traslado.js): precio al instante y pago con tarjeta. Es el único acceso al plan de la página.
-   Estructura: .ride > [.ride-head, .ride-seg, .ride-grid (campos), .ride-note, form.ride-contact, .ride-bar (total + botón), .ride-fine, .ride-plan] */
-.ride{position:relative;display:grid;gap:16px;padding:clamp(18px,3vw,26px);border-radius:28px;scroll-margin-top:84px;
-  background:radial-gradient(90% 70% at 100% 0%,rgba(124,77,255,.26),transparent 62%),radial-gradient(70% 60% at 0% 100%,rgba(76,195,219,.10),transparent 70%),var(--surface);
+/* 4. Traslado con chofer (lo arma js/traslado.js): precio al instante y pago con tarjeta. Solo en fiestas y música en vivo con entradas.
+   Pensado para que cualquiera lo use: pasos numerados con preguntas simples, letra grande, opciones que se tocan y un resumen tipo ticket.
+   Estructura: .ride > [.ride-head, fieldset.ride-step ×3 (1 viaje · 2 dónde · 3 personas y hora), form.ride-contact (4 tus datos),
+   .ride-sum (resumen, total y botón), .ride-trust, .ride-plan] */
+.ride{position:relative;display:grid;gap:22px;padding:clamp(20px,3vw,28px);border-radius:28px;scroll-margin-top:84px;
+  background:radial-gradient(90% 60% at 100% 0%,rgba(124,77,255,.24),transparent 62%),radial-gradient(70% 50% at 0% 100%,rgba(76,195,219,.08),transparent 70%),var(--surface);
   border:1px solid rgba(124,77,255,.35);box-shadow:0 30px 60px -36px #000}
 .ride>h2{font-size:24px;font-weight:600}                                   /* sin JavaScript */
 .ride>p{margin:0;color:var(--muted)}
@@ -50,51 +52,75 @@
 .ride-i{flex:none;display:grid;place-items:center;width:52px;height:52px;border-radius:18px;background:#7C4DFF;color:#fff;box-shadow:0 12px 26px -10px rgba(124,77,255,.8)}
 .ride-i .ico{width:26px;height:26px}
 .ride-ht{display:grid;gap:4px;min-width:0}
-.ride-eb{margin:0;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#a98bff}
-.ride-ht h2{font-size:clamp(24px,3.4vw,30px);font-weight:600;letter-spacing:-.025em}
-.ride-ht p:not(.ride-eb){margin:2px 0 0;font-size:15px;color:var(--muted)}
-/* Ida y vuelta, solo ida, solo vuelta: la píldora blanca se desliza (utils.js slidePill) */
-.ride-seg{display:flex;padding:4px;border-radius:999px;background:var(--glass);border:1px solid var(--line)}
-.ride-seg button{flex:1 1 0;min-width:0;min-height:44px;padding:0 10px;border:0;border-radius:999px;background:none;color:var(--ink);font:700 14px "DM Sans",sans-serif;cursor:pointer;white-space:nowrap;transition:color .4s var(--ease)}
-.ride-seg button[aria-pressed="true"]{color:var(--bg)}
-.ride-grid,.ride-contact{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 14px}
-.ride-contact{grid-template-columns:minmax(0,1fr);padding-top:16px;border-top:1px solid var(--line)}
-.ride-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 14px}
-.ride-q{margin:0;font-weight:700}
-.ride-f{display:grid;gap:7px;min-width:0;font-size:13px;font-weight:600;color:var(--muted)}
-.ride-f input,.ride-f select{width:100%;min-width:0;min-height:48px;padding:10px 12px;border-radius:14px;border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:var(--ink);font:500 16px "DM Sans",sans-serif;color-scheme:dark;-webkit-appearance:none;appearance:none}
-.ride-f select{background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%239a9aa4%27 stroke-width=%272%27 stroke-linecap=%27round%27%3E%3Cpath d=%27M6 9l6 6 6-6%27/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:18px;padding-right:38px}
+.ride-eb{margin:0;font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#b49cff}
+.ride-ht h2{font-size:clamp(26px,3.4vw,32px);font-weight:600;letter-spacing:-.025em}
+.ride-ht p:not(.ride-eb){margin:2px 0 0;font-size:16px;line-height:1.5;color:rgba(255,255,255,.78)}
+
+/* Pasos: título con número en círculo, separados por una línea fina */
+.ride-step{display:grid;gap:14px;margin:0;padding:20px 0 0;border:0;border-top:1px solid var(--line);min-width:0}
+.ride-step legend,.ride-legend{display:flex;align-items:center;gap:10px;margin:0;padding:0;font:600 19px/1.2 "Bricolage Grotesque",sans-serif;color:var(--ink)}
+.ride-step legend{float:left;width:100%;margin-bottom:14px}
+.ride-step legend+*{clear:both}
+.ride-num{flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#F7F5F2;color:#151518;font:700 14px "Bricolage Grotesque",sans-serif}
+
+/* 1. Tres opciones grandes, con su explicación: la elegida queda marcada en violeta con el punto lleno */
+.ride-ways{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}   /* una debajo de la otra: se leen enteras en cualquier pantalla */
+.ride-way{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-radius:18px;border:1.5px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);
+  color:var(--ink);font:inherit;text-align:left;cursor:pointer;transition:border-color .2s,background .2s}
+.ride-way[aria-checked="true"]{border-color:#7C4DFF;background:rgba(124,77,255,.16)}
+.ride-dot{flex:none;width:22px;height:22px;margin-top:1px;border-radius:50%;border:2px solid rgba(255,255,255,.45)}
+.ride-way[aria-checked="true"] .ride-dot{border-color:#7C4DFF;background:#7C4DFF;box-shadow:inset 0 0 0 4px var(--surface)}
+.ride-wt{display:grid;gap:3px;min-width:0}
+.ride-wt b{font-size:16px}
+.ride-wt small{font-size:14px;line-height:1.35;color:var(--muted)}
+@media (hover:hover){.ride-way:not([aria-checked="true"]):hover{border-color:rgba(255,255,255,.32);background:rgba(255,255,255,.07)}}
+
+/* 2 y 3. Campos: etiqueta clara arriba, letra grande, pista gris debajo cuando ayuda */
+.ride-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 16px}
+.ride-f{display:grid;gap:8px;align-content:start;min-width:0;font-size:15px;font-weight:600;color:rgba(255,255,255,.86)}
+.ride-f input,.ride-f select{width:100%;min-width:0;min-height:52px;padding:12px 14px;border-radius:14px;border:1.5px solid rgba(255,255,255,.22);background:rgba(255,255,255,.06);color:var(--ink);font:500 17px "DM Sans",sans-serif;color-scheme:dark;-webkit-appearance:none;appearance:none}
+.ride-f input::placeholder{color:rgba(255,255,255,.4)}
+.ride-f select{background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%23c9c9d1%27 stroke-width=%272%27 stroke-linecap=%27round%27%3E%3Cpath d=%27M6 9l6 6 6-6%27/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:20px;padding-right:44px;cursor:pointer}
 .ride-f select option{color:#151518}
-.ride-f input:focus,.ride-f select:focus{border-color:#7C4DFF;outline:none;box-shadow:0 0 0 3px rgba(124,77,255,.25)}
+.ride-f input:focus,.ride-f select:focus{border-color:#7C4DFF;outline:none;box-shadow:0 0 0 3px rgba(124,77,255,.3)}
 .ride-f input:user-invalid,.ride-f select:user-invalid{border-color:#ff6b8a}
-.ride-step{display:flex;align-items:center;justify-content:space-between;min-height:48px;padding:0 5px;border-radius:14px;border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06)}
-.ride-step button{width:38px;height:38px;border:0;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:var(--ink);background:var(--glass-hover);font:700 18px "DM Sans",sans-serif}
-.ride-step output{font:700 18px "Bricolage Grotesque",sans-serif;color:var(--ink)}
-.ride-note{display:flex;align-items:flex-start;gap:10px;margin:0;padding:12px 14px;border-radius:16px;background:var(--glass);font-size:14px;color:var(--muted)}
-.ride-note .ico{flex:none;width:18px;height:18px;margin-top:2px;color:#46d9a0}
+.ride-hint{font-size:13px;font-weight:500;color:var(--muted)}
+.ride-count{display:flex;align-items:center;justify-content:space-between;min-height:52px;padding:0 6px;border-radius:14px;border:1.5px solid rgba(255,255,255,.22);background:rgba(255,255,255,.06)}
+.ride-count button{width:42px;height:42px;border:0;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:var(--ink);background:var(--glass-hover);font:700 22px/1 "DM Sans",sans-serif}
+.ride-count button:active{transform:scale(.92)}
+.ride-count output{font:700 20px "Bricolage Grotesque",sans-serif;color:var(--ink)}
+.ride-note{display:flex;align-items:flex-start;gap:10px;margin:0;padding:14px 16px;border-radius:16px;background:rgba(70,217,160,.08);border:1px solid rgba(70,217,160,.25);font-size:15px;line-height:1.5;color:rgba(255,255,255,.8)}
+.ride-note .ico{flex:none;width:20px;height:20px;margin-top:2px;color:#46d9a0}
 .ride-note b{color:var(--ink)}
 .ride-note a{color:var(--ink);font-weight:700;text-underline-offset:3px}
-/* Total y botón: blanco, como "Comprar entradas" */
-.ride-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 10px 10px 18px;border-radius:22px;background:#F7F5F2;color:#151518}
-.ride-total{display:grid;line-height:1.15;min-width:0}
-.ride-total small{font-size:12px;color:#6b6b73;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ride-total b{font:700 26px/1.1 "Bricolage Grotesque",sans-serif;letter-spacing:-.02em}
-.ride-go{flex:none;min-height:50px;padding:0 22px;background:#151518;color:#fff;font-size:15px}
+.ride-contact[hidden]{display:none}
+
+/* Resumen tipo ticket (blanco cálido, como el comprobante de pago): tramos, total y el botón grande */
+.ride-sum{display:grid;gap:12px;padding:20px;border-radius:22px;background:#F7F5F2;color:#151518}
+.ride-sum-h{margin:0;font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#6b6b73}
+.ride-lines{list-style:none;margin:0;padding:0 0 12px;display:grid;gap:10px;border-bottom:1.5px dashed #d6d2cb}
+.ride-lines li{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.ride-lines span{display:grid;gap:1px;min-width:0}
+.ride-lines b{font-size:16px}
+.ride-lines small{font-size:14px;color:#55555c}
+.ride-lines em{flex:none;font-style:normal;font-weight:700;font-size:16px}
+.ride-total{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.ride-total span{font-size:14px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#6b6b73}
+.ride-total b{font:700 34px/1 "Bricolage Grotesque",sans-serif;letter-spacing:-.02em}
+.ride-per{margin:-4px 0 0;font-size:14px;color:#55555c}
+.ride-go{width:100%;min-height:56px;margin-top:4px;background:#151518;color:#fff;font-size:17px}
 .ride-go:disabled{opacity:.6}
-.ride-total b small{font:600 13px "DM Sans",sans-serif;letter-spacing:0;color:#6b6b73;margin-right:2px}
-/* Tres garantías cortas debajo del total */
-.ride-trust{list-style:none;margin:-2px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--muted)}
-.ride-trust li{display:flex;align-items:center;gap:6px}
-.ride-trust .ico{flex:none;width:15px;height:15px;color:#46d9a0}
-.ride-fine{display:flex;align-items:flex-start;gap:8px;margin:-4px 0 0;font-size:13px;color:var(--muted)}
-.ride-fine .ico{flex:none;width:15px;height:15px;margin-top:2px;color:#46d9a0}
-.ride-plan{display:inline-flex;align-items:center;gap:6px;justify-self:start;min-height:40px;color:var(--ink);font-weight:600;font-size:14px;text-underline-offset:4px}
+.ride-fail{background:rgba(255,107,138,.1);border-color:rgba(255,107,138,.4);color:#44444a}
+.ride-fail b,.ride-fail a{color:#151518}
+/* Garantías cortas y el link a Armar plan */
+.ride-trust{list-style:none;margin:-4px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px 20px;font-size:14px;color:rgba(255,255,255,.75)}
+.ride-trust li{display:flex;align-items:center;gap:7px}
+.ride-trust .ico{flex:none;width:16px;height:16px;color:#46d9a0}
+.ride-plan{display:inline-flex;align-items:center;gap:6px;justify-self:start;min-height:44px;color:var(--ink);font-weight:600;font-size:15px;text-underline-offset:4px}
 .ride-plan .ico{width:15px;height:15px}
-@media (max-width:520px){
-  .ride-two{grid-template-columns:minmax(0,1fr)}
-  .ride-wide{grid-column:1/-1}                 /* zona, dirección y día a lo ancho; personas y hora lado a lado */
-  .ride-bar{flex-wrap:wrap}
-  .ride-go{flex:1 1 100%}
+@media (max-width:640px){
+  .ride-grid{grid-template-columns:minmax(0,1fr)}
+
 }
 body.ride-on .plan-fab{display:none!important}   /* traslado.js: la píldora "Tu plan" no tapa el bloque */
 /* Eventos sin traslado (no son fiesta ni música en vivo con entradas): una sola línea discreta a Armar plan */

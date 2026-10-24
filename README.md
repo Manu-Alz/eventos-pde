@@ -31,7 +31,7 @@ js/
   planner.js        Armar plan (plan.html)
   pagar.js          página de pago (pagar.html): solo tarjeta, con Mercado Pago
   portada.js        slider de portada
-  calendar.js       calendario
+  calendar.js       calendario con pósters: cada día muestra el póster del evento (como el mapa), con el número del día y la cantidad
   app.js            filtros, lista e inicio
   publicar.js       página de publicar
 ```
@@ -105,15 +105,18 @@ Pensado sobre todo para quien viene de afuera y quiere resolver todo en un solo 
 Para turistas y también para la gente de acá (la vuelta de la fiesta sin manejar ni buscar taxi).
 
 - **En qué eventos:** solo los que tienen **entradas a la venta** (`tickets`) y son **Fiestas o Música en vivo** (`RIDE_CATS` en `js/config.js`): ahí la gente sale tarde y conviene no manejar. Un evento puntual se fuerza con `traslado: true` o se apaga con `traslado: false` en `data.js`. Es una sola regla (`rideOK`, `js/cards.js`) para la página del evento y Armar plan. En los demás eventos la página muestra solo una línea discreta: "¿Venís de afuera? Armá tu plan…".
-- **Dónde:** en la página del evento, debajo de los botones, el bloque **"Traslado con chofer"**: ida y vuelta, solo ida o solo vuelta; zona y dirección de donde sale; personas; hora a la que lo buscamos (y el día, si el evento dura varios). La vuelta no tiene hora: avisa por WhatsApp cuando quiere irse.
+- **Dónde y cómo:** en la página del evento, debajo de los botones, el bloque **"Traslado con chofer"**, pensado para que cualquiera lo use: pasos numerados con preguntas simples. **1. ¿Qué viaje necesitás?** (ida y vuelta, solo ida o solo vuelta, cada una con su explicación) · **2. ¿Dónde te buscamos?** (zona y dirección; en solo vuelta, ¿a dónde te llevamos?) · **3. ¿Cuántos son y a qué hora?** (personas, día si dura varios y hora en formato 24 h) · resumen tipo ticket con cada tramo y el total · **4. Tus datos** y pagar. La vuelta no tiene hora: avisa por WhatsApp cuando quiere irse.
+- **Letra grande y campos de 16 px o más** en todo el sitio, para que el iPhone no agrande la pantalla al tocar un campo.
 - **Precio:** sale solo con `TARIFAS` (`js/config.js`): un precio por tramo según los km desde su zona hasta el evento, por auto de hasta 4 personas; de 5 a 8, camioneta (× `grupo`). Las llegadas (aeropuertos, puertos, terminal) tienen precio fijo por tramo. **Hoy son precios de ejemplo: ajustalos a lo que te cobre tu chofer o empresa más tu margen.**
 - **Pago:** "Reservar" pide nombre, mail y WhatsApp → "Pagar US$ X con tarjeta" → el script vuelve a calcular el precio (no confía en el de la web), guarda la fila en "Servicios" con el precio y Estado **"Por pagar"** (referencia `TRS-XXXXX`) y abre Mercado Pago. Al aprobarse: Estado **"Pagado"**, mail al cliente con el itinerario, mail a vos y **mail automático a la empresa de traslados** con el viaje ya pagado (pasajero, WhatsApp, dónde buscarlo, horario).
 - **Empresa de traslados (cuando haya convenio):** en Apps Script, Configuración del proyecto → Propiedades del script → `AVISO_TRASLADOS` con su mail (o varios separados por coma). Vacío = el aviso te llega solo a vos.
+- **Si al reservar dice "No encontramos el pedido" o "No pudimos abrir el pago":** el script publicado es una versión vieja, sin traslados. En Apps Script: pegá el `Code.gs` de GitHub, guardá y **Implementar → Gestionar implementaciones → lápiz → Versión: Nueva versión → Implementar** (pegar y guardar no alcanza). La web ya no manda a pagar si el script no devuelve una reserva `TRS-`.
 - **Copias que tienen que coincidir:** `TARIFAS` en `js/config.js` y en `apps-script/Code.gs`, y las zonas de `js/tarifas.js` y `ZONAS` del script. La web muestra el precio, pero cobra el script.
 - **Siempre con precio, nunca "a cotizar":** antes de elegir zona muestra "Desde US$ X"; con la zona, el total y el desglose (ida + vuelta, por auto, no por persona). Para calcularlo usa el lugar del evento (`VENUES` o `geo`) o, si el lugar solo nombra una zona ("La Barra"), el centro de esa zona. Si un evento que debería tenerlo no tiene lugar, no sale el bloque y `tools/build-eventos.js` lo avisa ("Sin traslado por falta de ubicación…" en el registro de GitHub Actions).
 
 ## Mapa
 
+- **Calendario:** cada día con eventos muestra el póster (marco blanco y franja del color de la categoría, igual que los pines del mapa), el número del día y, si hay varios, otro póster detrás y la cantidad. Primero van los eventos que empiezan ese día; los días en que un evento largo solo continúa (festival de una semana) se ven atenuados.
 - El botón del pin, al lado del calendario, muestra los eventos en un mapa (los de hoy laten). El pin sale solo si el lugar está en `VENUES` (`js/config.js`); si no, se le pone `geo: [lat, lng]` al evento. Los eventos sin ubicación siguen en la lista y el calendario.
 
 ## Cobros online (Mercado Pago, sin que el cliente tenga que escribirnos)

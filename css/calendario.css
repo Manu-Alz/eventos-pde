@@ -1,63 +1,70 @@
 /* calendario.css · vista calendario
-   Estructura: .calhead > .cgrid [.cw, .cd > (.cd-num, .cd-evs, .dots)] > .legend > .calbelow
+   Estructura: .calhead > .cgrid [.cw, .cd > (.cd-post > .cp ×1-2, .cd-num, .cd-n)] > .legend > .calbelow
+   Cada día con eventos muestra el póster (marco blanco, franja del color de la categoría abajo), como los pines del mapa.
    Ajustes rápidos: */
 :root{
-  --cal-gap:4px;          /* espacio entre días */
-  --cal-min-h:112px;      /* alto mínimo de un día en pantallas anchas */
-  --cal-radius:18px
+  --cal-gap:6px;          /* espacio entre días */
+  --cal-max:900px;        /* ancho máximo de la grilla en pantallas anchas (así los días no quedan gigantes) */
+  --cal-radius:14px
 }
 
 /* 1. Cabecera: mes y navegación */
-.calhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.calhead{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:var(--cal-max);margin-bottom:12px}
 .calhead h2{font-size:clamp(30px,6vw,46px);font-weight:600;letter-spacing:-.04em;text-transform:capitalize}
-.calsub{margin:4px 0 0;color:var(--muted);font-size:14px}
+.calsub{margin:4px 0 0;color:var(--muted);font-size:15px}
 .calnav{display:flex;gap:8px}
-.calnav .chip{width:var(--tap);padding:0;font-size:20px}
+.calnav .chip{width:var(--tap);padding:0;font-size:22px}
 
-/* 2. Grilla de días */
-.cgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:var(--cal-gap)}
-.cw{text-align:center;font-size:13px;color:var(--muted);padding:4px 0}
-.cd{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:6px;min-width:0;min-height:var(--cal-min-h);padding:8px 6px 6px;text-align:left;cursor:pointer;
-  border-radius:var(--cal-radius);border:1px solid var(--line);background:var(--glass);color:var(--ink);font:500 15px 'DM Sans',sans-serif}
+/* 2. Grilla de días: celdas con forma de póster (4:5) */
+.cgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:var(--cal-gap);max-width:var(--cal-max)}
+.cw{text-align:center;font-size:13px;font-weight:700;color:var(--muted);padding:4px 0}
+.cd{position:relative;display:block;min-width:0;aspect-ratio:4/5;padding:0;cursor:pointer;border-radius:var(--cal-radius);border:1px solid var(--line);
+  background:var(--glass);color:var(--ink);font:inherit;transition:transform .3s var(--ease),opacity .2s}
 .cd.off{visibility:hidden}
-.cd:disabled{cursor:default;color:var(--muted)}
-.cd.past{opacity:.55}
-.cd.has{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.075)}
-.cd.has .cd-num{font-weight:700}
-.cd.today{outline:2px solid var(--sea);outline-offset:-1px;opacity:1}
-.cd[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.cd[aria-pressed="true"] .ev{background:#1c1c22;color:var(--ink)}
-.cd[aria-pressed="true"] .more{color:var(--bg)}
-@media (hover:hover){.cd.has:not([aria-pressed="true"]):hover{border-color:var(--ink)}}
+.cd:disabled{cursor:default}
+.cd.past{opacity:.45}
+.cd.cont .cd-post{opacity:.5}                /* solo continúa un evento de varios días: póster atenuado */
+.cd.today{border-color:var(--sea);box-shadow:0 0 0 2px var(--sea)}
+@media (hover:hover){.cd.has:hover{transform:translateY(-3px)}}
 
-/* 3. Contenido de un día (pantallas anchas): hasta 3 líneas; con 1 o 2 eventos los títulos pueden ocupar 2 líneas */
-.cd-evs{display:flex;flex-direction:column;gap:3px;width:100%;min-width:0}
-.ev{display:block;width:100%;font-size:12px;line-height:1.25;padding:2px 5px;border-radius:5px;border-left:3px solid var(--c);background:color-mix(in srgb,var(--c) 24%,transparent);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cd[data-n="1"] .ev,.cd[data-n="2"] .ev{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;white-space:normal}
-.more{font-size:12px;color:var(--muted);font-weight:700;padding-left:2px}
+/* Número del día: arriba a la izquierda; sobre un póster, en una píldora oscura para que se lea */
+.cd-num{position:absolute;left:7px;top:6px;z-index:3;font:600 15px/1 "DM Sans",sans-serif;color:var(--muted)}
+.cd.has .cd-num{left:5px;top:5px;padding:4px 7px;border-radius:999px;background:rgba(10,10,14,.78);color:#fff;font-weight:800;font-size:13px}
+.cd.today .cd-num{color:var(--sea)}
+.cd.has.today .cd-num{background:var(--sea);color:#08080a}
 
-/* 4. Puntos de color (celulares) */
-.dots{display:none;align-items:center;gap:3px}
-.dots i{width:7px;height:7px;border-radius:50%;background:var(--c)}
-.dots .plus{font-size:12px;line-height:1;color:var(--muted)}
-.cd[aria-pressed="true"] .dots .plus{color:var(--bg)}
+/* Póster: marco blanco cálido con la foto y la franja de la categoría (igual que .mk-card del mapa) */
+.cd.has{border-color:transparent;background:none}
+.cd-post{position:absolute;inset:0}
+.cp{position:absolute;inset:0;display:block;padding:3px 3px 6px;border-radius:var(--cal-radius);background:#F7F5F2;overflow:hidden;
+  box-shadow:0 10px 22px -8px rgba(0,0,0,.8),inset 0 -3px 0 var(--c)}
+.cp img,.cp-gen{position:absolute;left:3px;right:3px;top:3px;bottom:6px;width:calc(100% - 6px);height:calc(100% - 9px);border-radius:calc(var(--cal-radius) - 3px);object-fit:cover}
+.cp-gen{display:grid;place-items:center;font:700 clamp(16px,3vw,30px) "Bricolage Grotesque",sans-serif;color:#fff;background:color-mix(in srgb,var(--c) 75%,#000)}
+.cp.back{transform:rotate(-7deg) translate(-3px,2px) scale(.96);opacity:.85}
+/* Cantidad de eventos del día, cuando hay más de uno */
+.cd-n{position:absolute;top:-6px;right:-6px;z-index:3;min-width:22px;height:22px;padding:0 6px;border-radius:999px;display:grid;place-items:center;
+  background:#7C4DFF;color:#fff;font:800 12px/1 "DM Sans",sans-serif;box-shadow:0 0 0 2px var(--bg)}
+/* Día elegido: se marca con un borde blanco y queda arriba */
+.cd[aria-pressed="true"]{z-index:2;transform:scale(1.04);box-shadow:0 0 0 3px #F4F4F5;opacity:1}
+.cd:focus-visible{outline:3px solid var(--sea);outline-offset:2px}
 
-/* 5. Leyenda de categorías del mes */
-.legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:14px 0 0;padding:0;list-style:none;color:var(--muted);font-size:13px}
+/* 3. Leyenda de categorías del mes (el color de la franja de cada póster) */
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;max-width:var(--cal-max);margin:14px 0 0;padding:0;list-style:none;color:var(--muted);font-size:14px}
 .legend li{display:inline-flex;align-items:center;gap:6px}
-.legend i{width:8px;height:8px;border-radius:50%;background:var(--c)}
+.legend i{width:9px;height:9px;border-radius:50%;background:var(--c)}
 
-/* 6. Lista de eventos del día o del mes */
+/* 4. Lista de eventos del día o del mes */
 .calbelow{margin-top:24px;scroll-margin-top:12px}
 .calbelow-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
 .calbelow h3{font-size:clamp(24px,5vw,32px);font-weight:600;letter-spacing:-.03em}
 
-/* 7. Celulares: días cuadrados con puntos */
+/* 5. Celulares: celdas más chicas, marco y textos más finos */
 @media (max-width:700px){
-  :root{--cal-gap:3px}
-  .cd{aspect-ratio:1/1;min-height:0;justify-content:space-between;padding:6px;gap:0}
-  .cd-evs{display:none}
-  .dots{display:flex}
-  .cd-num{font-size:15px;line-height:1}
+  :root{--cal-gap:4px;--cal-radius:10px}
+  .cp{padding:2px 2px 4px}
+  .cp img,.cp-gen{left:2px;right:2px;top:2px;bottom:4px;width:calc(100% - 4px);height:calc(100% - 6px)}
+  .cd.has .cd-num{left:3px;top:3px;padding:3px 5px;font-size:11px}
+  .cd-num{left:5px;top:5px;font-size:13px}
+  .cd-n{top:-5px;right:-5px;min-width:18px;height:18px;padding:0 4px;font-size:10px}
   .calbelow-head{flex-wrap:wrap}
 }

@@ -74,6 +74,7 @@ function doGet(e) {
 /* ============ 2. Publicaciones (publicar.html) ============ */
 
 function guardarSolicitud(d) {
+  if (!d.title || !d.plan || !d.ref) return { ok: false, error: "Faltan datos de la publicación." };   // nada de filas vacías
   const dias = d.days || d.weeks || "";
   const clave = nuevaClave();
   conCandado(() => obtenerHoja(HOJA, COLUMNAS).appendRow([new Date(), d.ref, d.title, d.plan, dias, d.total, d.cat, d.date, d.time, d.place,
@@ -432,7 +433,8 @@ function usd_(v) {
   else s = s.replace(/,/g, "");
   return Number(s) || 0;
 }
-const nuevaClave = () => Utilities.getUuid().replace(/-/g, "").slice(0, 12);
+/* Clave del link de pago: empieza con letra para que la planilla nunca la lea como número (ej. "12e45" sería 1,2 × 10^46) */
+const nuevaClave = () => "k" + Utilities.getUuid().replace(/-/g, "").slice(0, 11);
 const fechaTexto = v => !v ? "" : v instanceof Date ? Utilities.formatDate(v, "America/Montevideo", "dd/MM/yyyy") : String(v).split("-").reverse().join("/");
 const horaTexto = v => !v ? "" : v instanceof Date ? Utilities.formatDate(v, "America/Montevideo", "HH:mm") : String(v);
 

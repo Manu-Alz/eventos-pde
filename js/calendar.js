@@ -1,11 +1,10 @@
 /* calendar.js · vista calendario
-   - Pantallas anchas: cada día muestra hasta 3 líneas (si hay más, 2 + "+N más").
-   - Celulares: cada día muestra puntos de color por categoría.
+   - Cada día con eventos muestra el póster del primero (marco blanco y franja del color de la categoría, como en el mapa).
+     Si hay más, asoma otro póster detrás y un número con la cantidad. El número del día va arriba, sobre el póster.
    - Los días sin eventos no se pueden tocar. Tocar un día muestra sus eventos abajo.
    - Se puede deslizar a los costados para cambiar de mes.
    Requiere: config.js (CATS), utils.js (esc, pad, MESES, TODAY), cards.js (cardEl, compareEvents) */
 
-const CAL_MAX_LINES = 3;                         // líneas de eventos por celda antes de pasar a "+N más"
 const WEEKDAYS = ["L", "M", "M", "J", "V", "S", "D"];
 
 /* ============ 1. Datos ============ */
@@ -22,29 +21,23 @@ function eventsByDay(list) {
   return map;
 }
 
-/* Cuántos eventos se escriben en la celda y cuántos pasan a "+N más" */
-function splitVisible(evs) {
-  if (evs.length <= CAL_MAX_LINES) return { shown: evs, extra: 0 };
-  const shown = evs.slice(0, CAL_MAX_LINES - 1);
-  return { shown, extra: evs.length - shown.length };
-}
+/* Póster chico de un evento: la foto o, sin foto, la inicial sobre el color de la categoría (queda debajo si la foto no carga) */
+const calPoster = (e, back) => `<span class="cp${back ? " back" : ""}" style="--c:${CATS[e.cat]}"><span class="cp-gen">${esc(e.title.charAt(0))}</span>`
+  + (e.photo ? `<img src="${esc(photoUrl(e))}" alt="" decoding="async" onerror="this.remove()">` : "") + "</span>";
 
 /* ============ 2. Piezas ============ */
-function dayCell(n, key, evs, month, selected) {
-  const count = evs.length;
-  const { shown, extra } = splitVisible(evs);
-  const classes = ["cd", count && "has", key === TODAY && "today", key < TODAY && "past"].filter(Boolean).join(" ");
-  const label = `${n} de ${MESES[month]}, ${count ? `${count} ${count > 1 ? "eventos" : "evento"}` : "sin eventos"}`;
+function dayCell(n, key, list, month, selected) {
+  /* Primero los eventos que empiezan ese día; los de varios días que solo continúan van detrás.
+     Si ese día solo hay continuaciones (ej. el 3.er día de un festival), el póster se ve atenuado (.cont) */
+  const evs = [...list.filter(e => e.date === key), ...list.filter(e => e.date !== key)];
+  const count = evs.length, cont = count > 0 && evs.every(e => e.date !== key);
+  const classes = ["cd", count && "has", cont && "cont", key === TODAY && "today", key < TODAY && "past"].filter(Boolean).join(" ");
+  const label = `${n} de ${MESES[month]}, ${count ? `${count} ${count > 1 ? "eventos" : "evento"}: ${evs.map(e => e.title).join(", ")}` : "sin eventos"}`;
+  const posters = count ? `<span class="cd-post" aria-hidden="true">${count > 1 ? calPoster(evs[1], true) : ""}${calPoster(evs[0])}</span>` : "";
 
-  const lines = shown.map(e => `<span class="ev" style="--c:${CATS[e.cat]}" title="${esc(e.title)}">${esc(e.title)}</span>`).join("")
-    + (extra ? `<span class="more">+${extra} más</span>` : "");
-  const maxDots = count > 3 ? 2 : 3;                // con más de 3 eventos: 2 puntos y un "+"
-  const dots = evs.slice(0, maxDots).map(e => `<i style="--c:${CATS[e.cat]}"></i>`).join("")
-    + (count > 3 ? '<b class="plus" aria-hidden="true">+</b>' : "");
-
-  return `<button type="button" class="${classes}" data-k="${key}" data-n="${Math.min(count, 4)}"`
-    + ` aria-pressed="${selected === key}"${key === TODAY ? ' aria-current="date"' : ""}${count ? "" : " disabled"} aria-label="${label}">`
-    + `<span class="cd-num">${n}</span><span class="cd-evs">${lines}</span><span class="dots">${dots}</span></button>`;
+  return `<button type="button" class="${classes}" data-k="${key}"`
+    + ` aria-pressed="${selected === key}"${key === TODAY ? ' aria-current="date"' : ""}${count ? "" : " disabled"} aria-label="${esc(label)}"${count ? ` title="${esc(evs.map(e => e.title).join(" · "))}"` : ""}>`
+    + `${posters}<span class="cd-num">${n}</span>${count > 1 ? `<span class="cd-n" aria-hidden="true">${count}</span>` : ""}</button>`;
 }
 
 const legendHtml = evs =>
