@@ -77,6 +77,20 @@ const VENUES = {
      photo: "hotel-del-mar.webp", from: 180, sleeps: 4, perks: ["Desayuno", "Frente al mar", "Piscina"] } */
 const STAYS = [];
 
+/* ============ 2c-bis. Alojamiento en Booking (afiliado) ============
+   En Armar plan, "Ver alojamientos en Booking" abre Booking con las fechas, la zona, las personas y el tipo ya puestos.
+   La persona elige, reserva y paga ahí; Eventos PDE cobra comisión por cada reserva que salga de ese link.
+   Cómo se cobra la comisión: Booking lo maneja por la red CJ (Commission Junction).
+     1. Anotate en partnerships.booking.com (Affiliate Partners) y completá el registro en CJ.
+     2. En CJ, generá un link de Booking.com y copiá la parte de adelante, sin el "?url=...":
+        algo como "https://www.dpbolvw.net/click-1234567-12345678". Pegala en cj.
+     3. Si en vez de CJ te dan un número de afiliado de Booking ("aid"), pegalo en aid.
+   Vacío: los links funcionan igual, pero sin comisión. */
+const BOOKING = {
+  cj:  "",                                  // link base de CJ para Booking.com (sin ?url=)
+  aid: ""                                   // número de afiliado de Booking, si te dan uno
+};
+
 /* ============ 2d. Traslados con chofer: precios para reservar y pagar al instante ============
    Los usan la página de cada evento ("Traslado con chofer") y Armar plan (cuando el pedido es solo de traslados).
    Precios en US$, con tu margen incluido, por tramo (un viaje en un sentido) y por auto de hasta 4 personas.

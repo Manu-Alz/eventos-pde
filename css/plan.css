@@ -165,6 +165,20 @@
 .pl-zone small{display:flex;align-items:center;gap:6px;margin-top:2px;font-size:12px;font-weight:700;color:var(--ink)}
 .pl-zone small .ico{width:14px;height:14px}
 .pl-zone[aria-pressed="true"]{border-color:#7C4DFF;background:rgba(124,77,255,.14)}
+/* Alojamiento en Booking: qué se va a buscar y el botón (azul de Booking, para que se reconozca al toque) */
+.pl-booking{display:grid;gap:12px;padding:18px;border-radius:20px;background:rgba(0,108,228,.12);border:1px solid rgba(0,108,228,.45)}
+.pl-booking-t{display:grid;gap:4px}
+.pl-booking-t>b{font:600 19px/1.2 "Bricolage Grotesque",sans-serif}
+.pl-booking-t span{font-size:15px;line-height:1.5;color:rgba(255,255,255,.8)}
+.pl-booking-t span b{color:var(--ink)}
+.pl-booking-go{gap:10px;min-height:54px;background:#006ce4;color:#fff;font-size:16px}
+.pl-booking-go .ico{width:18px;height:18px}
+@media (hover:hover){.pl-booking-go:hover{background:#0057b8}}
+.pl-booking-fine{font-size:12px;color:var(--muted)}
+.pl-booking .pl-tip{margin:0}
+/* Dónde lo buscamos (traslados): separado del alojamiento por una línea */
+.pl-pickup{display:grid;gap:12px;padding-top:16px;border-top:1px solid var(--line)}
+.pl-card>.pl-pickup:first-child,.pl-row+.pl-pickup{padding-top:0;border-top:0}
 .pl-stays{display:grid;gap:10px}
 .pl-stay-card{position:relative;display:grid;grid-template-columns:96px minmax(0,1fr);gap:14px;align-items:center;padding:10px 46px 10px 10px;border-radius:20px;border:1.5px solid var(--line);background:var(--glass);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
 .pl-stay-card[aria-pressed="true"]{border-color:#7C4DFF;background:rgba(124,77,255,.14)}

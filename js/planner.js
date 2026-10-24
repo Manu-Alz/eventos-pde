@@ -5,7 +5,9 @@
    2 Llegada y regreso: cómo llega (avión, barco, ómnibus o por su cuenta) y el traslado desde y hacia el aeropuerto
      o puerto (los dos tramos, solo la llegada, solo el regreso o ninguno).
    3 Dónde te quedás: apagado por defecto ("Necesito alojamiento"); prendido, fechas, zona en un mapa (con los minutos
-     hasta sus eventos) y, si hay convenios, el catálogo STAYS (config.js).
+     hasta sus eventos) y tipo, y "Ver alojamientos en Booking" abre Booking ya filtrado: elige, reserva y paga ahí y
+     Eventos PDE cobra comisión (BOOKING en config.js). Si hay convenios, el catálogo STAYS (config.js) se cotiza.
+     Abajo, la zona y dirección donde lo buscamos (para los traslados).
    4 Tus datos: nombre, mail, WhatsApp, país e idioma.
    Se puede pedir sin eventos (solo traslado o alojamiento). Manda un solo pedido de cotización a la planilla
    (pestaña "Servicios", referencia PLN-XXXXX) y de ahí sale el mail con el pago online. El itinerario viaja en "Algo más",
@@ -54,7 +56,6 @@ const RIDES = [["ida y vuelta", "Ida y vuelta"], ["solo ida", "Solo ida"], ["sol
 
 const ANY_ZONE = "Me da igual";
 const TYPES = ["Me da igual", "Hotel", "Apartamento", "Casa"];
-const BUDGETS = ["A conversar", "Hasta US$ 100", "US$ 100 a 250", "US$ 250 a 500", "Más de US$ 500"];
 const COUNTRIES = ["Argentina", "Brasil", "Uruguay", "Chile", "Paraguay", "Estados Unidos", "España", "Otro"];
 const LANGS = ["Español", "Português", "English"];
 const STAY_LIST = typeof STAYS !== "undefined" ? STAYS : [];   // catálogo de alojamientos con convenio (config.js)
@@ -73,6 +74,9 @@ const goes = tr => tr === "ida y vuelta" || tr === "solo ida";      // ese tramo
 const hasTix = e => Boolean(e.tickets || e.price);
 const tixOf = e => (!hasTix(e) ? "no" : opts.tix[slugOf(e)] || (e.tickets ? "no" : "si"));
 const stayOn = () => opts.stay === true;                            // alojamiento: apagado hasta que la persona lo prende
+/* El alojamiento se reserva en Booking (la persona paga ahí), salvo que elija uno con convenio del catálogo: ese se cotiza */
+const quoteStay = () => stayOn() && Boolean(stayById(opts.stayId));
+const viaBooking = () => stayOn() && !quoteStay();
 const people = () => opts.people || 2;
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 /* Lo buscamos media hora antes, en hora o media hora */
@@ -106,6 +110,24 @@ function bestZone(list) {
 }
 const zoneOf = list => opts.aZone || bestZone(list);
 const stayById = id => STAY_LIST.find(s => s.id === id);
+const BOOKING_AREA = { "Península": "Punta del Este", "Playa Brava o Mansa": "Punta del Este", [ANY_ZONE]: "Punta del Este" };
+const BOOKING_TYPE = { Hotel: "ht_id=204", Apartamento: "ht_id=201", Casa: "ht_id=220" };   // filtros de Booking por tipo
+function bookingUrl(list) {
+  const zone = zoneOf(list), area = BOOKING_AREA[zone] || zone;
+  const q = new URLSearchParams({ ss: `${area}, Maldonado, Uruguay`, group_adults: people(), no_rooms: 1, group_children: 0 });
+  if (stayIn(list)) q.set("checkin", stayIn(list));
+  if (stayOut(list)) q.set("checkout", stayOut(list));
+  if (BOOKING_TYPE[opts.aType]) q.set("nflt", BOOKING_TYPE[opts.aType]);
+  const B = typeof BOOKING === "object" ? BOOKING : {};
+  if (B.aid) q.set("aid", B.aid);
+  q.set("label", "eventospde-plan");
+  const dest = "https://www.booking.com/searchresults.es.html?" + q;
+  return B.cj ? `${B.cj}?url=${encodeURIComponent(dest)}` : dest;
+}
+const bookingText = list => {
+  const zone = zoneOf(list), area = zone === ANY_ZONE ? "Punta del Este" : zone, a = stayIn(list), b = stayOut(list);
+  return `${esc(area)}${a && b ? ` · del ${dmy2(a)} al ${dmy2(b)}` : ""} · ${plural(people(), "persona", "personas")}`;
+};
 
 /* Lo que incluye el pedido, para el resumen y el pedido */
 function totals(list) {
@@ -260,7 +282,7 @@ function zonesHtml(list) {
       <span>${esc(z.blurb)}</span>
       ${m != null ? `<small>${ico("car")}≈ ${m} min a tus eventos</small>` : ""}
     </button>`;
-  }).join("") + `<button type="button" class="pl-zone pl-zone-any" data-zone="${ANY_ZONE}" aria-pressed="${sel === ANY_ZONE}"><b>${ANY_ZONE}</b><span>Te proponemos lo mejor para tus fechas.</span></button>`;
+  }).join("") + `<button type="button" class="pl-zone pl-zone-any" data-zone="${ANY_ZONE}" aria-pressed="${sel === ANY_ZONE}"><b>${ANY_ZONE}</b><span>Te mostramos todo Punta del Este.</span></button>`;
 }
 
 function staysHtml(list) {
@@ -283,7 +305,7 @@ function staysHtml(list) {
 function stayStep(list) {
   const on = stayOn();
   return `<section class="pl-sec">
-    ${stepHead(3, "Dónde te quedás", "Te buscamos alojamiento cerca de tus eventos.")}
+    ${stepHead(3, "Dónde te quedás", "Elegí la zona y reservá tu alojamiento en Booking. Si sumás traslados, te buscamos ahí.")}
     <div class="pl-card">
       <div class="pl-row"><p class="pl-q">Necesito alojamiento</p><label class="pl-switch" aria-label="Necesito alojamiento"><input type="checkbox" id="pl-stay"${on ? " checked" : ""}><span></span></label></div>
       ${on ? `<div class="pl-two">
@@ -293,18 +315,30 @@ function stayStep(list) {
         <div class="mapa pl-map-wrap"><div class="mapa-box pl-map" id="pl-map"><p class="mapa-wait">Cargando el mapa…</p></div></div>
         <p class="pl-q">Zona <small>(tocala en el mapa o elegí abajo)</small></p>
         <div class="pl-zones" id="pl-zones">${zonesHtml(list)}</div>
-        <div id="pl-stays">${staysHtml(list)}</div>
-        <div class="pl-two">
-          <label>Tipo<select name="aType">${optionTags(TYPES, opts.aType || "Me da igual")}</select></label>
-          <label>Presupuesto por noche<select name="aBudget">${optionTags(BUDGETS, opts.aBudget || "A conversar")}</select></label>
-        </div>`
-      : `<p class="pl-q">¿Dónde te buscamos? <small>(con la zona ves el precio de los traslados al instante)</small></p>
-        <div class="pl-two">
-          <label>Zona<select name="rideZone"><option value="">Elegí tu zona</option>${ZONES.map(z => `<option${z.name === opts.rideZone ? " selected" : ""}>${esc(z.name)}</option>`).join("")}</select></label>
-          <label>Dirección u hotel<input name="from" value="${esc(opts.from || "")}" placeholder="Calle y número, o el hotel" autocomplete="off"></label>
-        </div>`}
+        <label>Tipo de alojamiento<select name="aType">${optionTags(TYPES, opts.aType || "Me da igual")}</select></label>
+        <div class="pl-booking" id="pl-booking">${bookingHtml(list)}</div>
+        <div id="pl-stays">${staysHtml(list)}</div>` : ""}
+      ${pickupHtml()}
     </div>
   </section>`;
+}
+
+/* Booking: un bloque claro con lo que se va a buscar y el botón; aviso de que es un link de referido */
+function bookingHtml(list) {
+  if (quoteStay()) return `<p class="pl-tip">${ico("check")}<span>Elegiste un alojamiento con convenio: te lo cotizamos junto con el resto del plan.</span></p>`;
+  return `<div class="pl-booking-t"><b>Elegí tu alojamiento en Booking</b><span>Te mostramos los de <b>${bookingText(list)}</b>. Elegís, reservás y pagás directo en Booking; muchos tienen cancelación gratis.</span></div>
+    <a class="btn pl-booking-go" id="pl-booking-go" href="${esc(bookingUrl(list))}" target="_blank" rel="sponsored noopener" data-ev="booking">Ver alojamientos en Booking ${ico("arrow")}</a>
+    <small class="pl-booking-fine">Enlace de referido: Eventos PDE puede recibir una comisión de Booking, sin costo extra para vos.</small>`;
+}
+
+/* Dónde lo buscamos (para los traslados): la zona da el precio al instante; la dirección puede quedar para después */
+function pickupHtml() {
+  return `<div class="pl-pickup">
+    <p class="pl-q">¿Dónde te buscamos? <small>${stayOn() ? "(si todavía no reservaste, elegí la zona y la dirección nos la pasás después)" : "(con la zona ves el precio de los traslados al instante)"}</small></p>
+    <div class="pl-two">
+      <label>Zona<select name="rideZone"><option value="">Elegí tu zona</option>${ZONES.map(z => `<option${z.name === opts.rideZone ? " selected" : ""}>${esc(z.name)}</option>`).join("")}</select></label>
+      <label>Dirección u hotel<input name="from" value="${esc(opts.from || "")}" placeholder="Calle y número, o el hotel" autocomplete="off"></label>
+    </div></div>`;
 }
 
 function contactStep() {
@@ -328,11 +362,11 @@ function contactStep() {
 /* Pago al instante: si el pedido es solo de traslados con precio (sin alojamiento ni entradas para conseguir) se cobra
    al reservar, con TARIFAS (tarifas.js). Devuelve { usd, items } o null (entonces se pide cotización). */
 /* Nada para pedir: ni chofer, ni aeropuerto, ni alojamiento, ni entradas incluidas */
-const nothingToDo = list => { const t = totals(list); return !t.rides && !t.airport && !stayOn() && !t.tix.length; };
+const nothingToDo = list => { const t = totals(list); return !t.rides && !t.airport && !quoteStay() && !t.tix.length; };
 
 function instant(list) {
   const t = totals(list), zone = opts.rideZone, p = people(), a = opts.arr, items = [];
-  if (stayOn() || t.tix.length || (!t.rides && !t.airport) || !zoneByName(zone)) return null;
+  if (quoteStay() || t.tix.length || (!t.rides && !t.airport) || !zoneByName(zone)) return null;
   for (const e of t.withRide) {
     const tr = trOf(e), legs = tr === "ida y vuelta" ? 2 : 1, g = geoOf(e);
     const usd = rideUSD(zone, g, legs, p);
@@ -360,7 +394,8 @@ function summaryLines(list) {
   return [
     t.tix.length ? line("ticket", plural(t.tix.length * p, "entrada", "entradas"), `${plural(t.tix.length, "evento", "eventos")} × ${plural(p, "persona", "personas")}`) : "",
     t.airport ? line("plane", TF_TEXT[t.tf], esc(t.arr.place)) : "",
-    stayOn() ? (t.nights
+    viaBooking() ? line("bed", "Alojamiento en Booking", `${bookingText(list)} · lo reservás vos`)
+    : quoteStay() ? (t.nights
       ? line("bed", `${plural(t.nights, "noche", "noches")} de alojamiento`, `${dmy2(stayIn(list))} al ${dmy2(stayOut(list))} · ${esc(stay ? stay.name : zone)}`)
       : line("bed", "Alojamiento", "Elegí las fechas en el paso 3")) : "",
     t.rides ? line("car", `${plural(t.rides, "viaje", "viajes")} con chofer`, `a ${plural(t.withRide.length, "evento", "eventos")}`) : ""
@@ -433,7 +468,7 @@ function subText(list) {
   if (!list.length) return SUB_DEFAULT;
   const start = tripStart(list), end = tripEnd(list);
   const when = start === end ? `el ${dow(start).toLowerCase()} ${dmy2(start)}` : `del ${dow(start).toLowerCase()} ${dmy2(start)} al ${dow(end).toLowerCase()} ${dmy2(end)}`;
-  return `${plural(list.length, "evento", "eventos")}, ${when}. Elegí qué querés que resolvamos y pedí una sola cotización con todo.`;
+  return `${plural(list.length, "evento", "eventos")}, ${when}. Elegí qué querés que resolvamos: chofer, traslado del aeropuerto, entradas y dónde quedarte.`;
 }
 
 function render() {
@@ -466,14 +501,18 @@ function refresh(list = planEvents()) {
   if (!nothingToDo(list)) $("pl-warn")?.remove();                   // el aviso "elegí qué resolvemos" se va solo
   /* Solo traslados con precio: total a la vista y pago con tarjeta; si no, cotización */
   const ins = instant(list);
-  const needZone = !stayOn() && !t.tix.length && (t.rides || t.airport) && !zoneByName(opts.rideZone);
+  const needZone = !quoteStay() && !t.tix.length && (t.rides || t.airport) && !zoneByName(opts.rideZone);
+  if ($("pl-booking") && !quoteStay()) {                                  // el link a Booking sigue a fechas, zona, personas y tipo
+    $("pl-booking-go").href = bookingUrl(list);
+    $("pl-booking").querySelector(".pl-booking-t span b").innerHTML = bookingText(list);
+  }
   $("pl-total").hidden = !ins;
   if (ins) $("pl-total").querySelector("b").textContent = `US$ ${ins.usd}`;
   $("pl-cta").textContent = ins ? `Pagar US$ ${ins.usd} con tarjeta` : "Pedir cotización";
   $("pl-fine").textContent = ins ? "Precio final, sin esperar cotización. Pagás con tarjeta y te confirmamos el chofer por WhatsApp."
     : needZone ? "Elegí tu zona en el paso 3 y ves el precio de los traslados al instante."
-    : nothingToDo(list) ? "Sumá chofer, traslado del aeropuerto o alojamiento para pedir tu plan."
-    : t.tix.length || stayOn() ? "Con entradas o alojamiento te mandamos el total por mail, sin costo ni compromiso, y pagás online con tarjeta."
+    : nothingToDo(list) ? (viaBooking() ? "El alojamiento lo reservás en Booking (paso 3). Sumá chofer o traslado del aeropuerto si querés que te llevemos." : "Sumá chofer, traslado del aeropuerto o alojamiento para pedir tu plan.")
+    : t.tix.length || quoteStay() ? "Con entradas o alojamiento con convenio te mandamos el total por mail, sin costo ni compromiso, y pagás online con tarjeta."
     : "Sin costo ni compromiso. Te mandamos el total por mail y pagás online con tarjeta solo si te sirve.";
   $("pl-bar-s").textContent = ins ? `Total US$ ${ins.usd}` : "Sin costo ni compromiso";
   $("pl-bar-go").textContent = ins ? "Pagar" : "Pedir cotización";
@@ -559,12 +598,15 @@ function toggleEvent(id) {
 function refreshStay(list = planEvents()) {
   const z = $("pl-zones"); if (z) z.innerHTML = zonesHtml(list);
   const s = $("pl-stays"); if (s) s.innerHTML = staysHtml(list);
+  const bk = $("pl-booking"); if (bk) bk.innerHTML = bookingHtml(list);       // Booking o "te lo cotizamos" según el catálogo
   const type = box.querySelector('[name="aType"]'); if (type) type.value = opts.aType || "Me da igual";
   drawMap(list);
   refresh(list);
 }
 function pickZone(name) {
   opts.aZone = name;
+  /* La zona donde se queda es también donde lo buscamos (si todavía no eligió otra): así ve el precio de los traslados */
+  if (!opts.rideZone && zoneByName(name)) { opts.rideZone = name; const rz = box.querySelector('[name="rideZone"]'); if (rz) rz.value = name; }
   const s = stayById(opts.stayId);
   if (s && s.zone !== name) opts.stayId = "";
   saveOpts();
@@ -607,7 +649,7 @@ function itinerary(list) {
 }
 
 function planPayload(ref, f, list) {
-  const t = totals(list), stay = stayOn(), st = stayById(opts.stayId);
+  const t = totals(list), stay = quoteStay(), st = stayById(opts.stayId);
   const parts = [t.tix.length && "entradas", (t.airport || t.rides) && "traslados", stay && "alojamiento"].filter(Boolean);
   const need = "plan: " + (parts.length ? parts.join(", ").replace(/, ([^,]*)$/, " y $1") : "a medida");
   const first = t.withRide[0];
@@ -622,7 +664,7 @@ function planPayload(ref, f, list) {
     tBack: t.airport || first ? "según el itinerario" : "", tBackTime: "",
     aIn: stay ? f.aIn : "", aOut: stay ? f.aOut : "", aZone: stay ? zoneOf(list) : "",
     aType: stay ? (st ? `${st.name} (convenio)` : f.aType) : "", aBudget: stay ? (st && st.from ? `desde US$ ${st.from}` : f.aBudget) : "",
-    notes: `${itin ? `Itinerario:\n${itin}\n\n` : ""}País: ${f.country} · Idioma: ${f.lang}${!stay && f.from ? ` · Se queda en: ${f.from}` : ""}${f.notes ? `\nAlgo más: ${f.notes}` : ""}`
+    notes: `${itin ? `Itinerario:\n${itin}\n\n` : ""}País: ${f.country} · Idioma: ${f.lang}${viaBooking() ? ` · Alojamiento: lo reserva en Booking (${zoneOf(list)}, ${dmy2(stayIn(list))} al ${dmy2(stayOut(list))})` : ""}${!stay && f.from ? ` · Se queda en: ${f.from}` : ""}${f.notes ? `\nAlgo más: ${f.notes}` : ""}`
   };
 }
 
@@ -670,13 +712,14 @@ async function submitPlan(form) {
   const ins = instant(list);
   if (ins) {
     const from = form.querySelector('[name="from"]');
-    if (from && !from.value.trim()) { from.closest(".pl-sec").scrollIntoView({ behavior: "smooth", block: "start" }); setTimeout(() => { from.focus({ preventScroll: true }); }, 450); return; }
+    /* Con alojamiento en Booking puede no tener hotel todavía: la dirección queda para después */
+    if (from && !from.value.trim() && !stayOn()) { from.closest(".pl-sec").scrollIntoView({ behavior: "smooth", block: "start" }); setTimeout(() => { from.focus({ preventScroll: true }); }, 450); return; }
     btn.disabled = true; btn.textContent = "Abriendo el pago…";
     track("plan_pagar", { eventos: list.length, usd: ins.usd, llegada: opts.arr.via || "" });
     try {
       const res = await fetch(CONFIG.formUrl, { method: "POST", headers: { "Content-Type": "text/plain" }, body: JSON.stringify({
-        kind: "traslado", zone: opts.rideZone, address: f.from || "", people: people(), name: f.name, email: f.email, phone: f.phone,
-        notes: `País: ${f.country} · Idioma: ${f.lang}${f.notes ? ` · ${f.notes}` : ""}`, items: ins.items.map(({ usd, ...it }) => it) }) });
+        kind: "traslado", zone: opts.rideZone, address: f.from || (stayOn() ? "Hotel a confirmar (lo reserva en Booking)" : ""), people: people(), name: f.name, email: f.email, phone: f.phone,
+        notes: `País: ${f.country} · Idioma: ${f.lang}${viaBooking() ? ` · Alojamiento: lo reserva en Booking (${zoneOf(list)}, ${dmy2(stayIn(list))} al ${dmy2(stayOut(list))})` : ""}${f.notes ? ` · ${f.notes}` : ""}`, items: ins.items.map(({ usd, ...it }) => it) }) });
       const r = await res.json();
       /* Solo se va a pagar si el script devolvió una reserva de traslado (TRS-…): un script viejo, sin traslados,
          contestaría ok pero sin reserva, y la página de pago diría "No encontramos el pedido" */
@@ -699,7 +742,7 @@ async function submitPlan(form) {
   const msg = `Hola! Quiero cotizar mi plan en Punta con Eventos PDE.\nPedido: ${ref}\nPersonas: ${data.people}\n${data.aIn ? `Alojamiento: del ${dmy2(data.aIn)} al ${dmy2(data.aOut)} · ${data.aZone} · ${data.aType} · ${data.aBudget}\n` : "Sin alojamiento\n"}\n${data.notes}\n\n${f.name} · ${f.email} · ${f.phone}`;
   $("pl-sub").textContent = "";
   box.innerHTML = doneHtml(ref, f, ok, msg);
-  track("plan_cotizar", { eventos: list.length, via: ok ? "sistema" : "manual", llegada: opts.arr.via || "", alojamiento: stayOn() ? zoneOf(list) : "no" });
+  track("plan_cotizar", { eventos: list.length, via: ok ? "sistema" : "manual", llegada: opts.arr.via || "", alojamiento: quoteStay() ? zoneOf(list) : viaBooking() ? "booking" : "no" });
   scrollTo({ top: 0, behavior: "smooth" });
 }
 
