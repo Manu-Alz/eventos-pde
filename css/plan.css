@@ -301,5 +301,5 @@
 .pl-faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:52px;padding:12px 18px;font-weight:700}
 .pl-faq summary::-webkit-details-marker{display:none}
 .pl-faq summary::after{content:"+";flex:none;font-size:22px;line-height:1;color:var(--muted);transition:transform .25s var(--ease)}
-.pl-faq details[open] summary::after{transform:rotate(45deg)}
-.pl-faq p{margin:0;padding:0 18px 16px;color:var(--muted);font-size:15px}
+.pl-faq details.is-open summary::after{transform:rotate(45deg)}
+.pl-faq p{margin:0;padding:0 18px 16px;overflow:hidden;color:var(--muted);font-size:15px}

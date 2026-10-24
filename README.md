@@ -23,7 +23,7 @@ js/
   data.js           los eventos                                      (se edita seguido)
   utils.js          utilidades compartidas
   analytics.js      Google Analytics y conteo de clics
-  site.js           pie de página (marca, columnas Agenda / Organizadores / Contacto); los links se cambian acá
+  site.js           pie de página (marca, columnas Agenda / Trabajá con nosotros / Contacto; los links se cambian acá) y animación de todas las preguntas frecuentes (.faq y .pl-faq)
   cards.js          piezas de una publicación y tarjeta
   tarifas.js        zonas de Punta y cálculo del precio de los traslados (los precios están en config.js, TARIFAS)
   traslado.js       "Traslado con chofer" de la página de cada evento (precio al instante y pago con tarjeta)

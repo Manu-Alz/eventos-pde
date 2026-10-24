@@ -307,26 +307,4 @@ form.addEventListener("submit", async ev => {
 /* La píldora de la forma de pago sigue al botón si cambia el ancho de la pantalla */
 addEventListener("resize", () => document.querySelectorAll(".seg").forEach(s => slidePill(s, s.querySelector('[aria-pressed="true"]'), true)));
 
-/* ============ 7. Preguntas frecuentes ============
-   Cada respuesta se despliega y se recoge con una animación (en vez de aparecer de golpe).
-   Si se toca de nuevo a mitad de camino, sigue desde donde estaba. */
-const FAQ_MS = 320;
-document.querySelectorAll(".faq details").forEach(d => {
-  const body = d.querySelector("p");
-  let anim = null;
-  d.querySelector("summary").addEventListener("click", ev => {
-    ev.preventDefault();
-    const opening = !d.classList.contains("is-open");
-    d.classList.toggle("is-open", opening);
-    const now = d.open ? body.getBoundingClientRect().height : 0;   // alto actual, aunque esté a mitad de la animación
-    if (anim) anim.cancel();
-    d.open = true;
-    const full = body.scrollHeight, pad = getComputedStyle(body).paddingBottom;
-    const shut = { height: "0px", paddingBottom: "0px", opacity: 0 }, open = { height: full + "px", paddingBottom: pad, opacity: 1 };
-    const from = { height: now + "px", paddingBottom: now ? pad : "0px", opacity: now ? 1 : 0 };
-    const ms = matchMedia("(prefers-reduced-motion:reduce)").matches ? 1 : FAQ_MS;
-    const a = anim = body.animate([from, opening ? open : shut], { duration: ms, easing: "cubic-bezier(.4,0,.2,1)", fill: "forwards" });
-    a.onfinish = () => { if (!opening) d.open = false; a.cancel(); if (anim === a) anim = null; };
-    if (opening) track("faq", { pregunta: d.querySelector("summary").textContent });
-  });
-});
+/* Las preguntas frecuentes se animan desde site.js (igual en todas las páginas) */

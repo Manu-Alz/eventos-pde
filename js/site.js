@@ -61,3 +61,30 @@
     a.textContent = CONFIG.email;
   });
 })();
+
+/* Preguntas frecuentes (Publicar, Armar plan y cualquier .faq o .pl-faq): cada respuesta se despliega y se recoge con
+   una animación, en vez de aparecer de golpe. Si se toca de nuevo a mitad de camino, sigue desde donde estaba.
+   El "+" gira con la clase .is-open (no con [open], que sigue puesto mientras se cierra). */
+(() => {
+  const MS = matchMedia("(prefers-reduced-motion:reduce)").matches ? 1 : 320;
+  document.querySelectorAll(".faq details, .pl-faq details").forEach(d => {
+    const body = d.querySelector("p");
+    if (!body) return;
+    let anim = null;
+    if (d.open) d.classList.add("is-open");
+    d.querySelector("summary").addEventListener("click", ev => {
+      ev.preventDefault();
+      const opening = !d.classList.contains("is-open");
+      d.classList.toggle("is-open", opening);
+      const now = d.open ? body.getBoundingClientRect().height : 0;   // alto actual, aunque esté a mitad de la animación
+      if (anim) anim.cancel();
+      d.open = true;
+      const full = body.scrollHeight, pad = getComputedStyle(body).paddingBottom;
+      const shut = { height: "0px", paddingBottom: "0px", opacity: 0 }, open = { height: full + "px", paddingBottom: pad, opacity: 1 };
+      const from = { height: now + "px", paddingBottom: now ? pad : "0px", opacity: now ? 1 : 0 };
+      const a = anim = body.animate([from, opening ? open : shut], { duration: MS, easing: "cubic-bezier(.4,0,.2,1)", fill: "forwards" });
+      a.onfinish = () => { if (!opening) d.open = false; a.cancel(); if (anim === a) anim = null; };
+      if (opening && typeof track === "function") track("faq", { pregunta: d.querySelector("summary").textContent });
+    });
+  });
+})();
