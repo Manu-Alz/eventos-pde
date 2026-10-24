@@ -11,7 +11,7 @@
 .ev-gen{display:block;aspect-ratio:4/5;background:radial-gradient(120% 95% at 30% 30%,color-mix(in srgb,var(--c) 80%,#000),transparent 80%),color-mix(in srgb,var(--c) 26%,var(--card))}
 @media (min-width:860px){
   .ev{grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:44px;align-items:start}
-  .ev-poster{position:sticky;top:84px}
+  .ev-poster{position:sticky;top:calc(84px + env(safe-area-inset-top,0px))}
 }
 
 /* 2. Datos */
@@ -43,7 +43,7 @@
    Pensado para que cualquiera lo use: pasos numerados con preguntas simples, letra grande, opciones que se tocan y un resumen tipo ticket.
    Estructura: .ride > [.ride-head, fieldset.ride-step ×3 (1 viaje · 2 dónde · 3 personas y hora), form.ride-contact (4 tus datos),
    .ride-sum (resumen, total y botón), .ride-trust, .ride-plan] */
-.ride{position:relative;display:grid;gap:22px;padding:clamp(20px,3vw,28px);border-radius:28px;scroll-margin-top:84px;
+.ride{position:relative;display:grid;gap:22px;padding:clamp(20px,3vw,28px);border-radius:28px;scroll-margin-top:calc(84px + env(safe-area-inset-top,0px));
   background:radial-gradient(90% 60% at 100% 0%,rgba(124,77,255,.24),transparent 62%),radial-gradient(70% 50% at 0% 100%,rgba(76,195,219,.08),transparent 70%),var(--surface);
   border:1px solid rgba(124,77,255,.35);box-shadow:0 30px 60px -36px #000}
 .ride>h2{font-size:24px;font-weight:600}                                   /* sin JavaScript */

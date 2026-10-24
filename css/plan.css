@@ -30,7 +30,7 @@
 .pl-sec+.pl-sec{padding-top:clamp(40px,6vw,56px);border-top:1px solid var(--line)}
 
 /* 3. Pasos numerados */
-.pl-sec{display:grid;gap:22px;scroll-margin-top:84px}
+.pl-sec{display:grid;gap:22px;scroll-margin-top:calc(84px + env(safe-area-inset-top,0px))}
 .pl-sh{display:flex;align-items:flex-start;gap:14px}
 .pl-n{flex:none;display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:#F7F5F2;color:#151518;font:700 16px 'Bricolage Grotesque',sans-serif}
 .pl-sh h2{font-size:clamp(24px,3vw,30px);font-weight:600;letter-spacing:-.025em}
@@ -46,7 +46,7 @@
 /* 4. Eventos (línea de tiempo por día) */
 .pl-days{display:grid;grid-template-columns:minmax(0,1fr);gap:30px}
 .pl-day{display:grid;grid-template-columns:72px minmax(0,1fr);gap:20px}
-.pl-date{position:sticky;top:84px;align-self:start;display:grid;justify-items:center;gap:2px;padding:12px 0;border-radius:20px;background:var(--glass);border:1px solid var(--line);line-height:1}
+.pl-date{position:sticky;top:calc(84px + env(safe-area-inset-top,0px));align-self:start;display:grid;justify-items:center;gap:2px;padding:12px 0;border-radius:20px;background:var(--glass);border:1px solid var(--line);line-height:1}
 .pl-date small{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .pl-date b{font:700 30px/1 'Bricolage Grotesque',sans-serif;letter-spacing:-.02em}
 .pl-evs{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
@@ -198,8 +198,8 @@
 .pl-switch input:focus-visible+span{outline:2px solid #fff;outline-offset:2px}
 
 /* 8. Resumen (fijo al costado en PC) y barra de abajo (celular) */
-.pl-sum{position:sticky;top:84px;display:grid;gap:16px;padding:22px;border-radius:28px;border:1px solid var(--line);
-  background:radial-gradient(120% 70% at 100% 0%,rgba(124,77,255,.2),transparent 60%),var(--surface);box-shadow:0 30px 60px -36px #000;scroll-margin-top:84px}
+.pl-sum{position:sticky;top:calc(84px + env(safe-area-inset-top,0px));display:grid;gap:16px;padding:22px;border-radius:28px;border:1px solid var(--line);
+  background:radial-gradient(120% 70% at 100% 0%,rgba(124,77,255,.2),transparent 60%),var(--surface);box-shadow:0 30px 60px -36px #000;scroll-margin-top:calc(84px + env(safe-area-inset-top,0px))}
 .pl-sum .pl-eyebrow{margin:0}
 .pl-sum h2{font-size:24px;font-weight:600;letter-spacing:-.025em;margin-top:-8px}
 .pl-people{padding:10px 12px 10px 16px;border-radius:18px;background:var(--glass);border:1px solid var(--line)}

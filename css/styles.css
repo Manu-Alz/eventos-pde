@@ -30,7 +30,7 @@ button{touch-action:manipulation}
 
 /* 2. Layout y cabecera */
 .wrap{position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:0 max(var(--gutter),env(safe-area-inset-right)) 0 max(var(--gutter),env(safe-area-inset-left))}
-header.top{position:sticky;top:0;z-index:30;display:flex;justify-content:space-between;align-items:center;gap:12px;
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;display:flex;justify-content:space-between;align-items:center;gap:12px;
   margin:0 calc(-1 * var(--gutter));padding:12px var(--gutter)}
 /* Al bajar (js/site.js agrega .stuck) aparece un velo de vidrio de borde a borde que se desvanece hacia abajo (sin cajas) */
 header.top::before{content:"";position:fixed;top:0;left:0;right:0;z-index:-1;pointer-events:none;opacity:0;transition:opacity .3s;
@@ -39,6 +39,9 @@ header.top::before{content:"";position:fixed;top:0;left:0;right:0;z-index:-1;poi
   -webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);
   -webkit-mask-image:linear-gradient(#000 72%,transparent);mask-image:linear-gradient(#000 72%,transparent)}
 header.top.stuck::before{opacity:1}
+/* Teléfonos con isla o notch (la página usa toda la pantalla): una franja fija del color del sitio detrás de la hora y la isla,
+   para que el contenido no se vea pasar por ahí. La cabecera queda pegada justo debajo. Sin isla mide 0. */
+body::after{content:"";position:fixed;top:0;left:0;right:0;z-index:95;height:env(safe-area-inset-top,0px);background:var(--bg);pointer-events:none}
 .logo{font:700 22px 'Bricolage Grotesque',sans-serif;text-decoration:none;letter-spacing:-.01em;white-space:nowrap}
 .logo span{color:var(--sun)}
 .hact{display:flex;gap:8px;align-items:center}
