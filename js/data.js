@@ -378,6 +378,15 @@ const EV = [
     photo: "lokeo-del-terror-pde.webp"
   },
   {
+    title: "Culpa: Halloween Edition",
+    cat: "Fiestas", date: "2026-10-31", time: "23:59",
+    place: "Syrah Premium, Punta Ballena",
+    desc: "Culpa, el \"reggaetón de ultratumba\", hace su edición de Halloween en Syrah Premium, Punta Ballena: reggaetón old school y barra libre. Entradas General y Backstage, y combos con habitación de hotel.",
+    tickets: "https://culpa.events/event/culpa-31-10-halloween-edition", price: "Desde USD 50",
+    contact: "https://instagram.com/culpa_pde",
+    photo: "culpa-syrah-premium.webp"   // imagen oficial de culpa.events (la que comparten); cambiala por el póster de Halloween cuando lo tengas
+  },
+  {
     title: "Custom by Coco Club",
     cat: "Fiestas", date: "2026-12-29", time: "23:55",
     place: "Centro de Convenciones de Punta del Este",

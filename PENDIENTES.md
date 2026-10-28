@@ -26,7 +26,9 @@ Cosas apagadas, de prueba o esperando algo tuyo. Cuando resuelvas una, borrala d
 - **Cotización del dólar:** `uyuRate: 42` en `js/config.js` y `COTIZACION = 42` en `Code.gs`. Si cambia, cambiala en los dos y publicá Nueva versión del script.
 - **Cada cambio en Code.gs:** pegalo en Apps Script y publicá **Implementar → Gestionar implementaciones → Editar → Nueva versión**. Si no, la web sigue usando el script viejo.
 - **Fotos genéricas (Unsplash):** reemplazalas por los afiches oficiales cuando los tengas. Son las de Jamie Jones, Artbat, el Festival de Jazz, el Rolex Circuito Atlántico Sur, el Festival de Cine, el Karting, 12 Violoncellos, Callas Trio, el IRONMAN, El Templo, Palito Bombón, Lovers, Arde By JW, Franky Rizardo, La Fiesta Punta, la Épica Gravel y la Copa Futuro del Este (golf).
-- **Eventos sin pin en el mapa:** Festival de Jazz, Festival de Cine, The 30 Limones, Box NYE y la Épica Gravel (larga en Laguna del Sauce, falta el punto exacto). Hace falta el lugar exacto.
+- **Eventos sin pin en el mapa:** Festival de Jazz, Festival de Cine, Box NYE y la Épica Gravel (larga en Laguna del Sauce, falta el punto exacto). Hace falta el lugar exacto.
+- **Pin aproximado:** Culpa (Syrah Premium, Punta Ballena) usa la ubicación de un aviso de Syrah, porque el edificio no está en OpenStreetMap. Si tenés el punto exacto, cambialo en `VENUES` (`js/config.js`).
+- **Póster de Culpa:** usa la imagen que Culpa comparte en culpa.events (su logo). Cambiala por el póster de la edición de Halloween cuando lo tengas.
 - **Para confirmar:** la fecha y el lugar del IRONMAN 70.3 (2027-03-07). La mayoría de las fiestas no tiene hora: sale "A confirmar".
 - **Sin cargar a propósito:** Hugel (la página de Mi Entrada es de enero de 2026, ya pasó), Corona Sunsets 2027 (sin página de venta todavía), Fiesta del Tannat (es en Canelones) y Navidad en el Yacht (Montevideo).
 - **Sin entradas encontradas (24/10):** Jamie Jones en MACA (31/12) y FOMO Fest (todavía no está en Ticketplus).

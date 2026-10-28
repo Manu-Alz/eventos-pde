@@ -65,7 +65,8 @@ const VENUES = {
   "Hotel del Lago":         [-34.85969, -55.05609],
   "OAK":                    [-34.91545, -54.85244],
   "Tío Tom":                [-34.88650, -55.04600],
-  "La Barra Golf Club":     [-34.88228, -54.84202]
+  "La Barra Golf Club":     [-34.88228, -54.84202],
+  "Syrah Premium":          [-34.91059, -55.04444]   // Punta Ballena, Ruta 10 antes de Casapueblo (aproximado: no está en OpenStreetMap)
 };
 
 /* ============ 2c. Alojamientos con convenio (catálogo de "Armar plan") ============
