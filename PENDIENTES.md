@@ -6,7 +6,7 @@ Cosas apagadas, de prueba o esperando algo tuyo. Cuando resuelvas una, borrala d
 
 | Qué | Dónde | Qué hacer |
 |---|---|---|
-| **Link de afiliado de Booking** (Travelpayouts) | `js/config.js` → `BOOKING.link` | Cuando Travelpayouts apruebe Booking (hoy está "In review"), andá a Tools → Links, armá un link a booking.com y pasámelo. Sin ese link, el botón de Booking igual funciona, pero **no cobrás comisión**. |
+| **Comisión de alojamiento** (Travelpayouts rechazó Booking el 28/10) | `js/config.js` → `BOOKING.link` | El botón de Booking sigue andando, pero **sin comisión**. Para cobrar: (1) pedí **Agoda Partners** directo (partners.agoda.com: acepta cualquier país, paga por transferencia, hasta 7%); (2) en tu misma cuenta de Travelpayouts sumate a **Trip.com** y **Expedia/Hotels.com**, que no dependen de Booking. Cuando te aprueben uno, pasame el link o el ID y cambio el botón de Armar plan a ese sitio. |
 | **Mails de inmobiliarias y hoteles aliados** | Apps Script → Configuración del proyecto → Propiedades del script → `AVISO_ALOJAMIENTO` | Poné los mails separados por coma. Les llega cada pedido de "Que me lo busquen ustedes" en copia oculta, sin los datos del cliente. Vacío = no le llega a nadie más que a vos. |
 | **Mails de la empresa de traslados** | Propiedad `AVISO_TRASLADOS` | Mails que reciben cada traslado pagado. Vacío = solo vos. |
 | **Alojamientos de aliados en el mapa** | `js/config.js` → `STAYS` | Vacío a propósito. Solo con permiso del aliado (fotos, ubicación, precio desde). |
@@ -25,12 +25,14 @@ Cosas apagadas, de prueba o esperando algo tuyo. Cuando resuelvas una, borrala d
 
 - **Cotización del dólar:** `uyuRate: 42` en `js/config.js` y `COTIZACION = 42` en `Code.gs`. Si cambia, cambiala en los dos y publicá Nueva versión del script.
 - **Cada cambio en Code.gs:** pegalo en Apps Script y publicá **Implementar → Gestionar implementaciones → Editar → Nueva versión**. Si no, la web sigue usando el script viejo.
-- **Fotos genéricas (Unsplash):** reemplazalas por los afiches oficiales cuando los tengas. Son las de Jamie Jones, Artbat, el Festival de Jazz, el Rolex Circuito Atlántico Sur, el Festival de Cine, el Karting, 12 Violoncellos, Callas Trio, el IRONMAN, El Templo, Palito Bombón, Lovers, Arde By JW, Franky Rizardo, La Fiesta Punta, la Épica Gravel y la Copa Futuro del Este (golf).
-- **Eventos sin pin en el mapa:** Festival de Jazz, Festival de Cine, Box NYE y la Épica Gravel (larga en Laguna del Sauce, falta el punto exacto). Hace falta el lugar exacto.
+- **Fotos genéricas (Unsplash):** reemplazalas por los afiches oficiales cuando los tengas. Son las de Jamie Jones, Artbat, el Festival de Jazz, el Rolex Circuito Atlántico Sur, el Festival de Cine, el Karting, 12 Violoncellos, Callas Trio, el IRONMAN, El Templo, Palito Bombón, Lovers, Arde By JW, Franky Rizardo, La Fiesta Punta, la Épica Gravel, la Copa Futuro del Este (golf) y el Expo Moto Salón 2027.
+- **Eventos sin pin en el mapa:** Festival de Jazz, Festival de Cine, Box NYE, la Épica Gravel (larga en Laguna del Sauce, falta el punto exacto) y Meller Open Bar (5/1: el lugar se anuncia más cerca; cuando lo digan, poné el lugar en `place` y sacale `traslado: false`). Hace falta el lugar exacto.
 - **Pin aproximado:** Culpa (Syrah Premium, Punta Ballena) usa la ubicación de un aviso de Syrah, porque el edificio no está en OpenStreetMap. Si tenés el punto exacto, cambialo en `VENUES` (`js/config.js`).
 - **Póster de Culpa:** usa la imagen que Culpa comparte en culpa.events (su logo). Cambiala por el póster de la edición de Halloween cuando lo tengas.
 - **Para confirmar:** la fecha y el lugar del IRONMAN 70.3 (2027-03-07). La mayoría de las fiestas no tiene hora: sale "A confirmar".
 - **Sin cargar a propósito:** Hugel (la página de Mi Entrada es de enero de 2026, ya pasó), Corona Sunsets 2027 (sin página de venta todavía), Fiesta del Tannat (es en Canelones) y Navidad en el Yacht (Montevideo).
+- **Sin precio a la vista (28/10):** Halloween After Office en el Aeropuerto y Meller Open Bar (CobraTicket no muestra el precio sin entrar a comprar).
+- **Sin cargar a propósito (28/10):** Exodus y "Festival 08.01" (8/1, en Entraste sin lugar ni ciudad) y Respira Primavera (es en Santiago de Chile).
 - **Sin entradas encontradas (24/10):** Jamie Jones en MACA (31/12) y FOMO Fest (todavía no está en Ticketplus).
 
 ## 4. Limpieza de la planilla
@@ -40,7 +42,9 @@ Cosas apagadas, de prueba o esperando algo tuyo. Cuando resuelvas una, borrala d
 
 ## 5. Comisiones: de dónde sale plata
 
-- **Booking:** sí, por Travelpayouts, una vez que esté puesto `BOOKING.link`.
+- **Booking:** hoy **no** (Travelpayouts rechazó el programa de Booking). Alternativas en la sección 1: Agoda Partners directo, o Trip.com y Expedia dentro de Travelpayouts.
+- **Entradas (la que más plata puede dar):** pediles a las productoras tu propio **código de RRPP / vendedor** (Venti, Entraste, CobraTicket y culpa.events los usan) y te pagan por cada entrada vendida desde tu link. Pasame los códigos y los pongo en cada evento o en `AFFILIATES` (`js/config.js`) para que salgan solos.
+- **Portada paga:** el plan Portada (`PLANS` en `js/config.js`) es la forma directa de cobrarle a las productoras; ya está armado en Publicar.
 - **Aliados (inmobiliarias y hoteles):** la comisión que acuerdes con cada uno.
 - **Traslados y entradas que cobrás con Mercado Pago:** tu margen.
 - **Uber:** **no.** Los botones de Uber son links comunes, sin código de afiliado. Uber tiene un programa de afiliados en algunos países (paga por cada usuario nuevo que hace su primer viaje), pero la página para Uruguay no responde. Si algún día lo habilitan, el código va en `uberUrl` en `js/cards.js`.

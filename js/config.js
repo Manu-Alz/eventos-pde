@@ -66,7 +66,9 @@ const VENUES = {
   "OAK":                    [-34.91545, -54.85244],
   "Tío Tom":                [-34.88650, -55.04600],
   "La Barra Golf Club":     [-34.88228, -54.84202],
-  "Syrah Premium":          [-34.91059, -55.04444]   // Punta Ballena, Ruta 10 antes de Casapueblo (aproximado: no está en OpenStreetMap)
+  "Syrah Premium":          [-34.91059, -55.04444],  // Punta Ballena, Ruta 10 antes de Casapueblo (aproximado: no está en OpenStreetMap)
+  "Aeropuerto de Punta del Este": [-34.85474, -55.09267],   // Laguna del Sauce (OpenStreetMap)
+  "Aguaverde":              [-34.84363, -54.87865]   // Aguaverde Wine Lodge, Camino del Cerro Eguzquiza km 7, La Barra
 };
 
 /* ============ 2c. Alojamientos con convenio (catálogo de "Armar plan") ============
@@ -85,8 +87,9 @@ const STAYS = [];
 /* ============ 2c-bis. Alojamiento en Booking (afiliado) ============
    En Armar plan, "Lo reservo yo en Booking" abre Booking con las fechas, la zona, las personas y el tipo ya puestos.
    La persona elige, reserva y paga ahí; Eventos PDE cobra comisión por cada reserva que salga de ese link.
-   Cómo se cobra la comisión (desde Uruguay): por Travelpayouts (travelpayouts.com), que acepta cualquier país y paga
-   por PayPal o transferencia.
+   ⚠ 28/10: Travelpayouts rechazó el programa de Booking, así que hoy el link anda pero SIN comisión.
+   Alternativas (ver PENDIENTES.md): Agoda Partners directo, o Trip.com y Expedia dentro de Travelpayouts.
+   Si algún día aprueban Booking (Travelpayouts, CJ o Awin), así se pone:
      1. Creá la cuenta en Travelpayouts, agregá eventospde.com como sitio y sumate al programa de Booking.com.
      2. En "Herramientas > Links" generá un link a booking.com y copiá todo lo que va ANTES de la dirección de Booking:
         termina en "u=" (Travelpayouts), "url=" (CJ) o "ued=" (Awin). Ej.: "https://tp.media/r?marker=12345&p=84&u=".

@@ -129,6 +129,8 @@ En el paso 3 de Armar plan, con fechas, zona y tipo elegidos, la persona elige *
 
 **Script de Travelpayouts:** el código que da la cuenta (Herramientas > Drive) está en el `<head>` de `index.html` y `plan.html`. Sirve para verificar el sitio y convierte solo los links a Booking en links de afiliado. En la compu (localhost) da "config is not valid": es normal, solo valida en eventospde.com.
 
+**Estado (28/10):** Travelpayouts **rechazó** el programa de Booking. El botón sigue funcionando, pero sin comisión. Las alternativas están en PENDIENTES.md (Agoda Partners directo, o Trip.com y Expedia en la misma cuenta de Travelpayouts); cuando aprueben una, el botón de Armar plan se pasa a ese sitio.
+
 **Comisión de Booking desde Uruguay:** el programa propio de Booking (por CJ) es para Europa y algunos países; desde acá se usa **Travelpayouts** ([travelpayouts.com](https://www.travelpayouts.com/)), que acepta cualquier país, tiene a Booking.com entre sus programas y paga por PayPal o transferencia. Creá la cuenta, agregá eventospde.com, sumate al programa de Booking.com y, en "Links", generá un link a booking.com. Copiá todo lo que va **antes** de la dirección de Booking (termina en `u=`) y pegalo en `BOOKING.link` (`js/config.js`); la web le agrega la búsqueda. Sirve igual para CJ (`url=`) o Awin (`ued=`). **Vacío, los links funcionan pero sin comisión.** Cada link lleva `label=eventospde-plan`. Debajo del botón se avisa que es un enlace de referido.
 
 **Hoteles e inmobiliarias que quieran sumarse:** la sección "Para hoteles e inmobiliarias" de `nosotros.html` (link en el pie, "Hoteles e inmobiliarias") explica cómo trabajamos y tiene el botón "Quiero sumarme" (mail a contacto@).

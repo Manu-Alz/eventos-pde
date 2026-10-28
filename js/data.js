@@ -481,5 +481,57 @@ const EV = [
     desc: "Torneo solidario de golf en La Barra Golf Club. Lo recaudado va a la Escuela de Atletas Guía de la Fundación Futuro del Este, que acompaña a personas con discapacidad en el deporte.",
     tickets: "https://redtickets.uy/evento/TORNEO-DE-GOLF--SEGUNDA-COPA-FUNDACION-FUTURO-DEL-ESTE/34198/",
     photo: "copa-futuro-del-este-la-barra-golf.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
+  },
+  /* Cargados el 28/10 (fuentes: Venti, Entraste, CobraTicket y la Intendencia de Maldonado) */
+  {
+    title: "Halloween After Office en el Aeropuerto",
+    cat: "Fiestas", date: "2026-10-31", time: "20:00",
+    place: "Aeropuerto de Punta del Este (Laguna del Sauce), by View Point",
+    desc: "After office de Halloween con DJ set en el Aeropuerto Internacional de Punta del Este, organizado por View Point y Makara. Para mayores de 24.",
+    tickets: "https://www.cobraticket.uy/e/after-office-halloween-322801",
+    photo: "halloween-after-office-aeropuerto.webp"
+  },
+  {
+    title: "Under Rail: Elbio & Denis",
+    cat: "Fiestas", date: "2026-12-27", time: "23:59",
+    place: "OAK, Punta del Este",
+    desc: "Under Rail arranca el verano en OAK con el dúo italiano Elbio & Denis (tech house, minimal y groove), más Cipolla & Myla y Otto.",
+    tickets: "https://venti.live/evento/under-rail-punta-del-este-27-12", price: "Desde USD 30",
+    photo: "under-rail-oak.webp"
+  },
+  {
+    title: "Bonaire: Asamblea Hedonista",
+    cat: "Fiestas", date: "2027-01-02", time: "23:00",
+    place: "Aguaverde Wine Lodge, Camino del Cerro Eguzquiza km 7, La Barra",
+    desc: "Bonaire vuelve a Aguaverde Wine Lodge con Pabels, Dobao, Juna, Pato Mallet, Loïc, Signo, Rockets e Isabella. Para mayores de 23.",
+    tickets: "https://venti.live/evento/bonaire-punta-del-este-2027", price: "Desde USD 80",
+    photo: "bonaire-aguaverde.webp"
+  },
+  {
+    title: "Meller Open Bar",
+    cat: "Fiestas", date: "2027-01-05", time: "23:30",
+    place: "Punta del Este (lugar a confirmar)",
+    desc: "Quinta edición de la fiesta de Meller, con barra libre toda la noche y hasta las 6:00. Entradas Silver (+25) y Club (+28); el lugar se anuncia más cerca de la fecha.",
+    tickets: "https://www.cobraticket.uy/e/meller-open-bar-50127-468751",
+    contact: "https://melleruruguay.com/pages/open-bar",
+    traslado: false,   // sin lugar confirmado no hay pin ni Uber: sacalo cuando anuncien dónde es
+    photo: "meller-open-bar-pde.webp"
+  },
+  {
+    title: "Bresh en Open Park",
+    cat: "Fiestas", date: "2027-01-06", time: "23:59",
+    place: "Open Park, Punta del Este",
+    desc: "La fiesta Bresh, nacida en Buenos Aires, llega a Open Park de la mano de Piano Piano. Por ahora hay preventa General con tarjetas Santander.",
+    tickets: "https://app.entraste.com/events/bresh-pde", price: "Desde USD 20",
+    photo: "bresh-open-park.webp"
+  },
+  {
+    title: "Expo Moto Salón 2027",
+    cat: "Autos", date: "2027-02-19", time: "11:00",
+    place: "Centro de Convenciones de Punta del Este",
+    desc: "Feria internacional de motos, accesorios, indumentaria, repuestos y servicios, en pabellones temáticos. Se puede entrar y estacionar en moto dentro del predio. Abre de 11:00 a 21:00 los tres días.",
+    link: "https://www.maldonado.gub.uy/noticias/punta-del-este-sera-sede-expo-moto-salon-2027", linkLabel: "Ver en la Intendencia",
+    endDate: "2027-02-21",
+    photo: "expo-moto-salon-centro-de-convenciones.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
   }
 ];
