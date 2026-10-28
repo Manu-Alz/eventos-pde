@@ -131,6 +131,17 @@ const AFFILIATES = {
   "tuticketera.com": { param: "ref", code: "eventospde" }   // EJEMPLO: reemplazar por una ticketera real
 };
 
+/* ============ 3b. Códigos de RRPP (comisión por cada entrada vendida) ============
+   La productora te da de alta como RRPP en su evento y te paga por cada entrada que se compra con tu código.
+     1. Tu código de cada ticketera va acá UNA vez (es tu usuario de RRPP; vacío = no se usa).
+     2. En cada evento donde la productora te aprobó, poné rrpp: true en data.js. Si te dio otro código, rrpp: "ESE-CODIGO".
+   La web le suma el código al botón "Comprar entradas" (ej. ...?rrpp=eventospde) y lo marca como enlace de referido.
+   Entraste: Mi cuenta > "Soy RRPP". Otra ticketera: si la productora te pasa un link de RRPP ya armado,
+   pegalo entero en tickets con affiliate: true. Guía completa: README.md, "Códigos de RRPP". */
+const RRPP = {
+  "entraste.com": { param: "rrpp", code: "" }   // sirve para entraste.com y app.entraste.com
+};
+
 /* ============ 4. Planes y precios ============
    Se cobra POR DÍA publicado, y cada día extra sale más barato: cuanto más tiempo está online, menos se paga por día.
    tiers = [[hastaElDía, precioPorDía], ...]  (precios en US$, enteros)

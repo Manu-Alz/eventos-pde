@@ -12,6 +12,7 @@
    │ contact    botón de contacto: link de WhatsApp, Instagram o "mailto:..."            │
    │ tickets    link de entradas -> embed "Comprar entradas"                             │
    │ affiliate  true si el link de tickets ya es un link de afiliado tuyo                │
+   │ rrpp       true si la productora te aprobó como RRPP: suma tu código (RRPP, config) │
    │ price      precio de referencia, ej. "Desde USD 40" (sale en su página)             │
    │ link       otro link (web, programa, reservas) -> embed; solo si no hay tickets     │
    │ linkLabel  texto del embed de link, ej. "Ver programa" (por defecto "Más información")│
@@ -224,8 +225,8 @@ const EV = [
   {
     title: "Festival Internacional de Jazz de Punta del Este",
     cat: "Música en vivo", date: "2027-01-04", time: "A confirmar",
-    place: "Punta del Este",
-    desc: "31.ª edición del Festival Internacional de Jazz de Punta del Este, declarada de interés nacional: una semana de conciertos en la ciudad. Programación y horarios a confirmar.",
+    place: "Finca El Sosiego, Punta Ballena",
+    desc: "31.ª edición del Festival Internacional de Jazz de Punta del Este, declarada de interés nacional, con dirección musical de Paquito D'Rivera: una semana de conciertos al aire libre en la Finca El Sosiego. Programación y horarios a confirmar.",
     endDate: "2027-01-11",
     photo: "festival-jazz-punta-del-este.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
   },
@@ -243,6 +244,7 @@ const EV = [
     cat: "Festivales", date: "2027-02-20", time: "A confirmar",
     place: "Maldonado y Punta del Este",
     desc: "29.ª edición del festival de cine de la ciudad, con funciones libres y gratuitas en Sala Cantegril, el Teatro Margarita Xirgú y Grupocine. Del 20 al 26 de febrero.",
+    link: "https://cinepunta.uy/", linkLabel: "Ver programación",
     endDate: "2027-02-26",
     photo: "festival-cine-punta-del-este.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
   },

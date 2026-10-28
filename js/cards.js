@@ -71,20 +71,26 @@ function uberUrl(e, way) {
 }
 
 /* Link de entradas. Si el dominio está en AFILIADOS (config.js) se le agrega tu código
-   y queda marcado como link de referido. */
+   y queda marcado como link de referido. Con rrpp en el evento, se le suma tu código de RRPP (RRPP en config.js). */
+function rrppRule(e, raw) {
+  if (!e.rrpp || typeof RRPP !== "object") return null;
+  const h = host(raw), key = Object.keys(RRPP).find(k => h === k || h.endsWith("." + k));
+  const code = key && (typeof e.rrpp === "string" ? e.rrpp : RRPP[key].code);
+  return code ? { param: RRPP[key].param, code } : null;
+}
 function ticketLink(e) {
   const raw = safeUrl(e.tickets);
   if (!raw) return null;
-  const rule = AFFILIATES[host(raw)];
+  const rules = [AFFILIATES[host(raw)], rrppRule(e, raw)].filter(Boolean);
   let url = raw;
-  if (rule) {
+  if (rules.length) {
     try {
       const u = new URL(raw);
-      if (!u.searchParams.has(rule.param)) u.searchParams.set(rule.param, rule.code);
+      for (const r of rules) if (!u.searchParams.has(r.param)) u.searchParams.set(r.param, r.code);
       url = u.toString();
     } catch (_) { /* link raro: se deja como vino */ }
   }
-  return { url, affiliate: Boolean(rule || e.affiliate) };
+  return { url, affiliate: Boolean(rules.length || e.affiliate) };
 }
 
 /* ============ 3. Identidad de cada evento ============

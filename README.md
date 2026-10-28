@@ -135,6 +135,18 @@ En el paso 3 de Armar plan, con fechas, zona y tipo elegidos, la persona elige *
 
 **Hoteles e inmobiliarias que quieran sumarse:** la sección "Para hoteles e inmobiliarias" de `nosotros.html` (link en el pie, "Hoteles e inmobiliarias") explica cómo trabajamos y tiene el botón "Quiero sumarme" (mail a contacto@).
 
+## Códigos de RRPP (comisión por cada entrada vendida)
+
+Un **RRPP** vende entradas de una fiesta con un **código propio**: cada entrada que se compra desde su link queda a su nombre y la productora le paga un monto por entrada (lo acuerdan entre ellos: un porcentaje o un fijo, y cuándo se paga). Eventos PDE es un RRPP más, pero con una web llena de gente buscando fiestas.
+
+**Cómo se arma (Entraste, que vende 17 de las fiestas cargadas):**
+1. Entrá a app.entraste.com con la cuenta de Eventos PDE y abrí **Mi cuenta > "Soy RRPP"**: ahí está tu perfil y tu código.
+2. Pedile a cada productora que te **dé de alta como RRPP en su evento** (el código tiene que estar aprobado en ese evento; si no, la venta sale sin tu nombre, pero la compra anda igual).
+3. Poné tu código una vez en `RRPP` (`js/config.js`) y `rrpp: true` en cada evento aprobado (`js/data.js`). El botón "Comprar entradas" sale con `?rrpp=TU_CODIGO` y marcado como enlace de referido. Si una productora te da un código distinto: `rrpp: "ESE-CODIGO"`.
+4. Las ventas se ven en el panel de RRPP de Entraste. En la web, cada clic queda en Analytics como `referido`, para cruzarlo con lo que te paguen.
+
+**Otras ticketeras (Venti, RedTickets, Passline, CobraTicket, culpa.events):** pedile a la productora **su link de RRPP para vos** (lo arman desde su panel) y pegalo entero en `tickets` con `affiliate: true`. No hay que sacarle el código: los parámetros que se borran son los de rastreo o de otros vendedores, no los tuyos.
+
 ## Chofer propio o Uber (interruptor `CHOFER.propio` en `js/config.js`)
 
 **Hoy está apagado** (`CHOFER = { propio: false }`), porque todavía no hay choferes propios. Mientras tanto:
