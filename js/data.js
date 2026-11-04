@@ -115,7 +115,7 @@ const EV = [
     cat: "Fiestas", date: "2026-12-28", time: "23:59",
     place: "Open Park, El Placer",
     desc: "Primera fecha de Blavicio en Open Park esta temporada: una noche de música electrónica bajo la carpa de El Placer, junto al puente de La Barra. Entradas en Entraste; la grilla se confirma con la organización.",
-    tickets: "https://app.entraste.com/events/blavicio-1st-chapter-at-open-park", price: "Desde USD 40",
+    tickets: "https://app.entraste.com/events/blavicio-1st-chapter-at-open-park", price: "Desde USD 30",
     photo: "blavicio-open-park.webp"
   },
   {
@@ -162,7 +162,7 @@ const EV = [
     title: "Blavicio en Open Park (2.ª fecha)",
     cat: "Fiestas", date: "2027-01-05", time: "23:59",
     place: "Open Park, El Placer",
-    tickets: "https://app.entraste.com/events/blavicio-5-de-enero", price: "Desde USD 60",
+    tickets: "https://app.entraste.com/events/blavicio-5-de-enero", price: "Desde USD 45",
     desc: "Segunda fecha de Blavicio en Open Park esta temporada, bajo la carpa de El Placer, junto al puente de La Barra. Entradas en Entraste.",
     photo: "blavicio-open-park.webp"
   },
@@ -417,7 +417,7 @@ const EV = [
     cat: "Fiestas", date: "2026-12-31", time: "23:59",
     place: "Open Park, El Placer",
     desc: "Fantasy, la fiesta de Año Nuevo de Open Park, con open bar junto al puente de La Barra. Organizan About, Blackout, Kabûl y Brothers.",
-    tickets: "https://app.entraste.com/events/fantasy-nye-2027", price: "Desde USD 110",
+    tickets: "https://app.entraste.com/events/fantasy-nye-2027", price: "Desde USD 120",
     photo: "fantasy-nye-open-park.webp"
   },
   {
@@ -433,7 +433,7 @@ const EV = [
     cat: "Fiestas", date: "2026-12-29", time: "23:59",
     place: "Ruta 104 km 3,5, Manantiales",
     desc: "Palito Bombón, el martes 29 de diciembre en Ruta 104 km 3,5. Sector general para mayores de 23 y VIP Standing para mayores de 25.",
-    tickets: "https://app.entraste.com/events/palito-bombon", price: "Desde USD 30",
+    tickets: "https://app.entraste.com/events/palito-bombon", price: "Desde USD 40",
     photo: "palito-bombon-ruta-104.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
   },
   {
@@ -441,7 +441,7 @@ const EV = [
     cat: "Fiestas", date: "2027-01-02", time: "23:59",
     place: "Ruta 104 km 3,5, Manantiales",
     desc: "Lovers, el sábado 2 de enero en Ruta 104 km 3,5. Sector general para mayores de 21 y VIP Standing para mayores de 24.",
-    tickets: "https://app.entraste.com/events/lovers", price: "Desde USD 40",
+    tickets: "https://app.entraste.com/events/lovers",
     photo: "lovers-ruta-104.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
   },
   {
@@ -449,7 +449,7 @@ const EV = [
     cat: "Fiestas", date: "2027-01-03", time: "23:59",
     place: "Open Park, El Placer",
     desc: "Arde By JW vuelve a Open Park el domingo 3 de enero, bajo la carpa de El Placer, junto al puente de La Barra. Hay sector general, VIP Standing (mayores de 22) y Backstage (mayores de 25).",
-    tickets: "https://app.entraste.com/events/arde-by-jw-2027", price: "Desde USD 60",
+    tickets: "https://app.entraste.com/events/arde-by-jw-2027", price: "Desde USD 70",
     photo: "arde-by-jw-open-park.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
   },
   {
@@ -523,8 +523,8 @@ const EV = [
     title: "Bresh en Open Park",
     cat: "Fiestas", date: "2027-01-06", time: "23:59",
     place: "Open Park, Punta del Este",
-    desc: "La fiesta Bresh, nacida en Buenos Aires, llega a Open Park de la mano de Piano Piano. Por ahora hay preventa General con tarjetas Santander.",
-    tickets: "https://app.entraste.com/events/bresh-pde", price: "Desde USD 20",
+    desc: "La fiesta Bresh, nacida en Buenos Aires, llega a Open Park de la mano de Piano Piano. Entradas General y VIP (+23).",
+    tickets: "https://app.entraste.com/events/bresh-pde", price: "Desde USD 30",
     photo: "bresh-open-park.webp"
   },
   {
@@ -535,5 +535,133 @@ const EV = [
     link: "https://www.maldonado.gub.uy/noticias/punta-del-este-sera-sede-expo-moto-salon-2027", linkLabel: "Ver en la Intendencia",
     endDate: "2027-02-21",
     photo: "expo-moto-salon-centro-de-convenciones.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
+  },
+  /* Cargados el 4/11 (fuentes: Entraste, Venti, CobraTicket, RedTickets, Centro de Convenciones y GFNY) */
+  {
+    title: "Reggaeton & Hits en Soho",
+    cat: "Fiestas", date: "2026-11-06", time: "23:59",
+    place: "Soho, Rambla General Artigas, Punta del Este",
+    desc: "La fiesta de la pista principal de Soho, sobre la rambla: reggaeton nuevo, viejo, hits y más.",
+    tickets: "https://app.entraste.com/events/soho-pde", price: "Desde $ 500",
+    photo: "reggaeton-hits-soho.webp"
+  },
+  {
+    title: "Trilogy: Terry's Bday en Soho",
+    cat: "Fiestas", date: "2026-11-07", time: "23:59",
+    place: "Terraza de Soho, Rambla General Artigas, Punta del Este",
+    desc: "Música electrónica en la terraza de Soho con Trilogy, hasta las 6:30. Tocan Terry Mood b2b Anto Bravo, Tatn b2b Izquierdo, Joaco Añón y Mr. Green b2b Nas You.",
+    tickets: "https://app.entraste.com/events/trilogy-terrys-bday", price: "Desde $ 500",
+    photo: "trilogy-terry-soho.webp"
+  },
+  {
+    title: "Set at OAK",
+    cat: "Fiestas", date: "2026-11-14", time: "23:59",
+    place: "OAK, La Barra",
+    desc: "Fiesta Set en OAK, La Barra, hasta las 6:00. Para mayores de 20.",
+    tickets: "https://www.cobraticket.uy/e/set-at-oak-705932",
+    photo: "set-oak.webp"
+  },
+  {
+    title: "SPOT en OAK Lotus",
+    cat: "Fiestas", date: "2026-11-21", time: "23:59",
+    place: "OAK Lotus La Barra, Ruta 10, La Barra",
+    desc: "Fiesta SPOT en OAK Lotus, sobre la Ruta 10 en La Barra, hasta las 6:00. Para mayores de 21.",
+    tickets: "https://www.cobraticket.uy/e/spot-316131",
+    photo: "spot-oak-lotus.webp"
+  },
+  {
+    title: "Benja Torres: Como en casa",
+    cat: "Música en vivo", date: "2026-12-11", time: "21:00",
+    place: "Cine Teatro Cantegril, Punta del Este",
+    desc: "Benja Torres trae su show en vivo \"Como en casa\" al Cine Teatro Cantegril.",
+    tickets: "https://redtickets.uy/evento/Benja-Torres-COMO-EN-CASA--Punta-del-Este/34697/", price: "Desde $ 1.380",
+    photo: "benja-torres-cantegril.webp"
+  },
+  {
+    title: "Collage NYE 2027",
+    cat: "Fiestas", date: "2026-12-31", time: "23:59",
+    place: "Aguaverde Wine Lodge, Camino del Cerro Eguzquiza km 7, La Barra",
+    desc: "Collage Universe recibe el 2027 en Aguaverde Wine Lodge con Sibil b2b Mayell y Tomas Station b3b Gulp b3b Momo Trosman. Entradas limitadas.",
+    tickets: "https://venti.live/evento/s31-12-2026-collage-nye-aguaverde-wine-lodge", price: "Desde USD 84",
+    contact: "https://instagram.com/collage_universe_",
+    photo: "collage-nye-aguaverde.webp"
+  },
+  {
+    title: "Año Nuevo en el Mar",
+    cat: "Fiestas", date: "2026-12-31", time: "16:00",
+    place: "Puerto de Punta del Este",
+    desc: "Fiesta en barco con 6 DJs, 2 pistas y canilla libre: sale del puerto a las 16:30, navega hasta la isla para ver el atardecer y vuelve a las 20:00. Hay dos fechas, el 31 de diciembre y el 1.º de enero. Para mayores de 18.",
+    tickets: "https://redtickets.uy/evento/ANO-NUEVO-EN-EL-MAR/34109/", price: "Desde USD 80",
+    endDate: "2027-01-01",
+    photo: "ano-nuevo-en-el-mar-puerto.webp"
+  },
+  {
+    title: "GFNY José Ignacio",
+    cat: "Deportes", date: "2027-01-03", time: "A confirmar",
+    place: "Pueblo Garzón (José Ignacio)",
+    desc: "Gran fondo de ciclismo de la serie GFNY, con salida y llegada en Pueblo Garzón y dos recorridos por los caminos de la zona de José Ignacio.",
+    link: "https://joseignacio.gfny.com/", linkLabel: "Ver e inscribirse",
+    photo: "gfny-jose-ignacio-garzon.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
+  },
+  {
+    title: "Heart Chakra hosted by Yoyaku",
+    cat: "Fiestas", date: "2027-01-05", time: "19:00",
+    place: "Aguaverde Wine Lodge, Camino del Cerro Eguzquiza km 7, La Barra",
+    desc: "Collage y el sello Yoyaku presentan Heart Chakra en Aguaverde Wine Lodge, con Satoshi Tomiie, Nicola Cruz y Sonja Moonear, entre otros.",
+    tickets: "https://venti.live/evento/s05-01-2027-heart-chakra-hosted-by-yoyaku-aguaverde-wine-lodge", price: "Desde USD 40",
+    contact: "https://instagram.com/collage_universe_",
+    photo: "heart-chakra-aguaverde.webp"
+  },
+  {
+    title: "MART 2027: Feria Internacional de Arte",
+    cat: "Festivales", date: "2027-01-07", time: "10:30",
+    place: "Centro de Convenciones de Punta del Este",
+    desc: "Feria internacional de arte contemporáneo, con galerías y artistas en el Centro de Convenciones. Abre del 7 al 9 de enero, de 10:30 a 23:00.",
+    link: "https://www.martpunta.com/", linkLabel: "Ver la feria",
+    endDate: "2027-01-09",
+    photo: "mart-centro-de-convenciones.webp"
+  },
+  {
+    title: "Festivalona",
+    cat: "Música en vivo", date: "2027-01-07", time: "17:00",
+    place: "Ferona Club Social, calle Albatros, La Juanita",
+    desc: "Segunda edición del festival al aire libre en La Juanita: dos escenarios con Hugo Fattoruso, Grela, Daltónica, La Grecia, El Crimen del Siglo y Abril Olivera, DJs de vinilos, food trucks y barra, de 17:00 a 00:00.",
+    tickets: "https://venti.live/evento/festivalona",
+    photo: "festivalona-ferona.webp"
+  },
+  {
+    title: "Somos Phone Tec",
+    cat: "Fiestas", date: "2027-01-07", time: "23:59",
+    place: "Ruta 104, La Barra",
+    desc: "Fiesta con canilla libre y dos pistas, cachengue y electrónica, hasta las 6:00. Sector General +21 y VIP +25.",
+    tickets: "https://www.cobraticket.uy/e/somos-phonetec-915720",
+    geo: [-34.87083, -54.81942],
+    map: "https://www.google.com/maps/search/?api=1&query=-34.87083,-54.81942",
+    photo: "somos-phonetec-ruta-104.webp"
+  },
+  {
+    title: "Croqueta en Narbona",
+    cat: "Fiestas", date: "2027-01-15", time: "23:30",
+    place: "Narbona, Camino de la Vid, Punta del Este",
+    desc: "La fiesta Croqueta vuelve a Narbona hasta que salga el sol. General +25 y VIP +29.",
+    tickets: "https://www.cobraticket.uy/e/croqueta-join-the-experience-590567",
+    photo: "croqueta-narbona.webp"
+  },
+  {
+    title: "DEX Design Experience",
+    cat: "Festivales", date: "2027-01-21", time: "18:30",
+    place: "Centro de Convenciones de Punta del Este",
+    desc: "Las últimas tendencias en diseño, arquitectura, interiorismo y lifestyle. Abre del 21 al 23 de enero, de 18:30 a 23:00.",
+    link: "https://centrodeconvenciones.com.uy/evento/dex-design-experience/", linkLabel: "Ver en el Centro de Convenciones",
+    endDate: "2027-01-23",
+    photo: "dex-centro-de-convenciones.webp"
+  },
+  {
+    title: "GFNY Punta del Este",
+    cat: "Deportes", date: "2027-03-14", time: "A confirmar",
+    place: "Parador Pedro Figari, Playa Mansa, Punta del Este",
+    desc: "Gran fondo de ciclismo de la serie GFNY: el recorrido sale junto al mar, va hacia Pan de Azúcar y termina en el Parador Pedro Figari, en Playa Mansa.",
+    link: "https://puntadeleste.gfny.com/register/", linkLabel: "Inscribirse",
+    photo: "gfny-punta-del-este.webp"
   }
 ];

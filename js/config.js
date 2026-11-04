@@ -68,7 +68,11 @@ const VENUES = {
   "La Barra Golf Club":     [-34.88228, -54.84202],
   "Syrah Premium":          [-34.91059, -55.04444],  // Punta Ballena, Ruta 10 antes de Casapueblo (aproximado: no está en OpenStreetMap)
   "Aeropuerto de Punta del Este": [-34.85474, -55.09267],   // Laguna del Sauce (OpenStreetMap)
-  "Aguaverde":              [-34.84363, -54.87865]   // Aguaverde Wine Lodge, Camino del Cerro Eguzquiza km 7, La Barra
+  "Aguaverde":              [-34.84363, -54.87865],  // Aguaverde Wine Lodge, Camino del Cerro Eguzquiza km 7, La Barra
+  "Cine Teatro Cantegril":  [-34.92470, -54.94570],  // código 33G3+4PH que da RedTickets
+  "Puerto de Punta del Este": [-34.96428, -54.95002],  // el puerto, junto al Yacht Club
+  "Ferona":                 [-34.83333, -54.65870],  // Ferona Club Social, calle Albatros, La Juanita (el dato es de Venti)
+  "Pueblo Garzón":          [-34.59303, -54.54548]   // OpenStreetMap
 };
 
 /* ============ 2c. Alojamientos con convenio (catálogo de "Armar plan") ============
