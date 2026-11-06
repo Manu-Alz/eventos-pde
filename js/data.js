@@ -663,5 +663,32 @@ const EV = [
     desc: "Gran fondo de ciclismo de la serie GFNY: el recorrido sale junto al mar, va hacia Pan de Azúcar y termina en el Parador Pedro Figari, en Playa Mansa.",
     link: "https://puntadeleste.gfny.com/register/", linkLabel: "Inscribirse",
     photo: "gfny-punta-del-este.webp"
+  },
+  /* Cargados el 6/11 (fuente: Entraste) */
+  {
+    title: "Pimienta",
+    cat: "Fiestas", date: "2027-01-02", time: "23:59",
+    place: "Punta del Este (lugar a confirmar)",
+    desc: "Fiesta Pimienta, con Bocaenboca y Brothers, de 23:59 a 5:00. Para mayores de 27; el lugar se anuncia más cerca de la fecha.",
+    tickets: "https://app.entraste.com/events/pimienta-0301", price: "Desde USD 40",
+    traslado: false,   // sin lugar confirmado no hay pin ni Uber: sacalo cuando anuncien dónde es
+    photo: "pimienta-pde.webp"
+  },
+  {
+    title: "Festival Fernet Branca",
+    cat: "Fiestas", date: "2027-01-08", time: "23:59",
+    place: "Open Park, Punta del Este",
+    desc: "Festival de Fernet Branca y Brothers en Open Park. Entradas General (+19), VIP Standing (+22) y Backstage (+25).",
+    tickets: "https://app.entraste.com/events/festival-0801", price: "Desde USD 45",
+    photo: "festival-fernet-branca-open-park.webp"
+  },
+  {
+    title: "Exodus",
+    cat: "Fiestas", date: "2027-01-08", time: "23:59",
+    place: "Punta del Este (lugar a confirmar)",
+    desc: "Exodus, con barra libre y dos pistas: Mr. Koolt, Dobao b2b Nebula Estudio y Franretta b2b Sirio en una, y Mati Galli, Tomi Álvarez M y Johnny Terra en la otra. General +21, VIP +25 y VIP OG's +35.",
+    tickets: "https://app.entraste.com/events/exodus", price: "Desde $ 4.300",
+    traslado: false,   // sin lugar confirmado no hay pin ni Uber: sacalo cuando anuncien dónde es
+    photo: "exodus-pde.webp"
   }
 ];
