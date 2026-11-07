@@ -69,7 +69,7 @@ Para aparecer cuando alguien busca "eventos en Punta del Este", "fiestas en Punt
 
 ## Tareas de todos los días (en `js/data.js`)
 
-- **Agregar un evento:** copiá uno existente y cambiá los campos. La lista de campos está al principio del archivo.
+- **Agregar un evento:** copiá uno existente y cambiá los campos. La lista de campos está al principio del archivo. Seguí el paso a paso de "Agregar eventos" (abajo) sin saltear nada.
 - **Poner un evento en la portada (slider):** agregale `portada: true` al evento. Se ven hasta 6, los más cercanos primero. Los eventos sin `portada` solo aparecen en la agenda, ordenada por fecha.
 - **Publicaciones pagas (por día):** al cargar el evento poné `from` (primer día pagado) y `until` (último día pagado; con 7 días contratados desde el 1/12, `until` es el 7/12). Pasado `until` deja de verse solo, aunque el evento sea después.
 - **Un evento vence solo** después de su fecha (`date`, o `endDate` si dura varios días). No hace falta borrarlo.
@@ -78,6 +78,43 @@ Para aparecer cuando alguien busca "eventos en Punta del Este", "fiestas en Punt
   - `affiliate: true`: para un link de afiliado que ya viene armado.
   - `link` + `linkLabel`: link libre (web, programa, reservas) cuando no hay entradas.
   - `contact`: botón de WhatsApp, Instagram o `mailto:`.
+
+## Agregar eventos: paso a paso (no saltear nada)
+
+Un evento no está "cargado" hasta que se cumplen todos los pasos. Es la misma lista que `CLAUDE.md`, con lo aprendido en cada carga.
+
+1. **Buscar.** Corré `node tools/buscar-eventos.js`. Recorre Venti, Entraste, CobraTicket y RedTickets y marca con **NUEVO** lo que todavía no está en `data.js`. Después mirá a mano:
+   - **Passline**, en el navegador, porque bloquea a los programas;
+   - las agendas de **Urubus**, **Modo Punta**, **Cadena del Mar**, el **Centro de Convenciones** y **Conciertos del Este**.
+   Un "NUEVO" puede ser el mismo evento vendido en otra ticketera: fijate por el título antes de cargarlo dos veces.
+2. **Confirmar en la página de venta:**
+   - **Fecha y hora:** en 24 h. Las ticketeras dan la hora en UTC: restale 3. Las 02:59 UTC son las 23:59 de Uruguay.
+   - **Lugar:** si la página no lo dice, mirá el póster. Muchas veces está ahí, como el "Festival 08.01" en Open Park.
+   - **Zona:** solo Punta del Este y alrededores (La Barra, Manantiales, José Ignacio, Maldonado, Punta Ballena y Solanas). Montevideo, Canelones y "Sauce" no van.
+   - **Precio:** el **lote más barato que está a la venta**, no el agotado. En Entraste los lotes se ven recién al abrir la página (el primero sin "AGOTADO"). Los canjes Santander a USD 0 no cuentan.
+3. **Cargar en `js/data.js`.** Va al final, debajo de un comentario con la fecha y las fuentes. Los campos obligatorios son `title`, `cat`, `date`, `time`, `place` y `desc`; además van `tickets`, `price` y `photo`. Si dura varios días, `endDate`. Los links van sin `utm_`, `fbclid` ni códigos de otros vendedores.
+4. **Mapa.** El pin sale si `place` contiene un nombre de `VENUES` (`js/config.js`). Si el lugar es nuevo, agregalo a `VENUES` con coordenadas reales. Sirven, en este orden:
+   - las que da la ticketera (Venti y CobraTicket las traen);
+   - OpenStreetMap;
+   - el código Plus de Google.
+   **Sin lugar anunciado:** `place: "Punta del Este (lugar a confirmar)"` y `traslado: false`, y anotalo en PENDIENTES.
+5. **Cómo ir y volver (Uber).** Sale solo en Fiestas y Música en vivo con `tickets` y pin. El build avisa si a alguno le falta el lugar.
+6. **Foto.** Usá el póster oficial (el `og:image` de la ticketera). Pasalo a webp, de 900 a 1200 px de ancho y menos de ~300 KB, en `img/eventos/artista-lugar.webp`. Si no hay póster, una foto de Unsplash con el comentario de foto genérica, y anotala en PENDIENTES.
+7. **Traducción.** El texto del evento queda en español; fechas, categorías y botones se traducen solos. Si agregaste un texto nuevo de la interfaz, va a `D` en `js/i18n.js`.
+8. **Build y versión:**
+   - subí `?v=` en **todos** los `.html` si cambió algún JS o CSS (`data.js` y `config.js` también cuentan);
+   - corré `node tools/build-eventos.js` y revisá la cantidad de páginas, la de Uber y los avisos.
+9. **Probar a 375 px:**
+   - la tarjeta y la página del evento;
+   - el botón de compra con su precio;
+   - el pin (`geoOf(evento)` en la consola) y Uber;
+   - que no haya fotos rotas, nada que se salga de costado ni errores nuevos en la consola.
+10. **Documentar:**
+    - **PENDIENTES.md:** fotos genéricas, eventos sin pin, sin precio o sin lugar, y lo que no se cargó y por qué.
+    - **Planilla de RRPP:** la productora de cada fiesta nueva va en `_rrpp/contactos-rrpp.xlsx`. Esa carpeta no se sube a git.
+    - **README.md:** se actualiza si cambia cómo funciona algo.
+11. **Subir y controlar:** `git pull --rebase`, commit y push. Después confirmá en eventospde.com que la página nueva da 200 y que se sirve el `?v=` nuevo.
+12. **Precios de lo ya cargado:** cada tanto revisá los precios en venta de los eventos que ya están, porque los lotes cambian (Entraste, Venti y RedTickets).
 
 ## Qué hace la web sola
 

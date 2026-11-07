@@ -162,7 +162,7 @@ const EV = [
     title: "Blavicio en Open Park (2.ª fecha)",
     cat: "Fiestas", date: "2027-01-05", time: "23:59",
     place: "Open Park, El Placer",
-    tickets: "https://app.entraste.com/events/blavicio-5-de-enero", price: "Desde USD 45",
+    tickets: "https://app.entraste.com/events/blavicio-5-de-enero", price: "Desde USD 49",
     desc: "Segunda fecha de Blavicio en Open Park esta temporada, bajo la carpa de El Placer, junto al puente de La Barra. Entradas en Entraste.",
     photo: "blavicio-open-park.webp"
   },
@@ -441,7 +441,7 @@ const EV = [
     cat: "Fiestas", date: "2027-01-02", time: "23:59",
     place: "Ruta 104 km 3,5, Manantiales",
     desc: "Lovers, el sábado 2 de enero en Ruta 104 km 3,5. Sector general para mayores de 21 y VIP Standing para mayores de 24.",
-    tickets: "https://app.entraste.com/events/lovers",
+    tickets: "https://app.entraste.com/events/lovers", price: "Desde USD 40",
     photo: "lovers-ruta-104.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
   },
   {
@@ -626,7 +626,7 @@ const EV = [
     cat: "Música en vivo", date: "2027-01-07", time: "17:00",
     place: "Ferona Club Social, calle Albatros, La Juanita",
     desc: "Segunda edición del festival al aire libre en La Juanita: dos escenarios con Hugo Fattoruso, Grela, Daltónica, La Grecia, El Crimen del Siglo y Abril Olivera, DJs de vinilos, food trucks y barra, de 17:00 a 00:00.",
-    tickets: "https://venti.live/evento/festivalona",
+    tickets: "https://venti.live/evento/festivalona", price: "Desde USD 40",
     photo: "festivalona-ferona.webp"
   },
   {

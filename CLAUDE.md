@@ -6,6 +6,7 @@ More detail in README.md (how it works) and PENDIENTES.md (what is pending).
 ## Checklist: adding or editing an event (no step can be skipped)
 
 An event is not "loaded" until every point below is checked off. The site does part of this on its own, but only if the data is complete.
+Start with `node tools/buscar-eventos.js` (lists what's on sale and marks what's missing), and read README.md, section "Agregar eventos: paso a paso", which has the details learned from each load: on-sale price (not sold-out lots), UTC times, venue on the poster, no venue → `traslado: false`, RRPP sheet.
 
 1. **Real data, only in Punta del Este** (La Barra, Manantiales, José Ignacio, Maldonado and Punta Ballena/Solanas count). Verify date, time and venue on the ticketing page or the official source. Montevideo, Canelones and other cities do not go in. Events can be added without asking the owner.
 2. **`js/data.js`.** Copy a similar event and fill in:
