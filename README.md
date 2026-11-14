@@ -85,13 +85,17 @@ Un evento no está "cargado" hasta que se cumplen todos los pasos. Es la misma l
 
 1. **Buscar.** Corré `node tools/buscar-eventos.js`. Recorre Venti, Entraste, CobraTicket y RedTickets y marca con **NUEVO** lo que todavía no está en `data.js`. Después mirá a mano:
    - **Passline**, en el navegador, porque bloquea a los programas;
-   - las agendas de **Urubus**, **Modo Punta**, **Cadena del Mar**, el **Centro de Convenciones** y **Conciertos del Este**.
+   - las agendas de **Urubus**, **Modo Punta**, **Cadena del Mar**, el **Centro de Convenciones** y **Conciertos del Este**. La página de verano de Modo Punta ("Events in Punta del Este, Summer") trae el link de venta de cada fiesta: así aparecieron las de **Mi Entrada** (Punta Verano), que el buscador no recorre.
    Un "NUEVO" puede ser el mismo evento vendido en otra ticketera: fijate por el título antes de cargarlo dos veces.
 2. **Confirmar en la página de venta:**
    - **Fecha y hora:** en 24 h. Las ticketeras dan la hora en UTC: restale 3. Las 02:59 UTC son las 23:59 de Uruguay.
    - **Lugar:** si la página no lo dice, mirá el póster. Muchas veces está ahí, como el "Festival 08.01" en Open Park.
    - **Zona:** solo Punta del Este y alrededores (La Barra, Manantiales, José Ignacio, Maldonado, Punta Ballena y Solanas). Montevideo, Canelones y "Sauce" no van.
-   - **Precio:** el **lote más barato que está a la venta**, no el agotado. En Entraste los lotes se ven recién al abrir la página (el primero sin "AGOTADO"). Los canjes Santander a USD 0 no cuentan.
+   - **Precio:** el **lote más barato que está a la venta**, no el agotado. Los canjes Santander o Itaú a USD 0 no cuentan. Dónde se ve en cada ticketera:
+     - **Entraste:** los lotes aparecen recién al abrir la página; vale el primero sin "AGOTADO".
+     - **CobraTicket y Mi Entrada:** hay que tocar "Comprar" o "Comprar ahora".
+     - **Venti:** dice "Precio desde". Ojo: si una fecha se vende desde Venti Argentina, el precio viene en pesos argentinos y no sirve.
+     - **Lugar en el póster:** el lugar del póster manda sobre el de la ticketera. Por ejemplo, La Juanita figura en Venti como "La Juanita", pero el póster dice Medellín Polo Club.
 3. **Cargar en `js/data.js`.** Va al final, debajo de un comentario con la fecha y las fuentes. Los campos obligatorios son `title`, `cat`, `date`, `time`, `place` y `desc`; además van `tickets`, `price` y `photo`. Si dura varios días, `endDate`. Los links van sin `utm_`, `fbclid` ni códigos de otros vendedores.
 4. **Mapa.** El pin sale si `place` contiene un nombre de `VENUES` (`js/config.js`). Si el lugar es nuevo, agregalo a `VENUES` con coordenadas reales. Sirven, en este orden:
    - las que da la ticketera (Venti y CobraTicket las traen);

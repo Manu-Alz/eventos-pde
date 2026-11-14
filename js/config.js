@@ -72,7 +72,10 @@ const VENUES = {
   "Cine Teatro Cantegril":  [-34.92470, -54.94570],  // código 33G3+4PH que da RedTickets
   "Puerto de Punta del Este": [-34.96428, -54.95002],  // el puerto, junto al Yacht Club
   "Ferona":                 [-34.83333, -54.65870],  // Ferona Club Social, calle Albatros, La Juanita (el dato es de Venti)
-  "Pueblo Garzón":          [-34.59303, -54.54548]   // OpenStreetMap
+  "Pueblo Garzón":          [-34.59303, -54.54548],  // OpenStreetMap
+  "Serena Hotel":           [-34.91990, -54.97168],  // Café del Mar, Parada 24 de Playa Mansa (el dato es de CobraTicket)
+  "Club Defensor":          [-34.91663, -54.94102],  // Bulevar Artigas y H. de Balzac, Maldonado (el dato es de CobraTicket)
+  "Lobos Rugby Club":       [-34.91809, -54.93828]   // Maldonado (el dato es de Entraste)
 };
 
 /* ============ 2c. Alojamientos con convenio (catálogo de "Armar plan") ============

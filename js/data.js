@@ -70,7 +70,7 @@ const EV = [
     title: "Hot Since 82: NYE 2027",
     cat: "Fiestas", date: "2026-12-31", time: "23:55",
     place: "Medellín Polo Club, Ruta 10 km 176 (Punta del Este)",
-    tickets: "https://venti.live/evento/hot-since-82-NYE-la-finca-%26-fragment",
+    tickets: "https://venti.live/evento/hot-since-82-NYE-la-finca-%26-fragment", price: "Desde USD 100",
     desc: "Hot Since 82, el productor británico detrás de Knee Deep In Sound, encabeza el Año Nuevo en La Pista del Medellín Polo Club junto a Manu Desrets y Báez & Saint.",
     photo: "hot-since-82-polo-medellin.webp",
     portada: true
@@ -106,7 +106,7 @@ const EV = [
     title: "Nick Warren + Sébastien Léger",
     cat: "Fiestas", date: "2026-12-27", time: "19:00",
     place: "Narbona Wine Lodge, Punta del Este",
-    tickets: "https://venti.live/evento/MY-TRIBE-Opening-You-Are-My-Tribe",
+    tickets: "https://venti.live/evento/MY-TRIBE-Opening-You-Are-My-Tribe", price: "Desde USD 70",
     desc: "My Tribe en Narbona Wine Lodge, desde las 19:00: Nick Warren, leyenda del progressive house británico (Way Out West), junto al francés Sébastien Léger, ffiña y Jero Rosella. Música para el atardecer y para seguir de largo.",
     photo: "nick-warren-narbona.webp"
   },
@@ -146,7 +146,7 @@ const EV = [
     title: "Adriatique en Arcana",
     cat: "Fiestas", date: "2027-01-03", time: "16:00",
     place: "Arcana, Museo Atchugarry, Ruta 104 km 4,5 (Manantiales)",
-    tickets: "https://venti.live/evento/arcana-experience-3-de-enero-en-punta-del-este",
+    tickets: "https://venti.live/evento/arcana-experience-3-de-enero-en-punta-del-este", price: "Desde USD 35",
     desc: "Arcana Punta del Este en el Museo Atchugarry, con Adriatique, el dúo suizo de melodic house y techno detrás del sello Siamese, más NIM y Peter Guzman. Una tarde de música electrónica entre arte y escultura en Manantiales.",
     photo: "adriatique-arcana.webp"
   },
@@ -178,7 +178,7 @@ const EV = [
     title: "Colyn en Playa Brava",
     cat: "Fiestas", date: "2026-12-27", time: "21:00",
     place: "Roll & Rock Beach House, Parada 8, Playa Brava",
-    tickets: "https://venti.live/evento/colyn-27-de-diciembre-en-pde",
+    tickets: "https://venti.live/evento/colyn-27-de-diciembre-en-pde", price: "Desde USD 30",
     desc: "Colyn, uno de los nombres que más suena en el melodic techno actual, toca frente al mar en Roll & Rock Beach House (Parada 8, Playa Brava) junto a Belu Clavero y BIØY. Música al aire libre desde las 21:00.",
     photo: "colyn-playa-brava.webp"
   },
@@ -194,7 +194,7 @@ const EV = [
     title: "Pasan Cosas en Narbona",
     cat: "Fiestas", date: "2026-12-29", time: "19:00",
     place: "Narbona Wine Lodge, Punta del Este",
-    tickets: "https://venti.live/evento/MY-TRIBE-Pasan-Cosas",
+    tickets: "https://venti.live/evento/MY-TRIBE-Pasan-Cosas", price: "Desde USD 50",
     desc: "My Tribe presenta Pasan Cosas en Narbona Wine Lodge: una tarde-noche de música electrónica entre viñedos, desde las 19:00.",
     photo: "pasan-cosas-narbona.webp"
   },
@@ -218,7 +218,7 @@ const EV = [
     title: "You Are My Tribe",
     cat: "Fiestas", date: "2027-01-08", time: "19:00",
     place: "Narbona Wine Lodge, Punta del Este",
-    tickets: "https://venti.live/evento/MY-TRIBE-Closing-you-are-my-tribe-closing",
+    tickets: "https://venti.live/evento/MY-TRIBE-Closing-you-are-my-tribe-closing", price: "Desde USD 40",
     desc: "My Tribe vuelve a Narbona Wine Lodge con una nueva fecha de la serie: música electrónica y tarde al aire libre desde las 19:00. Line-up a confirmar.",
     photo: "you-are-my-tribe-narbona.webp"
   },
@@ -514,7 +514,7 @@ const EV = [
     cat: "Fiestas", date: "2027-01-05", time: "23:30",
     place: "Punta del Este (lugar a confirmar)",
     desc: "Quinta edición de la fiesta de Meller, con barra libre toda la noche y hasta las 6:00. Entradas Silver (+25) y Club (+28); el lugar se anuncia más cerca de la fecha.",
-    tickets: "https://www.cobraticket.uy/e/meller-open-bar-50127-468751",
+    tickets: "https://www.cobraticket.uy/e/meller-open-bar-50127-468751", price: "Desde USD 105",
     contact: "https://melleruruguay.com/pages/open-bar",
     traslado: false,   // sin lugar confirmado no hay pin ni Uber: sacalo cuando anuncien dónde es
     photo: "meller-open-bar-pde.webp"
@@ -558,7 +558,7 @@ const EV = [
     cat: "Fiestas", date: "2026-11-14", time: "23:59",
     place: "OAK, La Barra",
     desc: "Fiesta Set en OAK, La Barra, hasta las 6:00. Para mayores de 20.",
-    tickets: "https://www.cobraticket.uy/e/set-at-oak-705932",
+    tickets: "https://www.cobraticket.uy/e/set-at-oak-705932", price: "Desde $ 700",
     photo: "set-oak.webp"
   },
   {
@@ -566,7 +566,7 @@ const EV = [
     cat: "Fiestas", date: "2026-11-21", time: "23:59",
     place: "OAK Lotus La Barra, Ruta 10, La Barra",
     desc: "Fiesta SPOT en OAK Lotus, sobre la Ruta 10 en La Barra, hasta las 6:00. Para mayores de 21.",
-    tickets: "https://www.cobraticket.uy/e/spot-316131",
+    tickets: "https://www.cobraticket.uy/e/spot-316131", price: "Desde USD 15",
     photo: "spot-oak-lotus.webp"
   },
   {
@@ -634,7 +634,7 @@ const EV = [
     cat: "Fiestas", date: "2027-01-07", time: "23:59",
     place: "Ruta 104, La Barra",
     desc: "Fiesta con canilla libre y dos pistas, cachengue y electrónica, hasta las 6:00. Sector General +21 y VIP +25.",
-    tickets: "https://www.cobraticket.uy/e/somos-phonetec-915720",
+    tickets: "https://www.cobraticket.uy/e/somos-phonetec-915720", price: "Desde USD 90",
     geo: [-34.87083, -54.81942],
     map: "https://www.google.com/maps/search/?api=1&query=-34.87083,-54.81942",
     photo: "somos-phonetec-ruta-104.webp"
@@ -644,7 +644,7 @@ const EV = [
     cat: "Fiestas", date: "2027-01-15", time: "23:30",
     place: "Narbona, Camino de la Vid, Punta del Este",
     desc: "La fiesta Croqueta vuelve a Narbona hasta que salga el sol. General +25 y VIP +29.",
-    tickets: "https://www.cobraticket.uy/e/croqueta-join-the-experience-590567",
+    tickets: "https://www.cobraticket.uy/e/croqueta-join-the-experience-590567", price: "Desde USD 35",
     photo: "croqueta-narbona.webp"
   },
   {
@@ -690,5 +690,107 @@ const EV = [
     tickets: "https://app.entraste.com/events/exodus", price: "Desde $ 4.300",
     traslado: false,   // sin lugar confirmado no hay pin ni Uber: sacalo cuando anuncien dónde es
     photo: "exodus-pde.webp"
+  },
+  /* Cargados el 14/11 (fuentes: Venti, Entraste, CobraTicket, Mi Entrada y Modo Punta) */
+  {
+    title: "Trail Run Punta Ballena",
+    cat: "Deportes", date: "2026-11-24", time: "07:00",
+    place: "Playa Solanas, Punta Ballena",
+    desc: "Carrera de trail que sale de la arena de Solanas, entra al bosque del Arboretum Lussich y sube los senderos del cerro Punta Ballena. Distancias de 18 km y 10 km.",
+    link: "https://adventurerace.com.uy/", linkLabel: "Inscribirse", price: "Inscripción $ 1.900",
+    geo: [-34.88507, -55.04064],   // Solanas, Punta Ballena (OpenStreetMap): el punto exacto de largada no está publicado
+    photo: "trail-run-punta-ballena.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
+  },
+  {
+    title: "Makara Sunset",
+    cat: "Fiestas", date: "2026-11-27", time: "18:00",
+    place: "Café del Mar, Serena Hotel, Parada 24, Playa Mansa",
+    desc: "Makara arranca la temporada con un sunset frente al mar en Café del Mar: old hits, house y cachengue, de 18:00 a 00:30. Para mayores de 26.",
+    tickets: "https://www.cobraticket.uy/e/makara-sunset-596053", price: "Desde $ 450",
+    photo: "makara-sunset-cafe-del-mar.webp"
+  },
+  {
+    title: "Plagio: La Fiesta Final",
+    cat: "Música en vivo", date: "2026-12-18", time: "22:00",
+    place: "Club Defensor, Bulevar Artigas y H. de Balzac, Maldonado",
+    desc: "Plagio cierra el año con su última fiesta en Maldonado. Abre la noche Desintoxicados (tributo a Pity), con feria y barras de comida y bebida. Para mayores de 18.",
+    tickets: "https://www.cobraticket.uy/e/plagio-la-fiesta-final-385557", price: "Desde $ 700",
+    photo: "plagio-defensor-maldonado.webp"
+  },
+  {
+    title: "Navidat 2026",
+    cat: "Fiestas", date: "2026-12-25", time: "01:00",
+    place: "Lobos Rugby Club, Maldonado",
+    desc: "La fiesta de Navidad con barra libre: arranca a la 1:00 de la noche del 24 y sigue hasta las 6:00. General +18, VIP +22 y VIP Backstage +26.",
+    tickets: "https://app.entraste.com/events/navidat-2026", price: "Desde $ 3.800",
+    photo: "navidat-lobos-rugby.webp"
+  },
+  {
+    title: "Roots",
+    cat: "Fiestas", date: "2026-12-27", time: "23:59",
+    place: "Punta del Este (lugar a confirmar)",
+    desc: "Roots, una fiesta nueva de Brothers para el verano 2027. General +22 y VIP Standing +25; el lugar se anuncia más cerca de la fecha.",
+    tickets: "https://app.entraste.com/events/roots", price: "Desde USD 30",
+    traslado: false,   // sin lugar confirmado no hay pin ni Uber: sacalo cuando anuncien dónde es
+    photo: "roots-pde.webp"
+  },
+  {
+    title: "La Juanita Punta del Este: Innellea",
+    cat: "Fiestas", date: "2026-12-28", time: "22:00",
+    place: "La Pista, Medellín Polo Club",
+    desc: "La Juanita trae a Innellea, con Chapa & Castelo, Bob Tosh y This & That, de 22:00 a 6:00 (se entra hasta las 4:00). Para mayores de 18.",
+    tickets: "https://venti.live/evento/LajuanitaPuntadelEste", price: "Desde USD 48",
+    photo: "la-juanita-innellea-polo-medellin.webp"
+  },
+  {
+    title: "Punta Verano: Hedkandi",
+    cat: "Fiestas", date: "2026-12-30", time: "16:00",
+    place: "Narbona, Camino de la Vid, Punta del Este",
+    desc: "Hedkandi vuelve con Punta Verano, junto a Albariño y Mar: tarde con barra libre premium y comida, con Lucas Borchardt, Pico Bussoli, Mati Carreño, João Veppo y Kalil.",
+    tickets: "https://mientrada.com.uy/evento/punta-verano-2027-hedkandi-ampamp-albarino-y-mar-30350", price: "Desde $ 7.245",
+    photo: "punta-verano-hedkandi-narbona.webp"
+  },
+  {
+    title: "Punta Verano: Réveillon Unique",
+    cat: "Fiestas", date: "2026-12-31", time: "23:00",
+    place: "Serena Hotel, Playa Mansa",
+    desc: "El Año Nuevo de Punta Verano vuelve a Playa Mansa, en el Serena Hotel: barra libre premium y comida de 23:00 a 7:00, con Marina Diniz, Pic Schmitz, João Veppo y Kalil.",
+    tickets: "https://mientrada.com.uy/evento/punta-verano-2027-reveillon-unique-30351", price: "Desde $ 18.342",
+    photo: "punta-verano-reveillon-unique-serena.webp"
+  },
+  {
+    title: "Punta Verano: HUGEL",
+    cat: "Fiestas", date: "2027-01-03", time: "19:00",
+    place: "Manantiales Beach, Manantiales",
+    desc: "Punta Verano presenta a HUGEL en un sunset con barra libre premium en Manantiales. Para mayores de 21.",
+    tickets: "https://mientrada.com.uy/evento/punta-verano-2027-hugel-closing-season-30286", price: "Desde $ 9.430",
+    geo: [-34.90591, -54.82386],   // Manantiales (OpenStreetMap): aproximado, "Manantiales Beach" no tiene dirección publicada
+    photo: "punta-verano-hugel-manantiales.webp"
+  },
+  {
+    title: "Este Arte #13",
+    cat: "Festivales", date: "2027-01-05", time: "A confirmar",
+    place: "Pavilion Vik, José Ignacio",
+    desc: "Feria de arte contemporáneo en José Ignacio: 14 galerías de América y Europa, cada una con un artista. Del 5 al 8 de enero.",
+    link: "https://www.estearte.com/", linkLabel: "Ver la feria",
+    endDate: "2027-01-08",
+    geo: [-34.84207, -54.64040],   // Playa Vik, José Ignacio (OpenStreetMap)
+    photo: "este-arte-vik-jose-ignacio.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
+  },
+  {
+    title: "Space is a Dream: The Dream",
+    cat: "Fiestas", date: "2027-01-06", time: "22:00",
+    place: "Aguaverde Wine Lodge, La Barra",
+    desc: "Space is a Dream presenta The Dream, con Quartino y artistas invitados: la entrada incluye barra libre, experiencia gastronómica y valet parking.",
+    tickets: "https://app.entraste.com/events/spaces-is-a-dream-2027", price: "Desde USD 200",
+    photo: "space-is-a-dream-aguaverde.webp"
+  },
+  {
+    title: "Corrida de San Fernando 2027",
+    cat: "Deportes", date: "2027-01-07", time: "19:30",
+    place: "Parada 17, Playa Mansa, Punta del Este",
+    desc: "La clásica corrida de verano, con 5 km (19:30) y 10 km (21:00) sobre la rambla de Playa Mansa. Los cupos se suelen agotar rápido.",
+    link: "https://www.corridadesanfernando.com/", linkLabel: "Ver la corrida", price: "Inscripción $ 1.200",
+    photo: "corrida-san-fernando.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
   }
 ];
