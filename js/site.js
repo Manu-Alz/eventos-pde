@@ -10,7 +10,7 @@
   if (head && !head.dataset.plain) {
     const path = location.pathname.replace(/index\.html$/, "");
     const onPlan = path === "/plan.html";
-    const NAV = [["/#agenda", "Agenda"], ["/#calendario", "Calendario"], ["/#mapa", "Mapa"], ["/publicar.html", "Publicar evento"], ["/nosotros.html", "Quiénes somos"]];
+    const NAV = [["/#agenda", "Agenda"], ["/#calendario", "Calendario"], ["/#mapa", "Mapa"], ["/publicar.html", "Sumá tu evento"], ["/nosotros.html", "Quiénes somos"]];
     const cur = href => (href === path ? ' aria-current="page"' : "");
     const cta = onPlan ? `<a class="btn nav-cta" href="/">Ver eventos</a>`
       : `<a class="btn nav-cta" href="/plan.html" data-ev="plan_cabecera">Armar mi plan</a>`;
@@ -75,7 +75,7 @@
         <div class="foot-col"><p class="foot-h">Agenda</p>
           ${link("/", "Todos los eventos")}${link("/agenda/", "Agenda por mes y categoría")}${link("/plan.html", "Armar plan", "plan_pie")}${link("/nosotros.html", "Quiénes somos", "nosotros_pie")}</div>
         <div class="foot-col"><p class="foot-h">Trabajá con nosotros</p>
-          ${link("/publicar.html", "Publicar evento", "promo_publicar")}<a href="/publicar.html#plans">Planes y precios</a><a href="/nosotros.html#aliados" data-ev="aliados_pie">Hoteles e inmobiliarias</a><a href="mailto:${esc(CONFIG.email)}?subject=${encodeURIComponent("Quiero trabajar con Eventos PDE")}" data-ev="contacto_organizador">Hablemos</a></div>
+          ${link("/publicar.html", "Sumá tu evento", "promo_publicar")}<a href="/publicar.html#rrpp">Vendé entradas con nosotros</a><a href="mailto:${esc(CONFIG.email)}?subject=${encodeURIComponent("Quiero trabajar con Eventos PDE")}" data-ev="contacto_organizador">Hablemos</a></div>
         <div class="foot-col foot-contact"><p class="foot-h">Contacto</p>
           <a href="mailto:${esc(CONFIG.email)}" data-ev="email_sitio">${esc(CONFIG.email)}</a><a href="https://instagram.com/${esc(CONFIG.instagram)}" target="_blank" rel="noopener" data-ev="instagram_sitio">@${esc(CONFIG.instagram)}</a></div>
       </nav>
@@ -121,3 +121,24 @@
     });
   });
 })();
+
+/* Compartir (página de cada evento): en el celular abre el menú del teléfono con el póster, el nombre y el link, así se
+   puede mandar por WhatsApp o subir a una historia de Instagram. Sin ese menú (la mayoría de las PC) queda el link de
+   WhatsApp de siempre. */
+document.addEventListener("click", async ev => {
+  const a = ev.target.closest && ev.target.closest("a[data-share]");
+  if (!a || !navigator.share) return;
+  ev.preventDefault();
+  const data = { title: a.dataset.share, text: a.dataset.share, url: a.dataset.url || location.href };
+  try {
+    if (a.dataset.img && navigator.canShare) {
+      const blob = await (await fetch(a.dataset.img)).blob();
+      const file = new File([blob], a.dataset.img.split("/").pop(), { type: blob.type || "image/webp" });
+      if (navigator.canShare({ files: [file] })) data.files = [file];
+    }
+    await navigator.share(data);
+    if (typeof track === "function") track("compartir_menu", { evento: a.dataset.share, poster: data.files ? "si" : "no" });
+  } catch (e) {
+    if (e && e.name !== "AbortError") location.href = a.href;            // si el menú falla, el link de WhatsApp
+  }
+});

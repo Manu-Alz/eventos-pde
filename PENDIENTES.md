@@ -45,7 +45,7 @@ Cosas apagadas, de prueba o esperando algo tuyo. Cuando resuelvas una, borrala d
 
 - **Booking:** hoy **no** (Travelpayouts rechazó el programa de Booking). Alternativas en la sección 1: Agoda Partners directo, o Trip.com y Expedia dentro de Travelpayouts.
 - **Entradas por RRPP (la que más plata puede dar):** la web ya suma tu código sola (`RRPP` en `js/config.js` + `rrpp: true` en el evento). Falta: (1) tu código de Entraste (Mi cuenta > "Soy RRPP") y (2) que cada productora te apruebe como RRPP. En Venti y las demás, pediles el link de RRPP y va en `tickets` con `affiliate: true`. Paso a paso en README.md, "Códigos de RRPP".
-- **Portada paga:** el plan Portada (`PLANS` en `js/config.js`) es la forma directa de cobrarle a las productoras; ya está armado en Publicar.
-- **Aliados (inmobiliarias y hoteles):** la comisión que acuerdes con cada uno.
-- **Traslados y entradas que cobrás con Mercado Pago:** tu margen.
+- **Sumá tu evento:** las productoras te escriben gratis desde `publicar.html` (WhatsApp o mail, con el link de venta y si aceptan RRPP). Es la puerta para conseguir códigos.
+- **Aliados (inmobiliarias y hoteles):** apagado desde el 26/11 (`CONFIG.gestion: false`): la web no manda pedidos para resolver.
+- **Traslados con Mercado Pago:** apagado desde el 26/11 (`CONFIG.gestion: false`). Armar plan muestra cómo llegar con links (ómnibus, barco, Uber).
 - **Uber:** **no.** Los botones de Uber son links comunes, sin código de afiliado. Uber tiene un programa de afiliados en algunos países (paga por cada usuario nuevo que hace su primer viaje), pero la página para Uruguay no responde. Si algún día lo habilitan, el código va en `uberUrl` en `js/cards.js`.

@@ -64,6 +64,77 @@ const I18N = (() => {
 
   /* ---------- Textos fijos ---------- */
   const D = {
+    /* Textos nuevos (11/2026): Sumá tu evento, Armar plan sin gestión, filtros rápidos */
+    "Este finde": ["This weekend","Este fim de semana"],
+    "Gratis": ["Free","Grátis"],
+    "Filtros rápidos": ["Quick filters","Filtros rápidos"],
+    "Sumalo gratis a la agenda: página propia, mapa, calendario y botón de compra, en tres idiomas.": ["Add it to the calendar for free: its own page, map, calendar and buy button, in three languages.","Inclua na agenda de graça: página própria, mapa, calendário e botão de compra, em três idiomas."],
+    "Sumar mi evento": ["Add my event","Incluir meu evento"],
+    "Sumá tu evento": ["Add your event","Inclua seu evento"],
+    "Vendé entradas con nosotros": ["Sell tickets with us","Venda ingressos com a gente"],
+    "No encontramos eventos con esa búsqueda. Probá con otra o sumá el tuyo.": ["No events match your search. Try another or add yours.","Não encontramos eventos com essa busca. Tente outra ou inclua o seu."],
+    "Todavía no hay eventos en esta categoría. Probá con otra o sumá el tuyo.": ["No events in this category yet. Try another or add yours.","Ainda não há eventos nesta categoria. Tente outra ou inclua o seu."],
+    "Elegí tus eventos y tené todo en un lugar: entradas, cómo llegar desde el aeropuerto y alojamiento cerca.": ["Pick your events and have it all in one place: tickets, how to get here from the airport and lodging nearby.","Escolha seus eventos e tenha tudo num só lugar: ingressos, como chegar do aeroporto e hospedagem perto."],
+    "Sumá tu evento gratis a la agenda y vendé entradas con nosotros como RRPP: ganamos solo por lo que vendemos.": ["Add your event to the calendar for free and sell tickets with us as a promoter: we only earn on what we sell.","Inclua seu evento na agenda de graça e venda ingressos com a gente como promotor: só ganhamos pelo que vendemos."],
+    "Si venís de afuera, elegís tus eventos y tenés todo en un lugar: entradas, cómo llegar desde el aeropuerto, Uber a cada fiesta y alojamiento cerca en Booking.": ["If you're coming from abroad, pick your events and have it all in one place: tickets, how to get here from the airport, Uber to every party and lodging nearby on Booking.","Se você vem de fora, escolhe seus eventos e tem tudo num só lugar: ingressos, como chegar do aeroporto, Uber para cada festa e hospedagem perto no Booking."],
+    "Sumás tu evento gratis a la agenda y vendemos tus entradas como RRPP: ganamos solo por lo que vendemos.": ["You add your event to the calendar for free and we sell your tickets as a promoter: we only earn on what we sell.","Você inclui seu evento na agenda de graça e vendemos seus ingressos como promotor: só ganhamos pelo que vendemos."],
+    "Ver la agenda y armar tu plan es gratis. Las entradas las comprás en la ticketera oficial de cada evento.": ["Browsing the calendar and planning your trip is free. You buy tickets on each event's official ticketing site.","Ver a agenda e montar seu plano é grátis. Os ingressos você compra na bilheteria oficial de cada evento."],
+    "Armá tu plan con cómo llegar y alojamiento": ["Plan your trip with how to get here and lodging","Monte seu plano com como chegar e hospedagem"],
+    "Elegí cómo llegás y te mostramos cómo seguir hasta Punta del Este.": ["Choose how you arrive and we'll show you how to get to Punta del Este.","Escolha como você chega e mostramos como seguir até Punta del Este."],
+    "Uber desde el aeropuerto": ["Uber from the airport","Uber do aeroporto"],
+    "También hay taxis y remises a la salida": ["There are also taxis and car services at the exit","Também há táxis e transfers na saída"],
+    "Ómnibus COT a Punta": ["COT bus to Punta","Ônibus COT para Punta"],
+    "Ómnibus COPSA a Punta": ["COPSA bus to Punta","Ônibus COPSA para Punta"],
+    "Buquebus: barco + ómnibus a Punta": ["Buquebus: ferry + bus to Punta","Buquebus: barco + ônibus para Punta"],
+    "Ómnibus desde Tres Cruces": ["Bus from Tres Cruces","Ônibus de Tres Cruces"],
+    "Colonia Express": ["Colonia Express","Colonia Express"],
+    "Uber desde la terminal": ["Uber from the bus terminal","Uber da rodoviária"],
+    "También hay taxis en la terminal": ["There are also taxis at the terminal","Também há táxis na rodoviária"],
+    "Perfecto. En cada fiesta tenés los botones de Uber para ir y volver.": ["Perfect. Every party has Uber buttons to get there and back.","Perfeito. Em cada festa você tem os botões do Uber para ir e voltar."],
+    "Si venís de afuera, elegí cómo llegás y te mostramos el ómnibus, el barco o el Uber hasta Punta.": ["If you're coming from abroad, choose how you arrive and we'll show you the bus, ferry or Uber to Punta.","Se você vem de fora, escolha como chega e mostramos o ônibus, o barco ou o Uber até Punta."],
+    "Elegí la zona y reservá tu alojamiento en Booking.": ["Choose the area and book your stay on Booking.","Escolha a região e reserve sua hospedagem no Booking."],
+    "Las entradas las comprás en cada evento, con Comprar. ¿Te falta dónde dormir? Buscalo en el paso 3.": ["Buy tickets at each event with Buy. Need a place to stay? Find it in step 3.","Compre os ingressos em cada evento, com Comprar. Falta onde dormir? Procure no passo 3."],
+    "Sumá eventos en el paso 1, mirá cómo llegar en el paso 2 y buscá alojamiento en el paso 3.": ["Add events in step 1, see how to get here in step 2 and find lodging in step 3.","Adicione eventos no passo 1, veja como chegar no passo 2 e procure hospedagem no passo 3."],
+    "Elegí tus eventos y tené todo en un lugar: entradas, cómo llegar desde el aeropuerto y alojamiento cerca de tus eventos.": ["Pick your events and have it all in one place: tickets, how to get here from the airport and lodging near your events.","Escolha seus eventos e tenha tudo num só lugar: ingressos, como chegar do aeroporto e hospedagem perto dos seus eventos."],
+    "No. Armar el plan es gratis: las entradas las comprás en cada evento, el alojamiento en Booking y los viajes en Uber.": ["No. Planning is free: you buy tickets at each event, lodging on Booking and rides on Uber.","Não. Montar o plano é grátis: os ingressos você compra em cada evento, a hospedagem no Booking e as viagens no Uber."],
+    "Todo se paga directo en cada lugar: las entradas, en la ticketera oficial de cada evento; el alojamiento, en Booking; los viajes, en Uber. Eventos PDE no cobra nada ni ve los datos de tu tarjeta.": ["You pay each one directly: tickets on each event's official ticketing site, lodging on Booking, rides on Uber. Eventos PDE charges nothing and never sees your card details.","Tudo se paga direto em cada lugar: ingressos na bilheteria oficial de cada evento, hospedagem no Booking, viagens no Uber. A Eventos PDE não cobra nada nem vê os dados do seu cartão."],
+    "En el paso 3 elegís las fechas y la zona (te mostramos cuántos minutos queda de tus eventos). Booking se abre con tus fechas, la zona y la cantidad de personas: ahí elegís y pagás directo.": ["In step 3 you choose the dates and area (we show how many minutes it is from your events). Booking opens with your dates, area and number of people: choose and pay there.","No passo 3 você escolhe as datas e a região (mostramos quantos minutos fica dos seus eventos). O Booking abre com suas datas, a região e o número de pessoas: escolha e pague lá."],
+    "¿Cómo llego a Punta desde el aeropuerto?": ["How do I get to Punta from the airport?","Como chego a Punta do aeroporto?"],
+    "En el paso 2 elegís cómo llegás y te mostramos cómo seguir: desde Laguna del Sauce, Uber o taxi (unos 25 minutos); desde Carrasco, ómnibus COT o COPSA o Uber (unos 90 minutos); en barco, Buquebus vende el ómnibus a Punta junto con el pasaje.": ["In step 2 you choose how you arrive and we show you how to continue: from Laguna del Sauce, Uber or taxi (about 25 minutes); from Carrasco, COT or COPSA bus or Uber (about 90 minutes); by ferry, Buquebus sells the bus to Punta with your ticket.","No passo 2 você escolhe como chega e mostramos como seguir: de Laguna del Sauce, Uber ou táxi (uns 25 minutos); de Carrasco, ônibus COT ou COPSA ou Uber (uns 90 minutos); de barco, a Buquebus vende o ônibus até Punta junto com a passagem."],
+    "En cada fiesta o show con entrada de tu plan (y en la página del evento) tenés \"Cómo ir y volver\": un Uber con el lugar ya cargado, para ir y para volver sin manejar.": ["Every party or ticketed show in your plan (and on the event page) has \"Getting there and back\": an Uber with the venue already set, to go and come back without driving.","Em cada festa ou show com ingresso do seu plano (e na página do evento) você tem \"Como ir e voltar\": um Uber com o local já definido, para ir e voltar sem dirigir."],
+    "Las entradas y Booking se cambian ahí mismo, con la ticketera o con el alojamiento. Tu plan queda guardado en este navegador y lo podés cambiar cuando quieras.": ["Tickets and Booking are changed right there, with the ticketing site or the lodging. Your plan is saved in this browser and you can change it anytime.","Ingressos e Booking são alterados lá mesmo, com a bilheteria ou a hospedagem. Seu plano fica salvo neste navegador e você pode mudá-lo quando quiser."],
+    "Sumá tu evento gratis a la agenda de Punta.": ["Add your event to the Punta calendar for free.","Inclua seu evento na agenda de Punta de graça."],
+    "Tu evento sale con página propia, póster, mapa, calendario y el botón de compra, en español, inglés y portugués. No cobramos por publicar: trabajamos como RRPP y ganamos solo por las entradas que se venden desde la web.": ["Your event gets its own page, poster, map, calendar and buy button, in Spanish, English and Portuguese. We don't charge to publish: we work as promoters and only earn on tickets sold through the site.","Seu evento sai com página própria, pôster, mapa, calendário e botão de compra, em espanhol, inglês e português. Não cobramos para publicar: trabalhamos como promotores e só ganhamos pelos ingressos vendidos pelo site."],
+    "Mandanos el link de venta": ["Send us the ticket link","Mande o link de venda"],
+    "Completá los datos abajo y mandalos por WhatsApp o mail.": ["Fill in the details below and send them by WhatsApp or email.","Preencha os dados abaixo e mande por WhatsApp ou e-mail."],
+    "Lo cargamos en la agenda": ["We add it to the calendar","Colocamos na agenda"],
+    "Con el póster, el lugar en el mapa y el precio en venta.": ["With the poster, the venue on the map and the current price.","Com o pôster, o local no mapa e o preço à venda."],
+    "Nos das de alta como RRPP": ["Add us as a promoter","Cadastre a gente como promotor"],
+    "Desde tu ticketera: las ventas que salen de la web quedan a nuestro nombre.": ["From your ticketing site: sales from our site are credited to us.","Pela sua bilheteria: as vendas que saem do site ficam no nosso nome."],
+    "Tu evento": ["Your event","Seu evento"],
+    "Productora": ["Producer","Produtora"],
+    "Quién organiza": ["Who's organizing","Quem organiza"],
+    "Link de venta de entradas": ["Ticket sales link","Link de venda de ingressos"],
+    "(Entraste, Venti, Passline, CobraTicket, RedTickets, Mi Entrada…)": ["(Entraste, Venti, Passline, CobraTicket, RedTickets, Mi Entrada…)","(Entraste, Venti, Passline, CobraTicket, RedTickets, Mi Entrada…)"],
+    "Tu Instagram o WhatsApp": ["Your Instagram or WhatsApp","Seu Instagram ou WhatsApp"],
+    "Nos pueden dar de alta como RRPP en la ticketera (con un código o link nuestro)": ["You can add us as a promoter on the ticketing site (with our own code or link)","Vocês podem nos cadastrar como promotor na bilheteria (com um código ou link nosso)"],
+    "Preparar mensaje": ["Prepare message","Preparar mensagem"],
+    "Listo, mandanos el mensaje": ["Done, send us the message","Pronto, mande a mensagem"],
+    "Elegí por dónde. El mensaje ya va escrito con los datos de tu evento.": ["Choose how. The message already includes your event details.","Escolha por onde. A mensagem já vai escrita com os dados do seu evento."],
+    "Mandar por WhatsApp": ["Send by WhatsApp","Enviar por WhatsApp"],
+    "Mandar por mail": ["Send by email","Enviar por e-mail"],
+    "Lo cargamos en el día y te avisamos cuando esté online.": ["We add it the same day and let you know when it's live.","Colocamos no mesmo dia e avisamos quando estiver no ar."],
+    "¿Cuánto cuesta publicar?": ["How much does it cost to publish?","Quanto custa publicar?"],
+    "Nada. Publicamos gratis todos los eventos de Punta del Este y alrededores que tengan datos reales.": ["Nothing. We publish every event in and around Punta del Este with real details for free.","Nada. Publicamos de graça todos os eventos de Punta del Este e arredores com dados reais."],
+    "¿Cómo funciona lo de RRPP?": ["How does the promoter deal work?","Como funciona a parte de promotor?"],
+    "Desde tu ticketera nos das de alta como RRPP (un código o un link de vendedor). El botón de compra de tu evento en la web lleva ese código, así cada entrada que vendemos queda registrada a nuestro nombre en tu panel. Nos pagás la comisión que acordemos, solo por lo vendido.": ["From your ticketing site you add us as a promoter (a code or seller link). The buy button for your event on our site carries that code, so every ticket we sell is credited to us in your dashboard. You pay us the commission we agree on, only for what's sold.","Pela sua bilheteria você nos cadastra como promotor (um código ou link de vendedor). O botão de compra do seu evento no site leva esse código, assim cada ingresso que vendemos fica no nosso nome no seu painel. Você paga a comissão combinada, só pelo que foi vendido."],
+    "¿Y si no trabajo con RRPP?": ["What if I don't work with promoters?","E se eu não trabalho com promotores?"],
+    "Igual podemos publicar tu evento. Escribinos y lo vemos.": ["We can still publish your event. Write to us and we'll sort it out.","Mesmo assim podemos publicar seu evento. Escreva para a gente e combinamos."],
+    "Apenas lo cargamos, normalmente en el día. Te avisamos cuando está online.": ["As soon as we add it, usually the same day. We'll let you know when it's live.","Assim que colocamos, normalmente no mesmo dia. Avisamos quando estiver no ar."],
+    "¿Puedo cambiar algo después?": ["Can I change something later?","Posso mudar algo depois?"],
+    "Sí: la hora, el lugar, el precio o el póster. Escribinos por WhatsApp o mail y lo actualizamos.": ["Yes: the time, venue, price or poster. Message us on WhatsApp or email and we'll update it.","Sim: o horário, o local, o preço ou o pôster. Escreva por WhatsApp ou e-mail e atualizamos."],
+    "Sumá tu evento – Eventos PDE": ["Add your event – Eventos PDE","Inclua seu evento – Eventos PDE"],
+
     /* Barra, pie y comunes */
     "Agenda": ["Events", "Agenda"], "Calendario": ["Calendar", "Calendário"], "Mapa": ["Map", "Mapa"],
     "Publicar evento": ["List your event", "Publicar evento"], "Quiénes somos": ["About us", "Quem somos"],
@@ -324,8 +395,8 @@ const I18N = (() => {
       m => `${m[1]} ${ev(m[1])}, ${m[3] ? `${ds(m[2])} ${m[3]}` : `${ds(m[4])} ${m[5]}${[" to ", " a "][L]}${ds(m[6])} ${m[7]}`}. ${(D[m[8]] || SUB[m[8]] || [m[8], m[8]])[L]}`],
     [/^Del (\d\d\/\d\d) al (\d\d\/\d\d)(: un día antes y uno después de tus eventos)?\.$/, m => [`From ${m[1]} to ${m[2]}${m[3] ? ": one day before and one after your events" : ""}.`, `De ${m[1]} a ${m[2]}${m[3] ? ": um dia antes e um depois dos seus eventos" : ""}.`][L]],
     [/^Llegás el (\d\d\/\d\d)\. Ahora tocá el día que te vas\.$/, m => [`Check-in ${m[1]}. Now tap your check-out day.`, `Entrada dia ${m[1]}. Agora toque no dia da saída.`][L]],
-    [/^Se abre Booking con tus fechas \((.*) al (.*)\), la zona y (\d+) personas?\. Las entradas las comprás en cada evento\. ¿Te buscamos en el aeropuerto\? Sumalo en el paso 2\.$/,
-      m => [`Booking opens with your dates (${m[1]} to ${m[2]}), the area and ${m[3]} ${ppl(m[3])}. Buy tickets at each event. Want us to pick you up at the airport? Add it in step 2.`, `O Booking abre com suas datas (${m[1]} a ${m[2]}), a região e ${m[3]} ${ppl(m[3])}. Os ingressos você compra em cada evento. Quer que a gente te busque no aeroporto? Adicione no passo 2.`][L]],
+    [/^Se abre Booking con tus fechas \((.*) al (.*)\), la zona y (\d+) personas?\. Las entradas las comprás en cada evento\.( ¿Te buscamos en el aeropuerto\? Sumalo en el paso 2\.)?$/,
+      m => [`Booking opens with your dates (${m[1]} to ${m[2]}), the area and ${m[3]} ${ppl(m[3])}. Buy tickets at each event.${m[4] ? " Want us to pick you up at the airport? Add it in step 2." : ""}`, `O Booking abre com suas datas (${m[1]} a ${m[2]}), a região e ${m[3]} ${ppl(m[3])}. Os ingressos você compra em cada evento.${m[4] ? " Quer que a gente te busque no aeroporto? Adicione no passo 2." : ""}`][L]],
     [/^(.+?)( · del (\d\d\/\d\d) al (\d\d\/\d\d))? · (\d+) personas?( · lo reservás vos| · te mandamos opciones)?$/,
       m => `${zone(m[1])}${m[2] ? [` · ${m[3]} to ${m[4]}`, ` · de ${m[3]} a ${m[4]}`][L] : ""} · ${m[5]} ${ppl(m[5])}${m[6] ? (m[6].includes("vos") ? [" · you book it", " · você reserva"] : [" · we send options", " · mandamos opções"])[L] : ""}`],
     [/^≈ (\d+) min a tus eventos$/, m => [`≈ ${m[1]} min to your events`, `≈ ${m[1]} min dos seus eventos`][L]],
@@ -376,7 +447,8 @@ const I18N = (() => {
   const PARTS = { "del traslado": ["the transfer", "do transfer"], "del alojamiento": ["the lodging", "da hospedagem"], "del chofer": ["the driver", "do motorista"] };
   const parts = s => s.split(" y ").map(p => (PARTS[p] || [p, p])[L]).join([" and ", " e "][L]);
   /* El resto del subtítulo de Armar plan (después de las fechas) */
-  const SUB = { "Comprá las entradas, sumá el traslado del aeropuerto si lo necesitás y elegí dónde quedarte.": ["Buy the tickets, add the airport transfer if you need it and choose where to stay.", "Compre os ingressos, adicione o transfer do aeroporto se precisar e escolha onde ficar."] };
+  const SUB = { "Comprá las entradas, mirá cómo llegar y elegí dónde quedarte.": ["Buy the tickets, see how to get here and choose where to stay.", "Compre os ingressos, veja como chegar e escolha onde ficar."],
+    "Comprá las entradas, sumá el traslado del aeropuerto si lo necesitás y elegí dónde quedarte.": ["Buy the tickets, add the airport transfer if you need it and choose where to stay.", "Compre os ingressos, adicione o transfer do aeroporto se precisar e escolha onde ficar."] };
 
   const t = s => {
     if (lang === "es" || !s) return s;
@@ -409,7 +481,7 @@ const I18N = (() => {
   };
   /* Título de la pestaña: "Evento · Martes 29 de diciembre | Eventos PDE" */
   const TITLES = { "Eventos PDE – Todo lo que pasa en Punta del Este": ["Eventos PDE – Everything happening in Punta del Este", "Eventos PDE – Tudo o que acontece em Punta del Este"],
-    "Armá tu plan en Punta – Eventos PDE": ["Plan your Punta trip – Eventos PDE", "Monte seu plano em Punta – Eventos PDE"], "Publicar un evento – Eventos PDE": ["List an event – Eventos PDE", "Publicar um evento – Eventos PDE"],
+    "Armá tu plan en Punta – Eventos PDE": ["Plan your Punta trip – Eventos PDE", "Monte seu plano em Punta – Eventos PDE"], "Publicar un evento – Eventos PDE": ["List an event – Eventos PDE", "Publicar um evento – Eventos PDE"], "Sumá tu evento – Eventos PDE": ["Add your event – Eventos PDE", "Inclua seu evento – Eventos PDE"],
     "Pagar pedido – Eventos PDE": ["Pay order – Eventos PDE", "Pagar pedido – Eventos PDE"], "Quiénes somos – Eventos PDE": ["About us – Eventos PDE", "Quem somos – Eventos PDE"],
     "Página no encontrada – Eventos PDE": ["Page not found – Eventos PDE", "Página não encontrada – Eventos PDE"] };
   const doTitle = () => {

@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Publicar un evento – Eventos PDE</title>
-<meta name="description" content="Publicá tu evento en Eventos PDE: elegí el plan Básico o Portada y llegá a quienes visitan Punta del Este.">
+<title>Sumá tu evento – Eventos PDE</title>
+<meta name="description" content="Sumá tu evento gratis a la agenda de Punta del Este: página propia, mapa, calendario y botón de compra en tres idiomas. Vendemos tus entradas como RRPP, con tu código.">
 <meta name="format-detection" content="telephone=no">
 <link rel="canonical" href="https://eventospde.com/publicar.html">
 <meta name="theme-color" content="#151518">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Eventos PDE">
 <meta property="og:locale" content="es_UY">
-<meta property="og:title" content="Publicar un evento – Eventos PDE">
-<meta property="og:description" content="Publicá tu evento en Eventos PDE: elegí el plan Básico o Portada y llegá a quienes visitan Punta del Este.">
+<meta property="og:title" content="Sumá tu evento – Eventos PDE">
+<meta property="og:description" content="Sumá tu evento gratis a la agenda de Punta del Este y vendé entradas con nosotros como RRPP.">
 <meta property="og:url" content="https://eventospde.com/publicar.html">
 <meta property="og:image" content="https://eventospde.com/img/og.jpg?v=2">
 <meta property="og:image:width" content="1200">
@@ -23,8 +23,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=68">
-<link rel="stylesheet" href="css/publicar.css?v=68">
+<link rel="stylesheet" href="css/styles.css?v=69">
+<link rel="stylesheet" href="css/publicar.css?v=69">
 </head>
 <body>
 <div class="wrap">
@@ -34,66 +34,51 @@
   </header>
 </div>
 
+<!-- Sumá tu evento: gratis para el productor. A cambio, vendemos sus entradas como RRPP (con su código o link).
+     El formulario no manda nada a ningún servidor: arma el mensaje y lo abre en WhatsApp o en el mail (js/publicar.js). -->
 <section class="pub" id="publicar">
 <div class="wrap">
   <a class="back" href="/">‹ Volver a los eventos</a>
-  <h1>Publicá tu evento y llegá a todo Punta.</h1>
-  <p class="lead">Tu evento aparece en su categoría, con fecha, hora, lugar y contacto. Se cobra por día de publicación y cuanto más tiempo está online tu evento, menos pagás por día: podés publicarlo desde un solo día. Primero elegí cuánta visibilidad querés y después completá los datos. ¿Dudas? Escribinos a <a data-email href="mailto:contacto@eventospde.com">contacto@eventospde.com</a> o por <a data-wa href="https://wa.me/" target="_blank" rel="noopener" data-ev="whatsapp_publicar">WhatsApp</a>.</p>
+  <h1>Sumá tu evento gratis a la agenda de Punta.</h1>
+  <p class="lead">Tu evento sale con página propia, póster, mapa, calendario y el botón de compra, en español, inglés y portugués. No cobramos por publicar: trabajamos como RRPP y ganamos solo por las entradas que se venden desde la web.</p>
 
   <ol class="how" aria-label="Cómo funciona">
-    <li><b>Elegí plan y días</b><span>Pagás solo los días que tu evento está online, desde uno.</span></li>
-    <li><b>Mandanos los datos</b><span>Te damos una referencia y los datos para pagar.</span></li>
-    <li><b>Lo publicamos</b><span>Apenas confirmamos el pago, tu evento sale en la agenda.</span></li>
+    <li><b>Mandanos el link de venta</b><span>Completá los datos abajo y mandalos por WhatsApp o mail.</span></li>
+    <li><b>Lo cargamos en la agenda</b><span>Con el póster, el lugar en el mapa y el precio en venta.</span></li>
+    <li><b>Nos das de alta como RRPP</b><span>Desde tu ticketera: las ventas que salen de la web quedan a nuestro nombre.</span></li>
   </ol>
 
-  <h3 class="step">Paso 1: elegí tu plan</h3>
-  <div class="plans" id="plans"></div>
-
-  <div id="paso2" hidden>
-    <h3 class="step">Paso 2: contanos del evento</h3>
-    <p class="chosen">Plan elegido: <b id="chosenName"></b> · Total: <b id="total"></b> <button type="button" class="linkbtn" id="changePlan">Cambiar plan</button></p>
-    <form id="form">
-      <label>Nombre del evento<input name="title" required autocomplete="off"></label>
-      <label>Categoría<select name="cat"></select></label>
-      <label>Fecha<input type="date" name="date" required></label>
-      <label>Hora<input type="time" name="time" required></label>
-      <label>Lugar<input name="place" required autocomplete="off"></label>
-      <div class="full dayfield">
-        <label>Días de publicación<input type="number" name="days" min="1" max="90" value="7" inputmode="numeric" required></label>
-        <div class="quick" id="quickDays" role="group" aria-label="Duraciones frecuentes"></div>
-      </div>
-      <label>Primer día de publicación<input type="date" name="start" required></label>
-      <p class="daysnote" id="daysNote" aria-live="polite"></p>
-      <label>Método de contacto
-        <select name="contactMethod"><option value="WhatsApp">WhatsApp</option><option value="Email">Email</option><option value="Instagram">Instagram</option></select>
-      </label>
-      <label class="full">Dato de contacto<input name="contact" required autocomplete="off" autocapitalize="off"></label>
-      <label class="full"><span>Link de entradas <span class="hint">(opcional)</span></span><input type="url" name="tickets" placeholder="https://" inputmode="url" autocapitalize="off" autocomplete="off"></label>
-      <label class="full"><span>Otro link <span class="hint">(opcional: web, programa, reservas)</span></span><input type="url" name="link" placeholder="https://" inputmode="url" autocapitalize="off" autocomplete="off"></label>
-      <label class="full">Descripción<textarea name="desc" rows="3" placeholder="Contá en una o dos líneas de qué se trata (ej. música electrónica, show en vivo, feria…)"></textarea></label>
-      <div class="full"><button class="btn" type="submit">Enviar evento</button></div>
-    </form>
-  </div>
+  <h3 class="step">Tu evento</h3>
+  <form id="form" novalidate>
+    <label>Nombre del evento<input name="title" required autocomplete="off"></label>
+    <label>Fecha<input type="date" name="date" required></label>
+    <label>Lugar<input name="place" required autocomplete="off" placeholder="Ej.: Open Park, La Barra"></label>
+    <label>Productora<input name="producer" autocomplete="organization" placeholder="Quién organiza"></label>
+    <label class="full"><span>Link de venta de entradas <span class="hint">(Entraste, Venti, Passline, CobraTicket, RedTickets, Mi Entrada…)</span></span><input type="url" name="tickets" required placeholder="https://" inputmode="url" autocapitalize="off" autocomplete="off"></label>
+    <label class="full"><span>Tu Instagram o WhatsApp</span><input name="contact" required autocomplete="off" autocapitalize="off" placeholder="@productora o +598 9…"></label>
+    <label class="check full"><input type="checkbox" name="rrpp" checked><span>Nos pueden dar de alta como RRPP en la ticketera (con un código o link nuestro)</span></label>
+    <div class="full"><button class="btn" type="submit">Preparar mensaje</button></div>
+  </form>
   <div id="ok" role="status"></div>
 
-  <h3 class="step faq-title">Preguntas frecuentes</h3>
+  <h3 class="step faq-title" id="rrpp">Preguntas frecuentes</h3>
   <div class="faq">
-    <details><summary>¿Cuándo aparece mi evento?</summary><p>Apenas confirmamos el pago. Si elegiste un primer día de publicación más adelante, sale ese día.</p></details>
-    <details><summary>¿Qué diferencia hay entre Básico y Portada?</summary><p>El Básico publica tu evento en la agenda, ordenado por fecha y en su categoría. La Portada suma un lugar en el slider de arriba de todo, lo primero que se ve al entrar. La portada tiene cupos limitados, por eso confirmamos la fecha antes de cobrarte.</p></details>
-    <details><summary>¿Cómo pago?</summary><p>Al enviar el formulario te damos tu referencia y el botón de Mercado Pago con el monto exacto: pagás con tarjeta de crédito o débito y el pago se confirma al instante.</p></details>
-    <details><summary>¿Qué pasa cuando terminan los días?</summary><p>El evento deja de verse solo al terminar los días pagados o cuando pasa su fecha. Si querés más días, escribinos con tu referencia.</p></details>
-    <details><summary>¿Puedo cambiar algo después de publicar?</summary><p>Sí: escribinos por WhatsApp o mail con tu referencia y lo actualizamos.</p></details>
+    <details><summary>¿Cuánto cuesta publicar?</summary><p>Nada. Publicamos gratis todos los eventos de Punta del Este y alrededores que tengan datos reales.</p></details>
+    <details><summary>¿Cómo funciona lo de RRPP?</summary><p>Desde tu ticketera nos das de alta como RRPP (un código o un link de vendedor). El botón de compra de tu evento en la web lleva ese código, así cada entrada que vendemos queda registrada a nuestro nombre en tu panel. Nos pagás la comisión que acordemos, solo por lo vendido.</p></details>
+    <details><summary>¿Y si no trabajo con RRPP?</summary><p>Igual podemos publicar tu evento. Escribinos y lo vemos.</p></details>
+    <details><summary>¿Cuándo aparece mi evento?</summary><p>Apenas lo cargamos, normalmente en el día. Te avisamos cuando está online.</p></details>
+    <details><summary>¿Puedo cambiar algo después?</summary><p>Sí: la hora, el lugar, el precio o el póster. Escribinos por WhatsApp o mail y lo actualizamos.</p></details>
   </div>
 </div>
 </section>
 
 <div class="wrap"><footer class="foot" id="site-footer"><span>Punta del Este, Uruguay</span></footer></div>
 
-<script src="js/config.js?v=68"></script>
-<script src="js/utils.js?v=68"></script>
-<script src="js/i18n.js?v=68"></script>
-<script src="js/analytics.js?v=68"></script>
-<script src="js/site.js?v=68"></script>
-<script src="js/publicar.js?v=68"></script>
+<script src="js/config.js?v=69"></script>
+<script src="js/utils.js?v=69"></script>
+<script src="js/i18n.js?v=69"></script>
+<script src="js/analytics.js?v=69"></script>
+<script src="js/site.js?v=69"></script>
+<script src="js/publicar.js?v=69"></script>
 </body>
 </html>

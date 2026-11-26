@@ -342,3 +342,5 @@
 .pl-faq summary::after{content:"+";flex:none;font-size:22px;line-height:1;color:var(--muted);transition:transform .25s var(--ease)}
 .pl-faq details.is-open summary::after{transform:rotate(45deg)}
 .pl-faq p{margin:0;padding:0 18px 16px;overflow:hidden;color:var(--muted);font-size:15px}
+.pl-howto{display:grid;gap:10px;margin-top:12px}
+.pl-howto .btn{width:100%;justify-content:space-between;min-height:52px;font-size:16px}

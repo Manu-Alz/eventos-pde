@@ -39,6 +39,8 @@ Start with `node tools/buscar-eventos.js` (lists what's on sale and marks what's
 
 ## Other rules
 
+- **The site must run without work for the owner.** Their only job is getting RRPP codes from producers. Keep `CONFIG.gestion: false`: no quotes, no payments, no requests to handle. Do not add features that create owner work (forms that need answers, manual bookings) unless they ask.
+
 - Mobile first. The style is dark with glass; the slider looks the same as the grid cards.
 - "Que un abuelo pueda usarla": plain numbered questions, large text, inputs of 16px or more, 24h times.
 - Do not fake data, hotels or partners. Do not publish partners' names without their permission.

@@ -13,6 +13,7 @@
    │ tickets    link de entradas -> embed "Comprar entradas"                             │
    │ affiliate  true si el link de tickets ya es un link de afiliado tuyo                │
    │ rrpp       true si la productora te aprobó como RRPP: suma tu código (RRPP, config) │
+   │ gratis     true si la entrada es libre: sale en el filtro "Gratis" de la agenda      │
    │ price      precio de referencia, ej. "Desde USD 40" (sale en su página)             │
    │ link       otro link (web, programa, reservas) -> embed; solo si no hay tickets     │
    │ linkLabel  texto del embed de link, ej. "Ver programa" (por defecto "Más información")│
@@ -243,6 +244,7 @@ const EV = [
     title: "Festival de Cine de Punta del Este",
     cat: "Festivales", date: "2027-02-20", time: "A confirmar",
     place: "Maldonado y Punta del Este",
+    gratis: true,
     desc: "29.ª edición del festival de cine de la ciudad, con funciones libres y gratuitas en Sala Cantegril, el Teatro Margarita Xirgú y Grupocine. Del 20 al 26 de febrero.",
     link: "https://cinepunta.uy/", linkLabel: "Ver programación",
     endDate: "2027-02-26",
@@ -792,5 +794,47 @@ const EV = [
     desc: "La clásica corrida de verano, con 5 km (19:30) y 10 km (21:00) sobre la rambla de Playa Mansa. Los cupos se suelen agotar rápido.",
     link: "https://www.corridadesanfernando.com/", linkLabel: "Ver la corrida", price: "Inscripción $ 1.200",
     photo: "corrida-san-fernando.webp"   // foto genérica de Unsplash (licencia libre): cambiala por el póster oficial cuando lo tengas
+  },
+  /* Cargados el 26/11 (fuentes: Venti, Entraste y CobraTicket) */
+  {
+    title: "Nico Bereciartua en Ferona",
+    cat: "Música en vivo", date: "2026-11-28", time: "21:00",
+    place: "Ferona Club Social, calle Albatros, La Juanita",
+    desc: "Nico Bereciartua presenta sus canciones en Ferona, con algunos invitados sorpresa.",
+    tickets: "https://venti.live/evento/nico-bereciartua-ferona", price: "Desde USD 30",
+    photo: "nico-bereciartua-ferona.webp"
+  },
+  {
+    title: "2Fancy: Final Night",
+    cat: "Fiestas", date: "2026-11-28", time: "23:59",
+    place: "OAK Lotus La Barra, Ruta 10, La Barra",
+    desc: "La última 2Fancy del año, en OAK Lotus. Para mayores de 18, con promo 3x2 en el primer lote.",
+    tickets: "https://www.cobraticket.uy/e/2fancy-645614", price: "Desde $ 550",
+    photo: "2fancy-oak-lotus.webp"
+  },
+  {
+    title: "Epic NYE 2027",
+    cat: "Fiestas", date: "2027-01-01", time: "01:30",
+    place: "Punta Ballena (lugar exacto el día del evento)",
+    desc: "House of Epic recibe el año con 12 horas de fiesta, de 1:30 a 13:00, con Sherard, Malevo, Zafira Arion y Piccolino. Se lleva la bebida. Para mayores de 18.",
+    tickets: "https://www.cobraticket.uy/e/epic-nye-2027-612186", price: "Desde USD 35",
+    traslado: false,   // el lugar exacto se anuncia el día del evento: sin pin ni Uber hasta entonces
+    photo: "epic-nye-punta-ballena.webp"
+  },
+  {
+    title: "La Fiesta del Verano: Clarita x Alegría",
+    cat: "Fiestas", date: "2027-01-01", time: "23:59",
+    place: "OAK Lotus La Barra, Ruta 10, La Barra",
+    desc: "Clarita y Alegría juntan a Uruguay y Argentina en la primera fiesta del 2027, en OAK Lotus. Para mayores de 15.",
+    tickets: "https://www.cobraticket.uy/e/la-fiesta-del-verano-clarita-x-alegria-610676", price: "Desde USD 25",
+    photo: "fiesta-del-verano-oak.webp"
+  },
+  {
+    title: "Pixel",
+    cat: "Fiestas", date: "2027-01-04", time: "23:59",
+    place: "Ruta 104 km 3,5, Manantiales",
+    desc: "Pixel, la fiesta de Brothers con barra libre, vuelve a la Ruta 104. General +19, VIP +21 y Backstage +23.",
+    tickets: "https://app.entraste.com/events/pixel", price: "Desde USD 70",
+    photo: "pixel-ruta-104.webp"
   }
 ];

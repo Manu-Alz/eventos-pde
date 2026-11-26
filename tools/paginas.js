@@ -103,7 +103,7 @@ function rideBox(e) {
         <p class="uber-fine">Se abre la app de Uber (o su web, si no la tenés). El precio lo ves en Uber antes de confirmar.</p>
         <a class="ride-plan" href="/plan.html?add=${id}" data-ev="plan_evento" data-n="${esc(e.title)}">¿Venís de afuera? Armá tu plan con aeropuerto y alojamiento ${ico("arrow")}</a>
       </section>`;
-  if (!rideOK(e)) return `<a class="ev-planlink" href="/plan.html?add=${id}" data-ev="plan_evento" data-n="${esc(e.title)}">${ico("plane")}<span><b>¿Venís de afuera?</b> Armá tu plan con traslado del aeropuerto y alojamiento</span>${ico("arrow")}</a>`;
+  if (!rideOK(e)) return `<a class="ev-planlink" href="/plan.html?add=${id}" data-ev="plan_evento" data-n="${esc(e.title)}">${ico("plane")}<span><b>¿Venís de afuera?</b> Armá tu plan con cómo llegar y alojamiento</span>${ico("arrow")}</a>`;
   return `<section class="ride" id="ride" aria-labelledby="ride-h" data-id="${id}" data-title="${esc(e.title)}" data-date="${e.date}"${e.endDate && e.endDate !== e.date ? ` data-end="${e.endDate}"` : ""} data-time="${esc(e.time)}" data-place="${esc(shortPlace(e))}" data-geo="${rideGeo(e).join(",")}">
         <h2 id="ride-h">Traslado con chofer</h2>
         <p>Te llevamos y te traemos, con precio final y pago con tarjeta.</p>
@@ -128,7 +128,7 @@ function eventPage(e, live, v) {
   const second = [
     contact && `<a class="btn ghost" href="${esc(contact)}" target="_blank" rel="noopener" data-ev="contacto" data-n="${esc(e.title)}">${ico(contactLabel(contact) === "Instagram" ? "instagram" : contactLabel(contact) === "WhatsApp" ? "chat" : "mail")}${contactLabel(contact)}</a>`,
     `<a class="btn ghost" href="${esc(gcalUrl(e))}" target="_blank" rel="noopener" data-ev="agendar" data-n="${esc(e.title)}">${ico("calendar")}Agendar</a>`,
-    `<a class="btn ghost" href="https://wa.me/?text=${encodeURIComponent(`${e.title} · ${longDate(e)}\n${url}`)}" target="_blank" rel="noopener" data-ev="compartir" data-n="${esc(e.title)}">${ico("share")}Compartir</a>`
+    `<a class="btn ghost" href="https://wa.me/?text=${encodeURIComponent(`${e.title} · ${longDate(e)}\n${url}`)}" target="_blank" rel="noopener" data-ev="compartir" data-n="${esc(e.title)}" data-share="${esc(`${e.title} · ${cap1(longDate(e))}`)}" data-url="${esc(url)}"${e.photo ? ` data-img="/${esc(photoUrl(e))}"` : ""}>${ico("share")}Compartir</a>`
   ].filter(Boolean).join("");
 
   return `<!DOCTYPE html>

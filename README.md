@@ -4,6 +4,20 @@ Agenda de eventos de Punta del Este. Sitio estático (HTML, CSS y JS puros): se 
 
 > Lo que está apagado, de prueba o esperando algo tuyo: [PENDIENTES.md](PENDIENTES.md).
 
+## Cómo gana plata la web (sin trabajo para vos)
+
+Desde noviembre de 2026 la web trabaja sola. **Lo único que hay que hacer es conseguir códigos de RRPP con las productoras** (ver "Códigos de RRPP"). No llega ningún pedido para resolver:
+
+- **Entradas:** el botón "Comprar" lleva a la ticketera oficial; con `rrpp: true` en el evento sale con tu código y cobrás comisión por cada entrada.
+- **Armar plan:** es una guía. Las entradas van con tu código, Uber a cada fiesta, cómo llegar desde el aeropuerto con links (ómnibus, barco, Uber) y alojamiento en Booking. No se cotiza nada ni se cobra nada (`CONFIG.gestion: false` en `js/config.js`).
+- **Sumá tu evento** (`publicar.html`): gratis para la productora. El formulario arma un mensaje que te llega por WhatsApp o mail con el link de venta y si acepta darte RRPP; vos cargás el evento siguiendo "Agregar eventos".
+- **Herramientas:**
+  - `node tools/buscar-eventos.js` busca eventos nuevos.
+  - `node tools/revisar-eventos.js --links` revisa que todo esté en orden.
+  - `node tools/servir.js` levanta la web en tu compu, en http://localhost:8765.
+
+Las cotizaciones de traslados, los alojamientos con aliados y el cobro por día de publicación quedaron apagados. El código sigue ahí: con `CONFIG.gestion: true` vuelve el plan con cotizaciones, y lo de abajo sobre traslados, aliados, Mercado Pago y planes queda como referencia.
+
 ## Estructura
 
 ```
@@ -108,7 +122,7 @@ Un evento no está "cargado" hasta que se cumplen todos los pasos. Es la misma l
 8. **Build y versión:**
    - subí `?v=` en **todos** los `.html` si cambió algún JS o CSS (`data.js` y `config.js` también cuentan);
    - corré `node tools/build-eventos.js` y revisá la cantidad de páginas, la de Uber y los avisos.
-9. **Probar a 375 px:**
+9. **Probar a 375 px** (`node tools/servir.js` y abrí http://localhost:8765). Antes corré `node tools/revisar-eventos.js --links`, que revisa datos, fotos, pines, precios y links:
    - la tarjeta y la página del evento;
    - el botón de compra con su precio;
    - el pin (`geoOf(evento)` en la consola) y Uber;
@@ -121,6 +135,9 @@ Un evento no está "cargado" hasta que se cumplen todos los pasos. Es la misma l
 12. **Precios de lo ya cargado:** cada tanto revisá los precios en venta de los eventos que ya están, porque los lotes cambian (Entraste, Venti y RedTickets).
 
 ## Qué hace la web sola
+
+- **Filtros rápidos:** debajo de las categorías aparecen **Hoy**, **Este finde** (de viernes a domingo) y **Gratis** (`gratis: true` en el evento, o un precio que diga "gratis" o "libre"). Un filtro sin eventos no se muestra, y se combinan con la categoría y la búsqueda.
+- **Compartir con póster:** en la página de cada evento, "Compartir" abre en el celular el menú del teléfono con el póster, el nombre y el link, así se puede mandar por WhatsApp o subir a una historia de Instagram. En la PC queda el link de WhatsApp.
 
 - **Entradas:** un evento con `tickets` muestra "Entradas" en la tarjeta y un botón fijo abajo del detalle. El botón de la portada siempre dice "Ver evento" (lleva a la página del evento, donde están las entradas).
 - **Agendar:** cada detalle tiene un botón que agrega el evento a Google Calendar (con hora: 3 horas; "A confirmar": día completo).
@@ -139,6 +156,14 @@ Un evento no está "cargado" hasta que se cumplen todos los pasos. Es la misma l
 - Como el robot sube esos cambios a `main`, antes de subir algo desde tu compu hacé **`git pull`** (o "Fetch/Pull" en GitHub Desktop).
 
 ## Armar plan (planificador de viaje): el único lugar para pedir entradas, traslados y alojamiento
+
+**Hoy (`CONFIG.gestion: false`):** tiene tres pasos.
+1. **Eventos:** cada uno con su botón Comprar y Uber.
+2. **Cómo llegás:** según cómo llegue, links a Uber desde Laguna del Sauce, a COT y COPSA desde Carrasco, o a Buquebus y Colonia Express si viene en barco.
+3. **Dónde te quedás:** solo Booking.
+
+No hay paso "Tus datos" ni cotización: el botón lleva a Booking o al paso que falta. Lo que sigue describe el plan con `gestion: true`.
+
 
 Pensado sobre todo para quien viene de afuera y quiere resolver todo en un solo lugar. No hay formularios aparte: `servicios.html` quedó solo para los links viejos (lleva a `plan.html` y, con `?e=<id>`, suma ese evento).
 
@@ -218,6 +243,9 @@ Para turistas y también para la gente de acá (la vuelta de la fiesta sin manej
 
 ## Cobros online (Mercado Pago, sin que el cliente tenga que escribirnos)
 
+**Hoy apagado:** con `CONFIG.gestion: false` nadie llega a pagar nada en la web, y Sumá tu evento es gratis. Queda como referencia por si se vuelve a prender.
+
+
 - **Armar plan (entradas, traslados y alojamiento):** el cliente pide en `plan.html` (con su mail) → le llega un mail de confirmación → vos completás en la pestaña "Servicios" las columnas **"Detalle para el cliente"** y **"Precio USD"** → al poner el precio le llega solo la cotización con el botón de pago → paga en `pagar.html` con tarjeta (Mercado Pago, monto exacto) → se marca **"Pagado"** y les llega un mail a los dos.
 - **Traslados (página del evento o plan solo de traslados):** el precio sale solo y se paga al reservar, sin cotizar (ver "Traslados con chofer").
 - **Solo tarjeta:** el pago se abre en Mercado Pago con tarjeta de crédito, débito o saldo de Mercado Pago, y se aprueba o rechaza al instante (sin efectivo ni "pendiente"). `pagar.html` y Publicar ya no ofrecen transferencia ni depósito (la cuenta queda en `config.js` solo como dato).
@@ -230,6 +258,9 @@ Para turistas y también para la gente de acá (la vuelta de la fiesta sin manej
 Se cobra por día publicado y cada tramo sale más barato: `tiers: [[hastaElDía, precioPorDía], ...]`. Los tramos se suman (7 días nunca cuestan menos que 6). Hoy: Básico US$ 6 los días 1-2, US$ 3 del 3 al 7, US$ 2 del 8 al 30 y US$ 1 desde el 31; Portada US$ 30, 12, 8 y 5. `MAX_DAYS` es el tope de días por pedido. La página recalcula tarjetas, total y mensajes sola.
 
 ## Cobro de publicaciones
+
+**Ya no se usa:** `publicar.html` ahora es "Sumá tu evento", gratis y con RRPP. `PLANS` en `config.js` queda solo como referencia.
+
 
 1. La persona elige plan, completa el formulario y recibe una referencia (`PDE-XXXXX`).
 2. Paga con tarjeta en Mercado Pago (monto exacto; se marca solo en la planilla y se publica sin que tenga que mandar nada). El link de monto libre (`mercadopago.link`) queda de respaldo si el script no responde.

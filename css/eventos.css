@@ -40,6 +40,8 @@
 .chip-cal{width:var(--tap);padding:0}
 .chip-cal .ico{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 /* Cantidad de eventos dentro de cada filtro */
+.chips-when{margin-top:-6px;padding-bottom:12px}
+.chips-when .chip{min-height:38px;font-size:15px}
 .chip-n{margin-left:8px;font-size:12px;font-weight:700;opacity:.55;font-variant-numeric:tabular-nums}
 .chip[aria-pressed="true"] .chip-n{opacity:.7}
 /* Escritorio: los filtros pasan a la línea siguiente en vez de cortarse */

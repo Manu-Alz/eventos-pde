@@ -19,6 +19,7 @@ const ymOf = iso => ({ y: +iso.slice(0, 4), m: +iso.slice(5, 7) - 1 });
 
 const state = {
   cat: "Todos",
+  when: "",                                      // filtro rápido: "" | "hoy" | "finde" | "gratis"
   view: "list",                                  // "list" | "cal" | "map"
   day: null,                                     // día elegido en el calendario
   month: (() => { const first = LIVE.map(e => e.date).sort()[0] || TODAY; return ymOf(first < TODAY ? TODAY : first); })()
@@ -34,11 +35,42 @@ const bounds = (() => {
 /* Lo que se busca: título, lugar, categoría, descripción y fecha ("diciembre", "sábado", "31") */
 const haystack = new Map(LIVE.map(e => [e, norm(`${e.title} ${e.place} ${e.cat} ${e.desc} ${longDate(e)} ${MESES[+e.date.slice(5, 7) - 1]}`)]));
 
-function filtered({ cat = state.cat } = {}) {
+/* Filtros rápidos: hoy, este fin de semana (viernes a domingo; si ya es fin de semana, el que corre) y gratis
+   (gratis: true en data.js, o un precio que diga "gratis" o "libre") */
+const finde = (() => {
+  const dow = new Date(TODAY + "T12:00:00Z").getUTCDay();          // 0 domingo … 6 sábado
+  const fri = dow === 0 ? addDays(TODAY, -2) : dow === 6 ? addDays(TODAY, -1) : addDays(TODAY, 5 - dow);
+  return { a: fri < TODAY ? TODAY : fri, b: addDays(fri, 2) };
+})();
+const isFree = e => e.gratis === true || /gratis|libre/i.test(e.price || "");
+const WHEN = {
+  hoy:    { label: "Hoy",        ok: e => e.date <= TODAY && (e.endDate || e.date) >= TODAY },
+  finde:  { label: "Este finde", ok: e => e.date <= finde.b && (e.endDate || e.date) >= finde.a },
+  gratis: { label: "Gratis",     ok: isFree }
+};
+
+function filtered({ cat = state.cat, when = state.when } = {}) {
   const words = norm($("q").value.trim()).split(/\s+/).filter(Boolean);
   return LIVE
-    .filter(e => (cat === "Todos" || e.cat === cat) && words.every(w => haystack.get(e).includes(w)))
+    .filter(e => (cat === "Todos" || e.cat === cat) && (!when || WHEN[when].ok(e)) && words.every(w => haystack.get(e).includes(w)))
     .sort(compareEvents);
+}
+
+/* Fila de filtros rápidos (debajo del buscador): un toque prende, otro apaga; se combinan con la categoría.
+   Un filtro sin eventos no se muestra (salvo que esté prendido, para poder apagarlo). */
+function renderWhen() {
+  const box = $("when");
+  if (!box) return;
+  box.innerHTML = "";
+  Object.entries(WHEN).forEach(([k, w]) => {
+    const n = filtered({ when: k }).length;
+    if (!n && state.when !== k) return;
+    box.appendChild(chipEl(w.label, state.when === k, n, () => {
+      state.when = state.when === k ? "" : k; state.day = null; render();
+      if (state.when) track("filtro_rapido", { filtro: k });
+    }));
+  });
+  box.hidden = !box.children.length;
 }
 
 /* Botón de filtro con su cantidad; sin eventos queda apagado (salvo el elegido, para poder salir de él) */
@@ -95,7 +127,6 @@ function renderChips() {
 /* ============ 4. Lista ============ */
 /* Tarjeta para organizadores: aparece entre los eventos y lleva a publicar.html */
 function promoEl() {
-  const from = Math.min(...PLANS.map(p => p.tiers[0][1]));
   const a = document.createElement("a");
   a.className = "card promo";
   a.href = "publicar.html";
@@ -104,8 +135,8 @@ function promoEl() {
     <div class="k-top"><span class="k-cat"><i></i>Para organizadores</span></div>
     <div class="k-bottom">
       <h3>¿Organizás un evento en Punta?</h3>
-      <p class="promo-text">Publicalo en la agenda desde US$ ${from} por día y llegá a quienes buscan qué hacer esta temporada.</p>
-      <span class="s-cta">Publicar evento <i>${ico("arrow")}</i></span>
+      <p class="promo-text">Sumalo gratis a la agenda: página propia, mapa, calendario y botón de compra, en tres idiomas.</p>
+      <span class="s-cta">Sumar mi evento <i>${ico("arrow")}</i></span>
     </div>`;
   return a;
 }
@@ -115,9 +146,9 @@ function renderList(list) {
   grid.innerHTML = "";
   if (!list.length) {
     const searching = $("q").value.trim();
-    grid.innerHTML = `<div class="empty"><p>${searching ? "No encontramos eventos con esa búsqueda." : "Todavía no hay eventos en esta categoría."} Probá con otra o publicá el tuyo.</p>
-      <p><button type="button" class="btn ghost" id="reset">Ver todos los eventos</button> <a class="btn" href="publicar.html" data-ev="promo_publicar">Publicar mi evento</a></p></div>`;
-    $("reset").onclick = () => { $("q").value = ""; state.cat = "Todos"; render(); };
+    grid.innerHTML = `<div class="empty"><p>${searching ? "No encontramos eventos con esa búsqueda." : "Todavía no hay eventos en esta categoría."} Probá con otra o sumá el tuyo.</p>
+      <p><button type="button" class="btn ghost" id="reset">Ver todos los eventos</button> <a class="btn" href="publicar.html" data-ev="promo_publicar">Sumar mi evento</a></p></div>`;
+    $("reset").onclick = () => { $("q").value = ""; state.cat = "Todos"; state.when = ""; render(); };
     return;
   }
   list.forEach(e => grid.appendChild(cardEl(e)));
@@ -130,6 +161,7 @@ function render() {
   const view = state.view;
 
   renderChips();
+  renderWhen();
   $("count").textContent = `${list.length} ${list.length === 1 ? "evento" : "eventos"}`;
   $("grid").hidden = view !== "list";
   $("cal").hidden = view !== "cal";
@@ -186,7 +218,7 @@ if (heroLive) heroLive.textContent = `${LIVE.length} ${LIVE.length === 1 ? "even
    desde la página de un evento ("‹ Todos los eventos", el logo), siempre que haya sido hace menos de una hora. */
 const SPOT_KEY = "epde-vuelta";
 const saveSpot = () => {
-  try { sessionStorage.setItem(SPOT_KEY, JSON.stringify({ y: scrollY, cat: state.cat, view: state.view, q: $("q").value, month: state.month, day: state.day, t: Date.now() })); } catch (_) {}
+  try { sessionStorage.setItem(SPOT_KEY, JSON.stringify({ y: scrollY, cat: state.cat, when: state.when, view: state.view, q: $("q").value, month: state.month, day: state.day, t: Date.now() })); } catch (_) {}
 };
 document.addEventListener("click", ev => { if (ev.target.closest && ev.target.closest('a[href^="/evento/"]')) saveSpot(); }, true);
 addEventListener("pagehide", saveSpot);
@@ -200,6 +232,7 @@ try {
 } catch (_) {}
 if (spot) {
   if (CATS[spot.cat] || spot.cat === "Todos") state.cat = spot.cat;
+  if (WHEN[spot.when]) state.when = spot.when;
   if (["list", "cal", "map"].includes(spot.view)) state.view = spot.view;
   if (spot.month) state.month = spot.month;
   state.day = spot.day || null;
